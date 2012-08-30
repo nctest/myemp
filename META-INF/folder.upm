@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding='gb2312'?>
+<module name="myemp">
+	<public>
+		<component remote="true" singleton="true" tx="CMT">
+			<interface>nc.itf.myemp.folder.IFolderQueryService</interface>
+			<implementation>nc.impl.myemp.folder.FolderQueryServiceImpl
+			</implementation>
+		</component>
+	</public>
+	<public>
+		<component remote="true" singleton="true" tx="CMT">
+			<interface>nc.itf.myemp.folder.IFolderService</interface>
+			<implementation>nc.impl.myemp.folder.FolderServiceImpl
+			</implementation>
+		</component>
+	</public>
+</module>

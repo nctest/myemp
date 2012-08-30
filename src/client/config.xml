@@ -1,0 +1,673 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- 上下文环境 -->
+	<bean id="InitDataListener" class="nc.ui.resa.factor.model.FactorInitDataListener">
+		<property name="model" ref="model" />
+		<property name="editor" ref="factorEditor" />
+		<property name="modelDataManager" ref="factorDataManager"></property>
+	</bean>
+
+	<bean id="context" class="nc.vo.uif2.LoginContext"></bean>
+
+	<!-- servicer -->
+	<bean id="service" class="nc.ui.resa.factor.model.FactorChartModelSerivce">
+	</bean>
+	<bean id="factorAppModelServicer" class="nc.ui.resa.factor.model.FactorModelServicer">
+	</bean>
+
+	<bean id="treeCreateStrategy" class="nc.ui.resa.factor.view.FactorChartCreatTreeStrategy">
+		<property name="factory" ref="factory" />
+		<property name="rootName" value="要素表"></property>
+	</bean>
+
+	<bean id="factorTreeCreateStrategy" class="nc.ui.resa.factor.model.FactorCreateTreeStrategy">
+		<property name="factory" ref="factory" />
+		<property name="rootName" value="核算要素"></property>
+	</bean>
+
+	<!-- model配置附件 -->
+	<bean id="factory" class="nc.vo.bd.meta.BDObjectAdpaterFactory"></bean>
+
+	<!-- models -->
+	<bean id="factorChartAppModel" class="nc.ui.resa.factor.model.FactorChartAppModel">
+		<property name="businessObjectAdapterFactory" ref="factory"></property>
+		<property name="treeCreateStrategy" ref="treeCreateStrategy"></property>
+		<property name="context" ref="context"></property>
+		<property name="service" ref="service"></property>
+	</bean>
+	<bean id="model" class="nc.ui.resa.factor.model.FactorAppModel">
+		<property name="businessObjectAdapterFactory" ref="factory"></property>
+		<property name="treeCreateStrategy" ref="factorTreeCreateStrategy"></property>
+		<property name="context" ref="context"></property>
+		<property name="service" ref="factorAppModelServicer"></property>
+	</bean>
+
+	<bean id="factorQueryManageModel" class="nc.ui.resa.factor.model.FactorQueryManageModel">
+		<property name="context" ref="context"></property>
+		<property name="businessObjectAdapterFactory" ref="factory"></property>
+	</bean>
+
+
+	<bean id="factorDataManager" class="nc.ui.resa.factor.model.FactorModelDataManager">
+		<property name="factorModel" ref="model"></property>
+		<property name="factorQueryModel" ref="factorQueryManageModel"></property>
+	</bean>
+
+	<!-- ClosingListener -->
+	<bean id="ClosingListener" class="nc.ui.uif2.FunNodeClosingHandler">
+		<property name="model" ref="model" />
+		<property name="saveaction" ref="factorsaveaction" />
+		<property name="cancelaction" ref="factorcancelaction" />
+	</bean>
+
+	<!-- 模板容器 -->
+	<bean id="templateContainer" class="nc.ui.uif2.editor.TemplateContainer"
+		init-method="load">
+		<property name="context" ref="context"></property>
+		<property name="nodeKeies">
+			<list>
+				<value>factor</value>
+				<value>factorass</value>
+				<value>factorctrlmdl</value>
+				<value>auditinfo</value>
+				<value>insertmidacc</value>
+				<value>qaccass</value>
+				<value>qassacc</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 界面元素 -->
+	<bean id="topPane" class="nc.ui.resa.factor.view.FactorTopPane"
+		init-method="initUI">
+		<property name="factorDataManager" ref="factorDataManager"></property>
+		<property name="appModel" ref="model"></property>
+		<property name="refreshAction" ref="chartrefreshaction"></property>
+	</bean>
+
+	<bean id="factorListView" class="nc.ui.resa.factor.view.FactorListViewer"
+		init-method="initUI">
+		<property name="model" ref="model"></property>
+		<property name="nodekey" value="factor"></property>
+		<property name="templateContainer" ref="templateContainer"></property>
+	</bean>
+
+	<bean id="factorEditor" class="nc.ui.resa.factor.view.FactorEditor"
+		init-method="initUI">
+		<property name="model" ref="model"></property>
+		<property name="nodekey" value="factor"></property>
+		<property name="assListViewer" ref="factorasspanel"></property>
+		<property name="ctrlMdlListViewer" ref="factorctrlmdlpanel"></property>
+		<property name="templateContainer" ref="templateContainer"></property>
+		<property name="closingListener" ref="ClosingListener"></property>
+		<property name="exceptionHandler" ref="exhandler"></property>
+	</bean>
+
+	<bean id="factorquerylistviewer" class="nc.ui.resa.factor.view.FactorQueryListViewer"
+		init-method="initUI">
+		<property name="model" ref="factorQueryManageModel"></property>
+		<property name="nodekey" value="factor"></property>
+		<property name="templateContainer" ref="templateContainer"></property>
+	</bean>
+
+	<!-- 辅助核算 -->
+	<bean id="factorasspanel" class="nc.ui.resa.factor.view.FactorAssListViewer"
+		init-method="initUI">
+		<property name="model" ref="model"></property>
+		<property name="nodekey" value="factorass"></property>
+		<property name="templateContainer" ref="templateContainer"></property>
+		<property name="actions">
+			<list>
+				<ref bean="assaddlineaction" />
+				<ref bean="assdellineaction" />
+				<ref bean="assupaction" />
+				<ref bean="assdownaction" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="factorctrlmdlpanel" class="nc.ui.resa.factor.view.FactorCtrlMdlListViewer"
+		init-method="initUI">
+		<property name="model" ref="model"></property>
+		<property name="nodekey" value="factorctrlmdl"></property>
+		<property name="templateContainer" ref="templateContainer"></property>
+		<property name="actions">
+			<list>
+				<ref bean="ctrlmdleaddaction" />
+				<ref bean="ctrlmdledelaction" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="insertMidFactorEditor" class="nc.ui.resa.factor.view.InsertMidFactorEditor"
+		init-method="initUI">
+
+		<property name="nodekey" value="insertmidacc"></property>
+		<property name="templateContainer" ref="templateContainer"></property>
+		<property name="model" ref="model"></property>
+		<property name="exceptionHandler" ref="exhandler"></property>
+	</bean>
+
+	<!-- 快速设置辅助核算上面部分 -->
+	<bean id="qassnortheditor" class="nc.ui.resa.factor.view.QuickSetAccAssHeadEditor"
+		init-method="initUI">
+		<property name="model" ref="model"></property>
+		<property name="templateContainer" ref="templateContainer"></property>
+		<property name="nodekey" value="qaccass"></property>
+	</bean>
+<!---->
+
+	<bean id="qasscentereditor" class="nc.ui.resa.factor.view.QuickSetAccAssBodyEditor"
+		init-method="initUI">
+		<property name="model" ref="model"></property>
+
+		<property name="templateContainer" ref="templateContainer"></property>
+
+		<property name="nodekey" value="qassacc"></property>
+		<property name="bodyActionMap">
+			<map>
+				<entry key="account">
+					<list>
+						<ref bean="accallselect" />
+						<ref bean="accallnotselect" />
+					</list>
+				</entry>
+			</map>
+		</property>
+	</bean>
+<!---->
+
+	<bean id="qaccasseditor" class="nc.ui.bd.account.view.QuickSetAssEditor"
+
+		init-method="initUI">
+		<property name="northEditor" ref="qassnortheditor"></property>
+
+		<property name="centerEditor" ref="qasscentereditor"></property>
+
+	</bean>
+
+	<bean id="newversioneditor" class="nc.ui.resa.factor.view.FactorsNewVersionEditor"
+		init-method="initUI">
+		<property name="model" ref="model"></property>
+	</bean>
+
+	<bean id="factorgroupaction" class="nc.ui.resa.factor.actions.FactorGroupAction">
+		<property name="model" ref="model"></property>
+	</bean>
+
+	<bean id="factorchartmaitenceaction" class="nc.ui.resa.factor.actions.FactorChartMTAction">
+		<property name="chartAppModel" ref="factorChartAppModel"></property>
+		<property name="model" ref="model"></property>
+	</bean>
+
+	<!--actions -->
+
+	<bean id="factorAddGroupAction" class="nc.funcnode.ui.action.GroupAction">
+		<property name="actions">
+			<list>
+				<ref bean="factorAddAction" />
+				<ref bean="newaccimportaction" />
+			</list>
+		</property>
+	</bean>
+	<bean id="newaccimportaction" class="nc.ui.resa.factor.actions.NewAccImportAction">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="factorAddAction" class="nc.ui.resa.factor.actions.FactorAddAction">
+		<property name="model" ref="model"></property>
+		<property name="interceptor" ref="actionInteceptor"></property>
+	</bean>
+
+	<bean id="accimportaction" class="nc.ui.resa.factor.actions.AccImportAction">
+		<property name="model" ref="model"></property>
+	</bean>
+
+	<bean id="factoreditaction" class="nc.ui.resa.factor.actions.FactorEditAction">
+		<property name="model" ref="model"></property>
+		<property name="editor" ref="factorEditor"></property>
+		<property name="interceptor" ref="actionInteceptor"></property>
+	</bean>
+	<bean id="factordelaction" class="nc.ui.resa.factor.actions.FactorDelAction">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="factorrefreshaction" class="nc.ui.uif2.actions.RefreshAction">
+		<property name="model" ref="model"></property>
+		<property name="dataManager" ref="factorDataManager"></property>
+	</bean>
+	<bean id="factorsinglerefresh" class="nc.ui.resa.factor.actions.FactorRefreshSingleAction">
+		<property name="model" ref="model"></property>
+	</bean>
+
+	<bean id="insertmidaction" class="nc.ui.resa.factor.actions.InsertMidClassAction">
+		<property name="editor" ref="insertMidFactorEditor"></property>
+		<property name="dlgTitle" value="插入中间级核算要素"></property>
+		<property name="model" ref="model"></property>
+		<property name="saveAction" ref="insertmidlevaction"></property>
+		<property name="exceptionHandler" ref="exhandler"></property>
+	</bean>
+
+	<bean id="factorsaveaction" class="nc.ui.resa.factor.actions.FactorSaveAction">
+		<property name="model" ref="model"></property>
+		<property name="editor" ref="factorEditor"></property>
+	</bean>
+	<bean id="factorcancelaction" class="nc.ui.uif2.actions.CancelAction">
+		<property name="model" ref="model"></property>
+		<property name="editor" ref="factorEditor"></property>
+	</bean>
+	<bean id="factorSaveAddAction" class="nc.ui.resa.factor.actions.FactorSaveAddAction">
+		<property name="addAction" ref="factorAddAction"></property>
+		<property name="savaction" ref="factorsaveaction"></property>
+		<property name="model" ref="model"></property>
+		<property name="editor" ref="factorEditor"></property>
+	</bean>
+	<bean id="nullAction" class="nc.funcnode.ui.action.SeparatorAction" />
+
+	<bean id="factorCopyAddAction" class="nc.ui.resa.factor.actions.FactorCopyAddAction">
+
+		<property name="model" ref="model"></property>
+		<property name="editor" ref="factorEditor"></property>
+		<property name="factorAssList" ref="factorasspanel"></property>
+		<property name="interceptor" ref="actionInteceptor"></property>
+	</bean>
+
+	<bean id="accSealGroup" class="nc.funcnode.ui.action.GroupAction">
+
+		<property name="actions">
+			<list>
+				<ref bean="accDisableAction" />
+				<ref bean="accEnableAction" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="accDisableAction" class="nc.ui.resa.factor.actions.FactorDisableAction">
+		<property name="model" ref="model"></property>
+	</bean>
+
+	<bean id="accEnableAction" class="nc.ui.resa.factor.actions.FactorEnableAction">
+		<property name="model" ref="model"></property>
+	</bean>
+
+	<bean id="actionInteceptor" class="nc.ui.resa.factor.actions.FactorActionInterceptor">
+		<property name="editor" ref="factorEditor"></property>
+		<property name="toppane" ref="topPane"></property>
+		<property name="appModel" ref="model"></property>
+	</bean>
+
+
+	<bean id="quicksetassaction" class="nc.ui.resa.factor.actions.QuickSetAssAction">
+		<property name="manageModel" ref="model"></property>
+		<property name="editor" ref="qaccasseditor"></property>
+		<property name="dlgTitle" value="快速设置辅助核算"></property>
+		<property name="model" ref="model"></property>
+		<property name="saveAction" ref="quicksetasssaveaction"></property>
+		<property name="cancelAction" ref="quicksetasscancelaction"></property>
+		<property name="exceptionHandler" ref="exhandler"></property>
+	</bean>
+
+	<bean id="insurorientaction" class="nc.ui.resa.factor.actions.IncurflagSetAction">
+		<property name="model" ref="model"></property>
+	</bean>
+
+	<bean id="balanorientaction" class="nc.ui.resa.factor.actions.BalanFlagAction">
+		<property name="model" ref="model"></property>
+	</bean>
+
+	<bean id="factoreditactiongroup" class="nc.funcnode.ui.action.GroupAction">
+		<property name="actions">
+			<list>
+				<ref bean="factoreditaction" />
+				<ref bean="quicksetassaction" />
+				<ref bean="insertmidaction" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="busiActionGroup" class="nc.funcnode.ui.action.MenuAction">
+		<property name="code" value="busiaction"></property>
+		<property name="name">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="mabase_0"></property>
+				<property name="resId" value="03820002-0399"></property>
+				<property name="defaultValue" value="业务按钮"></property>
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean="insurorientaction" />
+				<!-- 暂时不余额控制 wangxwb <ref bean="balanorientaction" /> -->
+				<ref bean="allowcloseaccaction" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="factorQueryAction" class="nc.ui.resa.factor.actions.FactorQueryAction">
+		<property name="toppane" ref="topPane"></property>
+		<property name="dataManager" ref="factorDataManager"></property>
+	</bean>
+
+
+	<bean id="allowcloseaccaction" class="nc.ui.resa.factor.actions.AllowCloseFactorAction">
+		<property name="model" ref="model"></property>
+	</bean>
+
+	<bean id="factorfilteraction" class="nc.funcnode.ui.action.MenuAction">
+		<property name="code" value="factorfilter"></property>
+		<property name="name">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="mabase_0"></property>
+				<property name="resId" value="03820002-0398"></property>
+				<property name="defaultValue" value="过滤"></property>
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean="filterAction" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="filterAction" class="nc.ui.resa.factor.actions.FactorShowDisableDataAction">
+		<property name="dataManager" ref="factorDataManager"></property>
+		<property name="model" ref="model"></property>
+	</bean>
+
+	<!-- version actions -->
+	<bean id="chartDelVersionAction" class="nc.ui.resa.factor.actions.FactorDelVersionAction">
+		<property name="model" ref="model"></property>
+		<property name="toppane" ref="topPane" />
+		<property name="exceptionHandler" ref="exhandler"></property>
+	</bean>
+	<bean id="chartNewVersionAction" class="nc.ui.resa.factor.actions.FactorNewVersionAction">
+		<property name="dimen">
+			<bean class="java.awt.Dimension">
+				<constructor-arg index="0">
+					<value>400</value>
+				</constructor-arg>
+				<constructor-arg index="1">
+					<value>150</value>
+				</constructor-arg>
+			</bean>
+		</property>
+		<property name="model" ref="model"></property>
+		<property name="editor" ref="newversioneditor"></property>
+		<property name="dlgTitle" value="创建新版本"></property>
+		<property name="saveAction" ref="versionsaveaction"></property>
+		<property name="exceptionHandler" ref="exhandler"></property>
+	</bean>
+	<bean id="exhandler" class="nc.ui.uif2.DefaultExceptionHanler">
+		<property name="context" ref="context"></property>
+	</bean>
+	<bean id="versionsaveaction" class="nc.ui.resa.factor.actions.FactorNewVersionSaveAction">
+		<property name="editor" ref="newversioneditor"></property>
+		<property name="model" ref="model"></property>
+		<property name="topPane" ref="topPane" />
+	</bean>
+	<bean id="factorversionactiongroup" class="nc.funcnode.ui.action.GroupAction">
+		<property name="actions">
+			<list>
+				<ref bean="chartNewVersionAction" />
+				<ref bean="chartDelVersionAction" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- ass actions -->
+	<bean id="assaddlineaction" class="nc.ui.resa.factor.actions.FactorAssAddLineAction">
+		<property name="model" ref="model"></property>
+		<property name="cardpanel" ref="factorasspanel"></property>
+	</bean>
+	<bean id="assdellineaction" class="nc.ui.resa.factor.actions.FactorAssDelLineAction">
+		<property name="model" ref="model"></property>
+		<property name="cardpanel" ref="factorasspanel"></property>
+	</bean>
+	<bean id="assupaction" class="nc.ui.resa.factor.actions.AssUpAction">
+		<property name="model" ref="model"></property>
+		<property name="billCard" ref="factorasspanel"></property>
+		<property name="exceptionHandler" ref="exhandler"></property>
+	</bean>
+	<bean id="assdownaction" class="nc.ui.resa.factor.actions.AssDownAction">
+		<property name="model" ref="model"></property>
+		<property name="billCard" ref="factorasspanel"></property>
+		<property name="exceptionHandler" ref="exhandler"></property>
+	</bean>
+
+	<bean id="ctrlmdleaddaction" class="nc.ui.resa.factor.actions.FactorCtrlMdleAddAction">
+		<property name="model" ref="model"></property>
+		<property name="cardpanel" ref="factorctrlmdlpanel"></property>
+		<property name="editor" ref="factorEditor" />
+	</bean>
+	<bean id="ctrlmdledelaction" class="nc.ui.resa.factor.actions.FactorCtrlMdleDelAction">
+		<property name="model" ref="model"></property>
+		<property name="cardpanel" ref="factorctrlmdlpanel"></property>
+		<property name="editor" ref="factorEditor" />
+	</bean>
+
+	<bean id="chartrefreshaction" class="nc.ui.uif2.actions.RefreshAllAction">
+		<property name="model" ref="factorChartAppModel"></property>
+		<property name="manager" ref="factorDataManager"></property>
+	</bean>
+
+
+	<!-- quick set ass actions -->
+	<bean id="accallselect" class="nc.ui.bd.account.actions.QuickAssSetAllSelectAction">
+		<property name="editor" ref="qasscentereditor"></property>
+	</bean>
+
+	<bean id="accallnotselect" class="nc.ui.bd.account.actions.QuickAssSetAllNotSelAction">
+		<property name="editor" ref="qasscentereditor"></property>
+	</bean>
+
+	<bean id="quicksetasssaveaction" class="nc.ui.resa.factor.actions.QuickSetAssSaveAction">
+		<property name="northEditor" ref="qassnortheditor"></property>
+		<property name="centerEditor" ref="qasscentereditor"></property>
+		<property name="model" ref="model"></property>
+	</bean>
+
+	<bean id="quicksetasscancelaction" class="nc.ui.bd.account.actions.QuickSetAssCancelAction">
+		<property name="northEditor" ref="qassnortheditor"></property>
+		<property name="centerEditor" ref="qasscentereditor"></property>
+	</bean>
+
+	<!-- insert mid level actions -->
+	<bean id="insertmidlevaction" class="nc.ui.resa.factor.actions.InsertMidLevSaveAction">
+		<property name="model" ref="model"></property>
+		<property name="insertEditor" ref="insertMidFactorEditor"></property>
+		<property name="validationService" ref="saveValidation"></property>
+	</bean>
+
+	<!--唯一性效验 -->
+	<bean name="saveValidation" class="nc.bs.uif2.validation.DefaultValidationService">
+		<property name="validators">
+			<list>
+				<bean class="nc.ui.uif2.validation.BillNotNullValidator">
+					<constructor-arg>
+						<bean factory-bean="insertMidFactorEditor" factory-method="getBillCardPanel" />
+					</constructor-arg>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 界面元素布局 -->
+	<bean id="realListPane" class="nc.ui.uif2.tangramlayout.node.VSNode">
+		<property name="name" value="列  表"></property>
+		<property name="up">
+			<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+				<property name="component" ref="topPane"></property>
+			</bean>
+		</property>
+		<property name="down">
+			<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+				<property name="component" ref="factorListView"></property>
+			</bean>
+		</property>
+		<property name="dividerLocation" value="31"></property>
+	</bean>
+
+	<bean id="realCardPane" class="nc.ui.uif2.tangramlayout.node.VSNode">
+		<property name="name" value="卡  片"></property>
+		<property name="up">
+			<bean class="nc.ui.uif2.tangramlayout.node.VSNode">
+				<property name="up">
+					<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+						<property name="component">
+							<bean class="nc.ui.uif2.tangramlayout.CardLayoutToolbarPanel">
+								<property name="titleAction">
+									<bean class="nc.ui.uif2.actions.ShowMeUpAction">
+										<property name="goComponent" ref="factorListView"></property>
+										<property name="model" ref="model"></property>
+									</bean>
+								</property>
+								<property name="model" ref="model"></property>
+							</bean>
+						</property>
+					</bean>
+				</property>
+				<property name="down">
+					<bean class="nc.ui.uif2.tangramlayout.node.VSNode">
+						<property name="up">
+							<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+								<property name="component" ref="factorEditor"></property>
+							</bean>
+						</property>
+						<property name="down">
+							<bean class="nc.ui.uif2.tangramlayout.node.HSNode">
+								<property name="left">
+									<bean class="nc.ui.uif2.tangramlayout.node.TBNode">
+										<property name="tabs">
+											<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+												<property name="name">
+													<bean class="nc.ui.uif2.I18nFB">
+														<property name="resDir" value="mabase_0"></property>
+														<property name="resId" value="03820002-0404"></property>
+														<property name="defaultValue" value="辅助核算"></property>
+													</bean>
+												</property>
+												<property name="component" ref="factorasspanel">
+												</property>
+											</bean>
+										</property>
+									</bean>
+								</property>
+								<property name="right">
+									<bean class="nc.ui.uif2.tangramlayout.node.TBNode">
+										<property name="tabs">
+											<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+												<property name="name">
+													<bean class="nc.ui.uif2.I18nFB">
+														<property name="resDir" value="mabase_0"></property>
+														<property name="resId" value="03820002-0405"></property>
+														<property name="defaultValue" value="受控模块"></property>
+													</bean>
+												</property>
+												<property name="component" ref="factorctrlmdlpanel">
+												</property>
+											</bean>
+										</property>
+									</bean>
+								</property>
+								<property name="dividerLocation" value="0.75"></property>
+							</bean>
+						</property>
+						<property name="dividerLocation" value="0.5"></property>
+					</bean>
+				</property>
+				<property name="dividerLocation" value="30f"></property>
+			</bean>
+		</property>
+		<property name="down">
+			<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+				<property name="component">
+					<bean class="nc.ui.uif2.editor.BillForm" init-method="initUI">
+						<property name="model" ref="model"></property>
+						<property name="nodekey" value="auditinfo"></property>
+						<property name="templateContainer" ref="templateContainer"></property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="dividerLocation" value="0.9"></property>
+	</bean>
+
+	<!-- list and card actions -->
+	<bean id="listActions" class="nc.ui.uif2.actions.StandAloneToftPanelActionContainer">
+		<constructor-arg>
+			<ref bean="factorListView" />
+		</constructor-arg>
+		<property name="actions">
+			<list>
+				<ref bean="factorAddGroupAction" />
+				<ref bean="factoreditactiongroup" />
+				<ref bean="factordelaction" />
+				<ref bean="factorCopyAddAction" />
+				<ref bean="factorrefreshaction" />
+				<ref bean="factorfilteraction" />
+				<ref bean="factorversionactiongroup" />
+				<ref bean="busiActionGroup" />
+				<ref bean="accSealGroup" />
+				<ref bean="factorgroupaction" />
+				<ref bean="factorchartmaitenceaction" />
+			</list>
+		</property>
+		<property name="model" ref="model"></property>
+	</bean>
+
+	<bean id="cardActions" class="nc.ui.uif2.actions.StandAloneToftPanelActionContainer">
+		<constructor-arg>
+			<ref bean="factorEditor" />
+		</constructor-arg>
+		<property name="editActions">
+			<list>
+				<ref bean="factorsaveaction" />
+				<ref bean="factorSaveAddAction" />
+				<ref bean="nullAction" />
+				<ref bean="factorcancelaction" />
+			</list>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean="factorAddGroupAction" />
+				<ref bean="factoreditactiongroup" />
+				<ref bean="factordelaction" />
+				<ref bean="factorCopyAddAction" />
+				<ref bean="factorsinglerefresh" />
+				<ref bean="factorfilteraction" />
+				<ref bean="factorversionactiongroup" /><!-- UE新加 -->
+				<ref bean="busiActionGroup" />
+				<ref bean="accSealGroup" />
+				<ref bean="factorgroupaction" />
+				<ref bean="factorchartmaitenceaction" /><!-- UE新加 -->
+			</list>
+		</property>
+		<property name="model" ref="model"></property>
+	</bean>
+
+	<bean id="toftpanelActionContributors" class="nc.ui.uif2.actions.ActionContributors">
+		<property name="contributors">
+			<list>
+				<ref bean="listActions" />
+				<ref bean="cardActions" />
+			</list>
+		</property>
+	</bean>
+	<!-- 界面元素装配 -->
+	<bean id="container" class="nc.ui.uif2.TangramContainer"
+		init-method="initUI">
+		<property name="tangramLayoutRoot">
+			<bean class="nc.ui.uif2.tangramlayout.node.TBNode">
+				<property name="tabs">
+					<list>
+						<ref bean="realListPane" />
+						<ref bean="realCardPane" />
+					</list>
+				</property>
+				<property name="showMode" value="CardLayout"></property>
+			</bean>
+		</property>
+		<property name="model" ref="model" />
+	</bean>
+
+</beans>

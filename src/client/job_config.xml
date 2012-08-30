@@ -1,0 +1,542 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="context" class="nc.vo.uif2.LoginContext">
+		<property name="pk_org">
+			<value></value>
+		</property>
+	</bean>
+	<!-- 应用服务类，负责进行模型操作的处理 -->
+	<bean id="jobService" class="nc.ui.org.job.JobAppModelService" />
+
+	<!-- 对象转换器工厂，由此获取操作对象的特征信息 -->
+	<bean id="boadatorfactory" class="nc.vo.bd.meta.BDObjectAdpaterFactory" />
+
+	<!-- 管理应用模型 -->
+	<bean id="jobAppModel" class="nc.ui.org.job.JobBillManageModel">
+		<property name="service" ref="jobService"></property>
+		<property name="businessObjectAdapterFactory" ref="boadatorfactory"></property>
+		<property name="context" ref="context"></property>
+	</bean>
+
+	<bean id="paginationmodel" class="nc.ui.uif2.components.pagination.PaginationModel"
+		init-method="init">
+		<property name="paginationQueryService" ref="jobService"></property>
+	</bean>
+
+	<bean id="modelDataManager" class="nc.ui.org.job.JobModelDataManager">
+		<property name="model">
+			<ref bean="jobAppModel" />
+		</property>
+		<property name="paginationModel" ref="paginationmodel"></property>
+		<property name="service">
+			<ref bean="jobService" />
+		</property>
+	</bean>
+
+	<!-- 模板容器，负责对模板的统一装载 -->
+	<bean id="templateContainer" class="nc.ui.uif2.editor.TemplateContainer"
+		init-method="load">
+		<property name="context" ref="context" />
+		<property name="nodeKeies">
+			<list>
+				<value>job</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="queryTemplateContainer" class="nc.ui.uif2.editor.QueryTemplateContainer">
+		<property name="context">
+			<ref bean="context" />
+		</property>
+		<property name="nodeKey">
+			<value>jobquery</value>
+		</property>
+	</bean>
+
+	<bean id="remoteCallCombinatorCaller" class="nc.ui.uif2.editor.UIF2RemoteCallCombinatorCaller">
+		<property name="remoteCallers">
+			<list>
+				<ref bean="templateContainer" />
+				<ref bean="queryTemplateContainer" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 界面元素 ########################################################### -->
+	<!-- 查询面板 -->
+	<bean id="queryAreaShell" class="nc.ui.uif2.actions.QueryAreaShell"
+		init-method="initUI">
+		<property name="queryArea">
+			<bean factory-bean="queryaction" factory-method="createQueryArea" />
+		</property>
+	</bean>
+
+	<!-- 列表视图 -->
+	<bean id="listView" class="nc.ui.org.job.JobBillListView"
+		init-method="initUI">
+		<property name="model" ref="jobAppModel"></property>
+		<property name="multiSelectionEnable">
+			<value>true</value>
+		</property>
+		<property name="nodekey">
+			<value>job</value>
+		</property>
+		<property name="pos">
+			<value>head</value>
+		</property>
+		<property name="north" ref="listInfoPnl"></property>
+		<property name="south" ref="paginationBar"></property>
+	</bean>
+	<!--卡控件 -->
+	<bean id="listInfoPnl" class="nc.ui.uif2.tangramlayout.CardLayoutToolbarPanel">
+		<property name="model" ref="jobAppModel"></property>
+	</bean>
+
+	<!-- 分页控件 -->
+	<bean id="paginationBar" class="nc.ui.uif2.components.pagination.PaginationBar">
+		<property name="paginationModel" ref="paginationmodel"></property>
+	</bean>
+
+	<!-- 卡片界面视图 -->
+	<bean id="cardInfoPnl" class="nc.ui.uif2.tangramlayout.CardLayoutToolbarPanel">
+		<property name="actions">
+			<list>
+				<!-- 浏览按钮 卡片界面共享信息按钮 -->
+				<bean id="firstLineAction" class="nc.ui.uif2.actions.FirstLineAction">
+					<property name="model" ref="jobAppModel" />
+					<property name="exceptionHandler" ref="exceptionhandler" />
+				</bean>
+				<bean id="preLineAction" class="nc.ui.uif2.actions.PreLineAction">
+					<property name="model" ref="jobAppModel" />
+					<property name="exceptionHandler" ref="exceptionhandler" />
+				</bean>
+				<bean id="nextLineAction" class="nc.ui.uif2.actions.NextLineAction">
+					<property name="model" ref="jobAppModel" />
+					<property name="exceptionHandler" ref="exceptionhandler" />
+				</bean>
+				<bean id="lastLineAction" class="nc.ui.uif2.actions.LastLineAction">
+					<property name="model" ref="jobAppModel" />
+					<property name="exceptionHandler" ref="exceptionhandler" />
+				</bean>
+			</list>
+		</property>
+		<property name="titleAction">
+			<bean id="returnaction" class="nc.ui.uif2.actions.ShowMeUpAction">
+				<property name="goComponent" ref="listView" />
+			</bean>
+		</property>
+		<property name="model" ref="jobAppModel"></property>
+	</bean>
+
+	<bean id="editor" class="nc.ui.org.job.JobEditor" init-method="initUI">
+		<property name="model" ref="jobAppModel"></property>
+		<property name="nodekey">
+			<value>job</value>
+		</property>
+		<property name="saveAction">
+			<ref bean="saveaction" />
+		</property>
+		<property name="cancelAction">
+			<ref bean="cancelaction" />
+		</property>
+		<property name="closeListener" ref="ClosingListener"></property>
+	</bean>
+
+	<!-- Actions ########################################################### -->
+	<bean id="saveAction" class="nc.ui.uif2.actions.SaveAction">
+		<property name="model" ref="jobAppModel" />
+		<property name="editor" ref="editor" />
+	</bean>
+
+	<!-- 界面布局总装########################################################### -->
+	<bean id="container" class="nc.ui.uif2.TangramContainer"
+		init-method="initUI">
+		<property name="tangramLayoutRoot">
+			<bean class="nc.ui.uif2.tangramlayout.node.TBNode">
+				<property name="tabs">
+					<list>
+						<bean class="nc.ui.uif2.tangramlayout.node.HSNode">
+							<property name="left">
+								<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+									<property name="component" ref="queryAreaShell"></property>
+								</bean>
+							</property>
+							<property name="right">
+								<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+									<property name="component" ref="listView"></property>
+								</bean>
+							</property>
+							<property name="dividerLocation">
+								<value>0.2f</value>
+							</property>
+							<property name="name">
+								<bean class="nc.ui.uif2.I18nFB">
+									<property name="resDir" value="org"></property>
+									<property name="resId" value="UC001-0000107"></property>
+									<property name="defaultValue" value="列表"></property>
+								</bean>
+							</property>
+						</bean>
+						<bean class="nc.ui.uif2.tangramlayout.node.VSNode">
+							<property name="up">
+								<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+									<property name="component" ref="cardInfoPnl" />
+								</bean>
+							</property>
+							<property name="down">
+								<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+									<property name="name">
+										<bean class="nc.ui.uif2.I18nFB">
+											<property name="resDir" value="org"></property>
+											<property name="resId" value="UC001-0000106"></property>
+											<property name="defaultValue" value="卡片"></property>
+										</bean>
+									</property>
+									<property name="component" ref="editor"></property>
+								</bean>
+							</property>
+							<property name="showMode" value="NoDivider"></property>
+							<property name="dividerLocation" value="30f" />
+						</bean>
+					</list>
+				</property>
+				<property name="showMode" value="CardLayout" />
+			</bean>
+		</property>
+		<property name="model">
+			<ref bean="jobAppModel" />
+		</property>
+	</bean>
+
+	<!-- 页签按钮管理 -->
+	<bean id="toftpanelActionContributors" class="nc.ui.uif2.actions.ActionContributors">
+		<property name="contributors">
+			<list>
+				<ref bean="jobListViewActions" />
+				<ref bean="jobEditorActions" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 页签按钮 -->
+	<bean id="jobListViewActions" class="nc.ui.uif2.actions.StandAloneToftPanelActionContainer">
+		<constructor-arg>
+			<ref bean="listView" />
+		</constructor-arg>
+		<property name="actions">
+			<list>
+				<ref bean="addaction" />
+				<ref bean="editaction" />
+				<ref bean="deleteaction" />
+				<ref bean="separatoraction" />
+
+				<ref bean="queryaction" />
+				<ref bean="refreshaction" />
+				<ref bean="filteractiongroup" />
+				<ref bean="separatoraction" />
+
+				<ref bean="usedactiongroup" />
+				<ref bean="separatoraction" />
+
+				<ref bean="listPrintActionGroup" />
+			</list>
+		</property>
+		<property name="model" ref="jobAppModel"></property>
+	</bean>
+
+	<bean id="jobEditorActions" class="nc.ui.uif2.actions.StandAloneToftPanelActionContainer">
+		<constructor-arg>
+			<ref bean="editor" />
+		</constructor-arg>
+		<property name="actions">
+			<list>
+				<ref bean="addaction" />
+				<ref bean="editaction" />
+				<ref bean="deleteaction" />
+				<ref bean="separatoraction" />
+
+				<ref bean="queryaction" />
+				<ref bean="refreshaction" />
+				<ref bean="filteractiongroup" />
+				<ref bean="separatoraction" />
+
+				<ref bean="usedactiongroup" />
+				<ref bean="separatoraction" />
+
+				<ref bean="printActionGroup" />
+			</list>
+		</property>
+		<property name="editActions">
+			<list>
+				<ref bean="saveaction" />
+				<ref bean="saveaddaction" />
+				<ref bean="separatoraction" />
+				<ref bean="cancelaction" />
+			</list>
+		</property>
+		<property name="model" ref="jobAppModel"></property>
+	</bean>
+
+	<bean id="addaction" class="nc.ui.org.job.action.JobAddAction">
+		<property name="model">
+			<ref bean="jobAppModel" />
+		</property>
+	</bean>
+
+	<bean id="cancelaction" class="nc.ui.org.job.action.JobCancelAction">
+		<property name="model">
+			<ref bean="jobAppModel" />
+		</property>
+		<property name="editor">
+			<ref bean="editor" />
+		</property>
+		<!-- property name="saveaction"><ref bean="saveaction" /></property -->
+		<property name="exceptionHandler">
+			<ref bean="exceptionhandler" />
+		</property>
+	</bean>
+
+	<bean id="exceptionhandler" class="nc.ui.uif2.DefaultExceptionHanler">
+		<property name="context">
+			<ref bean="context" />
+		</property>
+	</bean>
+
+	<bean id="saveaction" class="nc.ui.corg.importmember.BillFormSaveAction">
+		<property name="model">
+			<ref bean="jobAppModel" />
+		</property>
+		<property name="editor">
+			<ref bean="editor" />
+		</property>
+	</bean>
+
+	<bean id="saveaddaction" class="nc.ui.corg.importmember.BillFormSaveAddAction">
+		<property name="model">
+			<ref bean="jobAppModel" />
+		</property>
+		<property name="editor">
+			<ref bean="editor" />
+		</property>
+		<property name="addAction">
+			<ref bean="addaction" />
+		</property>
+	</bean>
+
+	<bean id="editaction" class="nc.ui.org.job.action.JobEditAction">
+		<property name="model">
+			<ref bean="jobAppModel" />
+		</property>
+		<property name="editor">
+			<ref bean="editor" />
+		</property>
+		<property name="resourceCode" value="job"></property>
+		<property name="mdOperateCode" value="edit"></property>
+	</bean>
+
+	<bean id="deleteaction" class="nc.ui.org.job.action.JobDeleteAction">
+		<property name="model">
+			<ref bean="jobAppModel" />
+		</property>
+		<property name="resourceCode" value="job"></property>
+		<property name="mdOperateCode" value="delete"></property>
+	</bean>
+
+	<bean id="deleteconfim" class="nc.ui.uif2.actions.DeleteConfirmInterceptor"></bean>
+
+	<bean id="separatoraction" class="nc.funcnode.ui.action.SeparatorAction"></bean>
+
+	<bean id="refreshaction" class="nc.ui.uif2.actions.RefreshAction">
+		<property name="model">
+			<ref bean="jobAppModel" />
+		</property>
+		<property name="dataManager">
+			<ref bean="modelDataManager" />
+		</property>
+	</bean>
+
+	<bean id="filteractiongroup" class="nc.funcnode.ui.action.MenuAction">
+		<property name="code">
+			<value>filter</value>
+		</property>
+		<property name="name">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="org"></property>
+				<property name="resId" value="0org0003"></property>
+				<property name="defaultValue" value="过滤"></property>
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean="showDisableDataAction" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="showDisableDataAction" class="nc.ui.uif2.actions.ShowDisableDataAction">
+		<property name="model">
+			<ref bean="jobAppModel" />
+		</property>
+		<property name="dataManager">
+			<ref bean="modelDataManager" />
+		</property>
+	</bean>
+
+	<bean id="queryaction" class="nc.ui.uif2.actions.QueryAction">
+		<property name="model">
+			<ref bean="jobAppModel" />
+		</property>
+		<property name="dataManager">
+			<ref bean="modelDataManager" />
+		</property>
+		<property name="templateContainer" ref="queryTemplateContainer"></property>
+		<property name="queryDelegator">
+			<ref bean="queryDelegator" />
+		</property>
+	</bean>
+
+	<bean id="queryDelegator" class="nc.ui.org.OrgQueryDelegatorWithGroupSet">
+		<property name="context">
+			<ref bean="context" />
+		</property>
+		<property name="nodeKey">
+			<value>jobquery</value>
+		</property>
+	</bean>
+
+	<bean id="usedactiongroup" class="nc.funcnode.ui.action.GroupAction">
+		<property name="code">
+			<value>enablegroup</value>
+		</property>
+		<property name="name">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="org"></property>
+				<property name="resId" value="UC001-0000111"></property>
+				<property name="defaultValue" value="启用"></property>
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean="jobenableaction" />
+				<ref bean="jobdisableaction" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="jobdisableaction" class="nc.ui.corg.importmember.OrgBillManageModelDisableAction">
+		<property name="model" ref="jobAppModel" />
+		<property name="resourceCode" value="job"></property>
+		<property name="mdOperateCode" value="disable"></property>
+	</bean>
+
+	<bean id="jobenableaction" class="nc.ui.corg.importmember.OrgBillManageModelEnableAction">
+		<property name="model" ref="jobAppModel" />
+		<property name="resourceCode" value="job"></property>
+		<property name="mdOperateCode" value="enable"></property>
+	</bean>
+
+	<bean id="printActionGroup" class="nc.funcnode.ui.action.GroupAction">
+		<property name="code">
+			<value>editorPrintGroup</value>
+		</property>
+		<property name="name">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="org"></property>
+				<property name="resId" value="UC001-0000007"></property>
+				<property name="defaultValue" value="打印"></property>
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean="templatePrintAction" />
+				<ref bean="templatePreviewAction" />
+				<ref bean="cardOutputAction" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="templatePreviewAction" class="nc.ui.uif2.actions.TemplatePreviewAction">
+		<property name="model">
+			<ref bean="jobAppModel" />
+		</property>
+		<property name="nodeKey" value="jobEditorPrint" />
+		<property name="printDlgParentConatiner" ref="editor" />
+		<property name="datasource" ref="datasource" />
+	</bean>
+
+	<bean id="templatePrintAction" class="nc.ui.uif2.actions.TemplatePrintAction">
+		<property name="model">
+			<ref bean="jobAppModel" />
+		</property>
+		<property name="nodeKey" value="jobEditorPrint" />
+		<property name="printDlgParentConatiner" ref="editor" />
+		<property name="datasource" ref="datasource" />
+	</bean>
+
+	<bean id="cardOutputAction" class="nc.ui.uif2.actions.OutputAction">
+		<property name="model">
+			<ref bean="jobAppModel" />
+		</property>
+		<property name="nodeKey" value="jobEditorPrint" />
+		<property name="printDlgParentConatiner" ref="editor" />
+		<property name="datasource" ref="datasource" />
+	</bean>
+
+	<bean id="datasource"
+		class="nc.ui.bd.pub.actions.print.MetaDataSingleSelectDataSource">
+		<property name="model" ref="jobAppModel" />
+	</bean>
+
+	<bean id="listPrintActionGroup" class="nc.funcnode.ui.action.GroupAction">
+		<property name="code" value="listPrintGroup" />
+		<property name="actions">
+			<list>
+				<ref bean="listTempletprintAction" />
+				<ref bean="listTempletPreviewAction" />
+				<ref bean="listOutputAction" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="listTempletPreviewAction" class="nc.ui.uif2.actions.TemplatePreviewAction">
+		<property name="model" ref="jobAppModel" />
+		<property name="nodeKey" value="jobListPrint" />
+		<property name="printDlgParentConatiner" ref="listView" />
+		<property name="datasource" ref="listDataSource"></property>
+	</bean>
+
+	<bean id="listTempletprintAction" class="nc.ui.uif2.actions.TemplatePrintAction">
+		<property name="model" ref="jobAppModel" />
+		<property name="nodeKey" value="jobListPrint" />
+		<property name="printDlgParentConatiner" ref="listView" />
+		<property name="datasource" ref="listDataSource"></property>
+	</bean>
+
+	<bean id="listDataSource" class="nc.ui.bd.pub.actions.print.MetaDataAllDatasSource">
+		<property name="model" ref="jobAppModel" />
+	</bean>
+
+	<bean id="listOutputAction" class="nc.ui.bd.pub.actions.print.PaginationOutputAction">
+		<property name="model" ref="jobAppModel" />
+		<property name="nodeKey" value="jobListPrint" />
+		<property name="paginationModel" ref="paginationmodel" />
+		<property name="printFactory" ref="printFactory" />
+		<property name="printDlgParentConatiner" ref="listView" />
+	</bean>
+
+	<bean id="printFactory"
+		class="nc.ui.bd.pub.actions.print.DefaultTemplatePagePrintFactory">
+		<property name="mdId" value="8afa3f01-d755-4b31-a593-507130d91ffd">
+		</property>
+	</bean>
+
+	<bean id="ClosingListener" class="nc.ui.uif2.FunNodeClosingHandler">
+		<property name="model" ref="jobAppModel" />
+		<property name="saveaction" ref="saveaction" />
+		<property name="cancelaction" ref="cancelaction" />
+	</bean>
+
+
+</beans>

@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean name="context" class="nc.vo.uif2.LoginContext"></bean>
+
+	<bean id="container" class="nc.ui.uif2.TangramContainer"
+		init-method="initUI">
+		<property name="tangramLayoutRoot">
+			<bean class="nc.ui.uif2.tangramlayout.node.HSNode">
+				<property name="left">
+					<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+						<property name="name" value="左树"></property>
+						<property name="component" ref="treePanel"></property>
+					</bean>
+				</property>
+				<property name="right">
+					<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+						<property name="name" value="右卡"></property>
+						<property name="component" ref="billForm"></property>
+					</bean>
+				</property>
+				<property name="dividerLocation" value="0.5f"></property>
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+				<ref local="addAction" />
+				<ref local="editAction" />
+				<ref local="deleteAction" />
+				<ref local="refreshAction" />
+				<ref local="printGroupAction"/>
+			</list>
+		</property>
+		<property name="editActions">
+			<list>
+				<ref local="addAction" />
+				<ref local="saveAction" />
+				<ref local="deleteAction" />
+				<ref local="cancelAction" />
+			</list>
+		</property>
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="printGroupAction" class="nc.funcnode.ui.action.GroupAction">
+		<property name="actions">
+			<list>
+				<ref local="templatePrintAction"/>
+				<ref local="templatePreviewAction"/>
+				<ref local="outputAction"/>
+			</list>
+		</property>
+	</bean>
+	<bean id="outputAction" class="nc.ui.uif2.actions.OutputAction">
+		<property name="model" ref="model"></property>
+		<property name="datasource" ref="datasource"></property>
+	</bean>
+	<bean id="templatePreviewAction" class="nc.ui.uif2.actions.TemplatePreviewAction">
+		<property name="model" ref="model"></property>
+		<property name="datasource" ref="datasource"></property>
+	</bean>
+	<bean id="templatePrintAction" class="nc.ui.uif2.actions.TemplatePrintAction">
+		<property name="model" ref="model"></property>
+		<property name="datasource" ref="datasource"></property>
+	</bean>
+	<bean id="datasource" class="nc.ui.bd.pub.actions.print.MetaDataAllDatasSource">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="addAction" class="nc.ui.myemp.mng.actions.MngAddAction">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="editAction" class="nc.ui.uif2.actions.EditAction">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="deleteAction" class="nc.ui.uif2.actions.DeleteAction">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="refreshAction" class="nc.ui.uif2.actions.RefreshAction">
+		<property name="model" ref="model"></property>
+		<property name="dataManager" ref="modelDataManager"></property>
+	</bean>
+	<bean id="saveAction" class="nc.ui.uif2.actions.SaveAction">
+		<property name="model" ref="model"></property>
+		<property name="editor" ref="billForm"></property>
+	</bean>
+	<bean id="cancelAction" class="nc.ui.uif2.actions.CancelAction">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="modelDataManager" class="nc.ui.myemp.mng.model.MngModelDataManager">
+		<property name="model" ref="model"></property>
+		<property name="exceptionHandler" ref="exceptionHandler"></property>
+	</bean>
+	<bean id="exceptionHandler" class="nc.ui.uif2.DefaultExceptionHanler">
+		<property name="context" ref="context"></property>
+	</bean>
+	<bean id="billForm" class="nc.ui.myemp.mng.view.MngBillForm"
+		init-method="initUI">
+		<property name="model" ref="model"></property>
+		<property name="nodekey" value="mdept"></property>
+		<property name="templateContainer" ref="templateContainer"></property>
+		<property name="componentValueManager" ref="componentValueManager"></property>
+		<property name="bodyActionMap">
+			<map>
+				<entry key="employees">
+					<list>
+						<ref local="addLineAction" />
+						<ref local="delLineAction" />
+					</list>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="componentValueManager" class="nc.ui.myemp.mng.view.MngComponentValueStrategy">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="templateContainer" class="nc.ui.uif2.editor.TemplateContainer">
+		<property name="context" ref="context"></property>
+		<property name="nodeKeies">
+			<list>
+				<value>mdept</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="treePanel" class="nc.ui.uif2.components.TreePanel"
+		init-method="initUI">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="model" class="nc.ui.uif2.model.HierachicalDataAppModel">
+		<property name="context" ref="context"></property>
+		<property name="businessObjectAdapterFactory" ref="factory"></property>
+		<property name="service" ref="service"></property>
+		<property name="treeCreateStrategy" ref="treeCreateStrategy"></property>
+	</bean>
+	<bean id="treeCreateStrategy" class="nc.vo.bd.meta.BDObjectTreeCreateStrategy">
+		<property name="factory" ref="factory"></property>
+		<property name="className" value="nc.vo.myemp.mng.Dept"></property>
+		<property name="rootName" value="部门员工管理"></property>
+	</bean>
+	<bean id="service" class="nc.ui.myemp.mng.model.MngModelService"></bean>
+	<bean id="factory" class="nc.vo.bd.meta.BDObjectAdpaterFactory"></bean>
+	<bean id="addLineAction" class="nc.ui.uif2.actions.AddLineAction">
+		<property name="model" ref="model"></property>
+		<property name="cardpanel" ref="billForm"></property>
+	</bean>
+	<bean id="delLineAction" class="nc.ui.uif2.actions.DelLineAction">
+		<property name="model" ref="model"></property>
+		<property name="cardpanel" ref="billForm"></property>
+	</bean>
+
+
+</beans>

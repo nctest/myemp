@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- 环境变量 -->
+	<bean id="context" class="nc.vo.uif2.LoginContext"></bean>
+
+	<!-- 模型部分配置########################################################### -->
+
+	<!-- 应用服务类，负责进行模型操作的处理 -->
+	<bean id="manageModelService" class="nc.ui.bd.psn.psndoc.model.PsndocAppModelService">
+		<property name="model" ref="PsndocManageAppModel"></property>
+	</bean>
+
+	<!-- 对象转换器工厂，由此获取操作对象的特征信息 -->
+	<bean id="boadatorfactory" class="nc.vo.bd.meta.BDObjectAdpaterFactory" />
+
+	<!-- 层次结构构造策略 -->
+	<bean id="treeCreateStrategy" class="nc.vo.bd.meta.BDObjectTreeCreateStrategy">
+		<property name="factory" ref="boadatorfactory" />
+		<property name="rootName">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="10140psn"></property>
+				<property name="defaultValue" value="部门"></property>
+				<property name="resId" value="010140psn0085"></property>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- 用户定义属性加载器，同一家在所有页签的用户定义属性 -->
+	<bean id="userdefitemContainer" class="nc.ui.uif2.userdefitem.UserDefItemContainer">
+		<property name="context" ref="context" />
+		<property name="params">
+			<list>
+				<bean class="nc.ui.uif2.userdefitem.QueryParam">
+					<property name="mdfullname" value="uap.psndoc" />
+				</bean>
+				<bean class="nc.ui.uif2.userdefitem.QueryParam">
+					<property name="mdfullname" value="uap.psnjob" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 应用模型 -->
+	<bean id="DeptTreeAppModel" class="nc.ui.uif2.model.HierachicalDataAppModel">
+		<property name="treeCreateStrategy" ref="treeCreateStrategy" />
+		<property name="businessObjectAdapterFactory" ref="boadatorfactory" />
+		<property name="context" ref="context" />
+	</bean>
+
+	<bean id="PsndocManageAppModel" class="nc.ui.bd.psn.psndoc.model.PsndocAppModel">
+		<property name="service" ref="manageModelService"></property>
+		<property name="businessObjectAdapterFactory" ref="boadatorfactory">
+		</property>
+		<property name="context" ref="context"></property>
+	</bean>
+
+	<!-- 数据模型管理器，主要负责各种方式的模型初始化 -->
+	<bean id="modelDataManager"
+		class="nc.ui.bd.psn.psndoc.model.PsndocDeptTreeModelDataManager">
+		<property name="model" ref="DeptTreeAppModel" />
+	</bean>
+
+	<bean id="PsndocModelDataManager" class="nc.ui.bd.psn.psndoc.model.PsndocAppModelDataManager">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="treeModel" ref="DeptTreeAppModel" />
+		<property name="paginationModel" ref="paginationModel"></property>
+	</bean>
+
+	<!-- 列表界面分页model -->
+	<bean id="paginationModel" class="nc.ui.uif2.components.pagination.PaginationModel"
+		init-method="init" />
+
+	<bean id="TreeAndListViewRefresh" class="nc.ui.bd.psn.psndoc.model.PsndocMediator">
+		<property name="leftTreeModel" ref="DeptTreeAppModel"></property>
+		<property name="leftTreeDataManager" ref="modelDataManager"></property>
+		<property name="rightManageModel" ref="PsndocManageAppModel"></property>
+		<property name="rightManageDataManager" ref="PsndocModelDataManager">
+		</property>
+	</bean>
+
+
+	<!-- 模板容器，负责对模板的统一装载 -->
+	<bean id="templateContainer" class="nc.ui.uif2.editor.TemplateContainer"
+		init-method="load">
+		<property name="context" ref="context" />
+		<property name="nodeKeies">
+			<list>
+				<value>psndoc</value>
+				<value>psndocshare</value>
+				<value>transfer</value>
+			</list>
+		</property>
+	</bean>
+
+	<!-- 界面元素 ########################################################### -->
+
+	<!--树控件，如果进行管理，需要实现接口IComponentWithActions存储动作 -->
+	<bean id="treePanel" class="nc.ui.uif2.components.TreePanel"
+		init-method="initUI">
+		<property name="model" ref="DeptTreeAppModel" />
+		<property name="name">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="10140psn"></property>
+				<property name="defaultValue" value="部门"></property>
+				<property name="resId" value="010140psn0085"></property>
+			</bean>
+		</property>
+
+	</bean>
+
+	<!-- 列表视图 -->
+	<bean id="listView" class="nc.ui.bd.psn.psndoc.view.PsndocListView"
+		init-method="initUI">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="multiSelectionEnable" value="true" />
+		<property name="nodekey" value="psndoc" />
+		<property name="pos" value="head" />
+		<property name="templateContainer" ref="templateContainer" />
+		<property name="userdefitemListPreparator">
+			<bean id="userdefitemListPreparator" class="nc.ui.uif2.editor.UserdefitemContainerListPreparator">
+				<property name="container" ref="userdefitemContainer" />
+				<property name="params">
+					<list>
+						<bean id="listUserdefitemQueryParam" class="nc.ui.uif2.editor.UserdefQueryParam">
+							<property name="mdfullname" value="uap.psndoc" />
+							<property name="pos" value="0" />
+							<property name="prefix" value="def" />
+						</bean>
+
+					</list>
+				</property>
+			</bean>
+		</property>
+		<property name="south" ref="paginationBar" />
+	</bean>
+	<!-- 分页面板 -->
+	<bean id="paginationBar" class="nc.ui.uif2.components.pagination.PaginationBar"
+		init-method="registeCallbak">
+		<property name="paginationModel" ref="paginationModel" />
+		<property name="context" ref="context" />
+	</bean>
+	<bean id="cardPanel" class="nc.ui.bd.psn.psndoc.view.PsndocCardPanel"
+		init-method="initUI">
+		<property name="tangramLayoutRoot">
+			<bean class="nc.ui.uif2.tangramlayout.node.VSNode">
+				<property name="name">
+					<bean class="nc.ui.uif2.I18nFB">
+						<property name="resDir" value="10140psn"></property>
+						<property name="defaultValue" value="卡片界面"></property>
+						<property name="resId" value="010140psn0086"></property>
+					</bean>
+				</property>
+				<property name="up">
+					<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+						<property name="component" ref="sharePanel" />
+					</bean>
+				</property>
+				<property name="down">
+					<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+						<property name="name">
+							<bean class="nc.ui.uif2.I18nFB">
+								<property name="resDir" value="10140psn"></property>
+								<property name="defaultValue" value="人员信息"></property>
+								<property name="resId" value="010140psn0087"></property>
+							</bean>
+						</property>
+						<property name="component" ref="editor" />
+					</bean>
+				</property>
+				<property name="dividerLocation">
+					<value>60f</value>
+				</property>
+			</bean>
+		</property>
+	</bean>
+
+	<!--卡控件 -->
+	<bean id="editor" class="nc.ui.bd.psn.psndoc.view.PsndocEditor"
+		init-method="initUI">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="nodekey" value="psndoc" />
+		<property name="templateContainer" ref="templateContainer" />
+		<property name="closingListener" ref="ClosingListener" />
+		<property name="sharePanel" ref="sharePanel" />
+		<property name="userdefitemPreparator">
+			<bean class="nc.ui.uif2.editor.UserdefitemContainerPreparator">
+				<property name="container" ref="userdefitemContainer" />
+				<property name="params">
+					<list>
+						<bean name="cardUserdefitemQueryParam" class="nc.ui.uif2.editor.UserdefQueryParam">
+							<property name="mdfullname" value="uap.psndoc" />
+							<property name="pos" value="0" />
+							<property name="prefix" value="def" />
+						</bean>
+						<bean name="cardUserdefitemQueryParam" class="nc.ui.uif2.editor.UserdefQueryParam">
+							<property name="mdfullname" value="uap.psnjob" />
+							<property name="pos" value="1" />
+							<property name="prefix" value="def" />
+						</bean>
+					</list>
+				</property>
+			</bean>
+		</property>
+		<property name="bodyActionMap">
+			<map>
+				<entry key="psnjobs">
+					<list>
+						<bean class="nc.ui.bd.psn.psndoc.action.PsndocAddLineAction">
+							<property name="model" ref="PsndocManageAppModel" />
+							<property name="cardpanel" ref="editor" />
+						</bean>
+
+						<bean class="nc.ui.bd.psn.psndoc.action.PsndocDelLineAction">
+							<property name="model" ref="PsndocManageAppModel" />
+							<property name="cardpanel" ref="editor" />
+							<property name="exceptionHandler" ref="exceptionhandler" />
+						</bean>
+					</list>
+				</entry>
+			</map>
+		</property>
+	</bean>
+
+	<!-- 共享panel -->
+	<bean id="sharePanel" class="nc.ui.bd.psn.psndoc.view.PsndocSharePanel"
+		init-method="initUI">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="templateContainer" ref="templateContainer" />
+		<property name="nodekey" value="psndocshare" />
+		<property name="north" ref="editorToolBarPanel"></property>
+	</bean>
+	<bean id="editorToolBarPanel" class="nc.ui.uif2.tangramlayout.CardLayoutToolbarPanel">
+		<property name="actions">
+			<list>
+				<ref bean="firstlineAction" />
+				<ref bean="prelineAction" />
+				<ref bean="nextlineAction" />
+				<ref bean="lastLineAction" />
+			</list>
+		</property>
+
+		<property name="titleAction" ref="editorReturnAction"></property>
+	</bean>
+	<bean id="firstlineAction" class="nc.ui.uif2.actions.FirstLineAction">
+		<property name="model" ref="PsndocManageAppModel"></property>
+		<property name="exceptionHandler" ref="exceptionhandler"></property>
+	</bean>
+
+	<bean id="prelineAction" class="nc.ui.uif2.actions.PreLineAction">
+		<property name="model" ref="PsndocManageAppModel"></property>
+		<property name="exceptionHandler" ref="exceptionhandler"></property>
+	</bean>
+
+	<bean id="nextlineAction" class="nc.ui.uif2.actions.NextLineAction">
+		<property name="model" ref="PsndocManageAppModel"></property>
+		<property name="exceptionHandler" ref="exceptionhandler"></property>
+	</bean>
+
+	<bean id="lastLineAction" class="nc.ui.uif2.actions.LastLineAction">
+		<property name="model" ref="PsndocManageAppModel"></property>
+		<property name="exceptionHandler" ref="exceptionhandler"></property>
+	</bean>
+
+	<bean id="editorReturnAction" class="nc.ui.uif2.actions.ShowMeUpAction">
+		<property name="goComponent" ref="listView"></property>
+	</bean>
+	<bean id="exceptionhandler" class="nc.ui.uif2.DefaultExceptionHanler">
+		<property name="context" ref="context" />
+	</bean>
+
+	<!-- 组织面板 -->
+	<bean id="orgPanel" class="nc.ui.bd.pub.BDOrgPanel" init-method="initUI">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="dataManager" ref="modelDataManager" />
+		<!-- <property name="pk_orgtype" value="CORPORGTYPE000000000" /> -->
+		<property name="pk_orgtype" value="BUSINESSUNIT00000000" />
+		<property name="labelName">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="10140psn"></property>
+				<property name="defaultValue" value="业务单元"></property>
+				<property name="resId" value="010140psn0079"></property>
+			</bean>
+		</property>
+	</bean>
+
+	<!--界面的action控制 -->
+	<bean id="toftpanelActionContributors" class="nc.ui.uif2.actions.ActionContributors">
+		<property name="contributors">
+			<list>
+				<ref bean="ListViewActions" />
+				<ref bean="EditorActions" />
+			</list>
+		</property>
+	</bean>
+
+	<!-- 界面布局总装########################################################### -->
+	<bean id="container" class="nc.ui.uif2.TangramContainer"
+		init-method="initUI">
+		<property name="tangramLayoutRoot">
+			<bean class="nc.ui.uif2.tangramlayout.node.TBNode">
+				<property name="tabs">
+					<list>
+						<bean class="nc.ui.uif2.tangramlayout.node.VSNode">
+							<property name="up">
+								<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+									<property name="component">
+										<ref bean="orgPanel" />
+									</property>
+								</bean>
+							</property>
+							<property name="down">
+								<bean class="nc.ui.uif2.tangramlayout.node.HSNode">
+									<property name="left">
+										<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+											<property name="component" ref="treePanel">
+											</property>
+										</bean>
+									</property>
+									<property name="right">
+										<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+											<property name="component">
+												<ref bean="listView" />
+											</property>
+										</bean>
+									</property>
+									<property name="dividerLocation">
+										<value>0.2f</value>
+									</property>
+								</bean>
+							</property>
+							<property name="dividerLocation">
+								<value>30f</value>
+							</property>
+							<property name="showMode" value="NoDivider">
+							</property>
+						</bean>
+						<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+							<property name="component">
+								<ref bean="cardPanel" />
+							</property>
+						</bean>
+					</list>
+				</property>
+				<property name="showMode" value="CardLayout"></property>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- ClosingListener ################################################### -->
+	<!--2010.3.9 modified by tangxx start -->
+	<bean id="exceptionHandler" class="nc.ui.uif2.DefaultExceptionHanler">
+		<property name="context" ref="context"></property>
+	</bean>
+	<!-- end -->
+
+	<bean id="ClosingListener" class="nc.ui.uif2.FunNodeClosingHandler">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="saveaction" ref="saveAction" />
+		<property name="cancelaction" ref="cancelAction" />
+	</bean>
+
+	<!-- 页签按钮 ########################################################### -->
+	<bean id="ListViewActions" class="nc.ui.uif2.actions.StandAloneToftPanelActionContainer">
+		<constructor-arg>
+			<ref bean="listView" />
+		</constructor-arg>
+		<property name="actions">
+			<list>
+				<ref bean="AddAction" />
+				<ref bean="editAction" />
+				<ref bean="deleteAction" />
+				<ref bean="separatorAction" />
+				<ref bean="queryAction" />
+				<ref bean="refreshAction" />
+				<ref bean="filterAction" />
+				<ref bean="separatorAction" />
+				<ref bean="disEnableActionGroup" />
+				<ref bean="transferAction" />
+				<ref bean="createUserAction" />
+				<ref bean="separatorAction" />
+				<ref bean="listprintActionGroup" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="EditorActions" class="nc.ui.uif2.actions.StandAloneToftPanelActionContainer">
+		<constructor-arg>
+			<ref bean="editor" />
+		</constructor-arg>
+		<property name="actions">
+			<list>
+				<ref bean="AddAction" />
+				<ref bean="editAction" />
+				<ref bean="deleteAction" />
+				<ref bean="separatorAction" />
+				<ref bean="queryAction" />
+				<ref bean="refreshSingleAction" />
+				<ref bean="filterAction" />
+				<ref bean="separatorAction" />
+				<ref bean="disEnableActionGroup" />
+				<ref bean="transferAction" />
+				<ref bean="createUserAction" />
+				<ref bean="separatorAction" />
+				<ref bean="cardprintActionGroup" />
+
+			</list>
+		</property>
+		<property name="editActions">
+			<list>
+				<ref bean="saveAction" />
+				<ref bean="saveAddAction" />
+				<ref bean="separatorAction" />
+				<ref bean="cancelAction" />
+			</list>
+		</property>
+		<property name="model" ref="PsndocManageAppModel" />
+	</bean>
+
+
+	<!-- Actions ########################################################### -->
+	<bean id="separatorAction" class="nc.funcnode.ui.action.SeparatorAction" />
+
+	<!-- 卡片列表切换 -->
+	<bean id="switchMediator" class="nc.ui.uif2.actions.SwitchAction"
+		init-method="init">
+		<property name="context" ref="context" />
+		<property name="component1" ref="listView" />
+		<property name="component2" ref="editor" />
+	</bean>
+
+	<!-- 编辑按钮 -->
+	<bean id="AddAction" class="nc.ui.bd.psn.psndoc.action.PsndocAddAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="appMode" ref="DeptTreeAppModel"></property>
+	</bean>
+
+	<bean id="editAction" class="nc.ui.bd.psn.psndoc.action.PsndocEditAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="resourceCode" value="psndoc"></property>
+		<property name="mdOperateCode" value="edit"></property>
+	</bean>
+	<bean id="deleteActionGroup" class="nc.funcnode.ui.action.GroupAction">
+		<property name="code" value="DeleteGroup"></property>
+		<property name="name">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="10140psn"></property>
+				<property name="defaultValue" value="删除"></property>
+				<property name="resId" value="010140psn0088"></property>
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean="deleteAction" />
+				<ref bean="asynDeleteAction" />
+			</list>
+		</property>
+
+	</bean>
+
+	<bean id="deleteAction" class="nc.ui.bd.psn.psndoc.action.PsndocDeleteAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="resourceCode" value="psndoc"></property>
+		<property name="mdOperateCode" value="delete"></property>
+	</bean>
+	<bean id="asynDeleteAction" class="nc.ui.bd.psn.psndoc.action.AnsyDeleteAction">
+		<property name="model" ref="PsndocManageAppModel"></property>
+		<property name="service" ref="manageModelService"></property>
+	</bean>
+
+	<!-- 编辑态按钮 -->
+	<bean id="saveAction" class="nc.ui.bd.psn.psndoc.action.PsndocSaveAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="editor" ref="editor" />
+		<property name="validationService" ref="saveValidationService" />
+	</bean>
+
+	<bean id="saveAddAction" class="nc.ui.uif2.actions.SaveAddAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="editor" ref="editor" />
+		<property name="addAction" ref="AddAction" />
+		<property name="validationService" ref="saveValidationService" />
+	</bean>
+	<!-- 保存校验 -->
+	<bean id="saveValidationService" class="nc.bs.uif2.validation.DefaultValidationService">
+		<property name="validators">
+			<list>
+				<bean id="psnjobValidator" class="nc.ui.bd.psn.psndoc.action.PsnjobValidatorForClient">
+					<property name="model" ref="PsndocManageAppModel" />
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="cancelAction" class="nc.ui.bd.psn.psndoc.action.PsndocCancelAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="editor" ref="editor" />
+	</bean>
+
+	<!-- 业务按钮 -->
+	<bean id="disEnableActionGroup" class="nc.funcnode.ui.action.GroupAction">
+		<property name="code" value="DisEnableGroup"></property>
+		<property name="name">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="10140psn"></property>
+				<property name="defaultValue" value="停用"></property>
+				<property name="resId" value="010140psn0089"></property>
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean="enableAction" />
+				<ref bean="disEnableAction" />
+
+			</list>
+		</property>
+
+	</bean>
+	<bean id="disEnableAction" class="nc.ui.bd.psn.psndoc.action.PsndocDisEnableAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="editor" ref="editor" />
+		<property name="resourceCode" value="psndoc"></property>
+		<property name="mdOperateCode" value="disable"></property>
+	</bean>
+
+	<bean id="enableAction" class="nc.ui.bd.psn.psndoc.action.PsndocEnableAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="editor" ref="editor" />
+		<property name="resourceCode" value="psndoc"></property>
+		<property name="mdOperateCode" value="enable"></property>
+	</bean>
+	<bean id="createUserAction" class="nc.ui.bd.psn.psndoc.action.PsnDocCreateUserAction">
+		<property name="model" ref="PsndocManageAppModel"></property>
+		<property name="service" ref="manageModelService"></property>
+	</bean>
+
+	<bean id="transferAction" class="nc.ui.bd.psn.psndoc.action.PsndocTransferAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="psndocTransferPanel">
+			<bean class="nc.ui.bd.psn.psndoc.action.PsndocTransferPanel"
+				init-method="initUI">
+				<property name="nodekey" value="transfer" />
+				<property name="templateContainer" ref="templateContainer" />
+				<property name="context" ref="context"></property>
+			</bean>
+		</property>
+	</bean>
+
+	<!-- 查询按钮 -->
+	<bean id="filterAction" class="nc.funcnode.ui.action.MenuAction">
+		<property name="code" value="ShowDisEnable" />
+		<property name="name">
+			<bean class="nc.ui.uif2.I18nFB">
+				<property name="resDir" value="10140psn"></property>
+				<property name="defaultValue" value="过滤"></property>
+				<property name="resId" value="010140psn0090"></property>
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean="showDisEnableAction" />
+			</list>
+		</property>
+	</bean>
+	<bean id="showDisEnableAction" class="nc.ui.uif2.actions.ShowDisableDataAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="dataManager" ref="PsndocModelDataManager" />
+	</bean>
+
+	<!-- 列表界面Actions -->
+	<bean id="refreshAction" class="nc.ui.uif2.actions.RefreshAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="dataManager" ref="TreeAndListViewRefresh" />
+	</bean>
+
+	<!-- 卡片界面Actions -->
+	<bean id="refreshSingleAction" class="nc.ui.bd.psn.psndoc.action.PsndocRefreshSingleAction">
+		<property name="model" ref="PsndocManageAppModel" />
+	</bean>
+
+	<bean id="queryAction" class="nc.ui.uif2.actions.QueryAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="dataManager" ref="TreeAndListViewRefresh" />
+		<property name="templateContainer" ref="QueryTemplateContainer"></property>
+	</bean>
+	<bean id="QueryTemplateContainer" class="nc.ui.uif2.editor.QueryTemplateContainer">
+		<property name="context" ref="context"></property>
+	</bean>
+	<bean id="remoteCallCombinatorCaller" class="nc.ui.uif2.editor.UIF2RemoteCallCombinatorCaller">
+		<property name="remoteCallers">
+			<list>
+				<ref bean="QueryTemplateContainer" />
+				<ref bean="templateContainer" />
+				<ref bean="userdefitemContainer" />
+			</list>
+		</property>
+	</bean>
+
+
+	<!-- 未确定 -->
+	<bean id="listprintActionGroup" class="nc.funcnode.ui.action.GroupAction">
+		<property name="actions">
+			<list>
+				<ref bean="listtemplatePrintAction" />
+				<ref bean="listTempletPreviewAction" />
+				<ref bean="listoutputaction" />
+			</list>
+		</property>
+	</bean>
+	<bean id="listTempletPreviewAction"
+		class="nc.ui.bd.pub.actions.print.BDTemplatePaginationPreviewAction">
+		<property name="printAction" ref="listtemplatePrintAction" />
+	</bean>
+	<bean id="listtemplatePrintAction"
+		class="nc.ui.bd.pub.actions.print.BDTemplatePaginationPrintAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="nodeKey" value="psnlist"></property>
+		<property name="printDlgParentConatiner" ref="listView"></property>
+		<property name="printFactory" ref="printFactory" />
+		<property name="paginationModel" ref="paginationModel" />
+	</bean>
+	<bean id="listoutputaction" class="nc.ui.bd.pub.actions.print.BDPaginationOutputAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="nodeKey" value="psnlist"></property>
+		<property name="printDlgParentConatiner" ref="listView"></property>
+		<property name="printFactory" ref="printFactory" />
+		<property name="paginationModel" ref="paginationModel" />
+	</bean>
+	<bean id="printFactory"
+		class="nc.ui.bd.pub.actions.print.DefaultTemplatePagePrintFactory">
+		<property name="mdId" value="40d39c26-a2b6-4f16-a018-45664cac1a1f" />
+	</bean>
+	<bean id="cardtemplatePreviewAction" class="nc.ui.bd.pub.actions.print.BDTemplatePreviewAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="nodeKey" value="psncard"></property>
+		<property name="printDlgParentConatiner" ref="editor"></property>
+		<property name="datasource" ref="singledatasource"></property>
+	</bean>
+	<bean id="cardtemplatePrintAction" class="nc.ui.bd.pub.actions.print.BDTemplatePrintAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="nodeKey" value="psncard"></property>
+		<property name="printDlgParentConatiner" ref="editor"></property>
+		<property name="datasource" ref="singledatasource"></property>
+	</bean>
+
+	<bean id="listprintPreAction" class="nc.ui.bd.pub.actions.print.BDListPanelDirectPrintAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="directPrint" value="false"></property>
+		<property name="listView" ref="listView"></property>
+		<property name="title" value="人员基本信息"></property>
+	</bean>
+
+	<bean id="listprintAction" class="nc.ui.bd.pub.actions.print.BDListPanelDirectPrintAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="listView" ref="listView"></property>
+		<property name="title" value="人员基本信息"></property>
+	</bean>
+
+
+	<bean id="datasource" class="nc.ui.bd.pub.actions.print.MetaDataAllDatasSource">
+		<property name="model" ref="PsndocManageAppModel"></property>
+	</bean>
+	<bean id="singledatasource"
+		class="nc.ui.bd.pub.actions.print.MetaDataSingleSelectDataSource">
+		<property name="model" ref="PsndocManageAppModel"></property>
+	</bean>
+	<bean id="cardprintActionGroup" class="nc.funcnode.ui.action.GroupAction">
+		<property name="actions">
+			<list>
+				<ref bean="cardtemplatePrintAction" />
+				<ref bean="cardtemplatePreviewAction" />
+				<ref bean="cardoutputaction" />
+			</list>
+		</property>
+	</bean>
+
+	<bean id="cardprintAction" class="nc.ui.bd.pub.actions.print.BDCardPanelDirectPrintAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="headEditors">
+			<list>
+				<ref bean="sharePanel" />
+				<ref bean="editor" />
+			</list>
+		</property>
+		<property name="bodyEditors" ref="editor"></property>
+		<property name="tailEditor" ref="editor"></property>
+		<property name="title" value="人员基本信息"></property>
+	</bean>
+
+	<bean id="cardprintPreAction" class="nc.ui.bd.pub.actions.print.BDCardPanelDirectPrintAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="directPrint" value="false"></property>
+		<property name="headEditors">
+			<list>
+				<ref bean="sharePanel" />
+				<ref bean="editor" />
+			</list>
+		</property>
+		<property name="bodyEditors" ref="editor"></property>
+		<property name="tailEditor" ref="editor"></property>
+		<property name="title" value="人员基本信息"></property>
+	</bean>
+	<bean id="cardoutputaction" class="nc.ui.uif2.actions.OutputAction">
+		<property name="model" ref="PsndocManageAppModel" />
+		<property name="nodeKey" value="psncard"></property>
+		<property name="printDlgParentConatiner" ref="editor"></property>
+		<property name="datasource" ref="singledatasource"></property>
+	</bean>
+	<bean id="ansyqueryAction" class="nc.ui.bd.pub.asny.AsnyQueryAction">
+		<property name="funcode" value="10140PSN"></property>
+		<property name="model" ref="PsndocManageAppModel"></property>
+	</bean>
+
+
+</beans>

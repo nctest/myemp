@@ -1,0 +1,260 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="context" class="nc.vo.uif2.LoginContext"></bean>
+	<bean id="container" class="nc.ui.uif2.TangramContainer"
+		init-method="initUI">
+		<property name="tangramLayoutRoot">
+			<bean class="nc.ui.uif2.tangramlayout.node.TBNode">
+				<property name="tabs">
+					<list>
+						<bean class="nc.ui.uif2.tangramlayout.node.HSNode">
+							<property name="left">
+								<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+									<property name="component" ref="queryAreaShell"></property>
+								</bean>
+							</property>
+							<property name="right">
+								<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+									<property name="component" ref="billListView"></property>
+								</bean>
+							</property>
+							<property name="dividerLocation" value="250f"></property>
+						</bean>
+						<bean class="nc.ui.uif2.tangramlayout.node.VSNode">
+							<property name="up">
+								<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+									<property name="component" ref="toolbarPanel"></property>
+								</bean>
+							</property>
+							<property name="down">
+								<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+									<property name="component" ref="billForm"></property>
+								</bean>
+							</property>
+							<property name="dividerLocation" value="30f"></property>
+						</bean>
+					</list>
+				</property>
+				<property name="showMode" value="CardLayout"></property>
+			</bean>
+		</property>
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="queryAreaShell" class="nc.ui.uif2.actions.QueryAreaShell"
+		init-method="initUI">
+		<property name="context" ref="context"></property>
+		<property name="queryArea">
+			<bean factory-bean="queryAction" factory-method="createQueryArea"></bean>
+		</property>
+	</bean>
+	<bean id="queryAction" class="nc.ui.uif2.actions.QueryAction">
+		<property name="model" ref="model"></property>
+		<property name="dataManager" ref="modelDataManager"></property>
+		<property name="templateContainer" ref="queryTemplateContainer"></property>
+		<property name="queryDelegator" ref="queryDelegator"></property>
+	</bean>
+	<bean id="queryDelegator" class="nc.ui.org.OrgQueryDelegatorWithGroupSet">
+		<property name="context" ref="context"></property>
+		<property name="nodeKey" value="queryCountry"></property>
+		<property name="templateContainer" ref="queryTemplateContainer"></property>
+	</bean>
+	<bean id="templateContainer" class="nc.ui.uif2.editor.TemplateContainer">
+		<property name="context" ref="context"></property>
+		<property name="nodeKeies">
+			<list>
+				<value>country</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="queryTemplateContainer" class="nc.ui.uif2.editor.QueryTemplateContainer">
+		<property name="context" ref="context"></property>
+		<property name="nodeKey" value="queryCountry"></property>
+	</bean>
+	<bean id="remoteCallCombinatorCaller" class="nc.ui.uif2.editor.UIF2RemoteCallCombinatorCaller">
+		<property name="remoteCallers">
+			<list>
+				<ref local="templateContainer" />
+				<ref local="queryTemplateContainer" />
+			</list>
+		</property>
+	</bean>
+	<bean id="toolbarPanel" class="nc.ui.uif2.tangramlayout.CardLayoutToolbarPanel">
+		<property name="titleAction">
+			<bean class="nc.ui.uif2.actions.ShowMeUpAction">
+				<property name="goComponent" ref="billListView"></property>
+				<property name="model" ref="model"></property>
+			</bean>
+		</property>
+		<property name="actions">
+			<list>
+				<bean class="nc.ui.uif2.actions.FirstLineAction">
+					<property name="model" ref="model"></property>
+				</bean>
+				<bean class="nc.ui.uif2.actions.PreLineAction">
+					<property name="model" ref="model"></property>
+				</bean>
+				<bean class="nc.ui.uif2.actions.NextLineAction">
+					<property name="model" ref="model"></property>
+				</bean>
+				<bean class="nc.ui.uif2.actions.LastLineAction">
+					<property name="model" ref="model"></property>
+				</bean>
+			</list>
+		</property>
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="toftpanelActionContributors" class="nc.ui.uif2.actions.ActionContributors">
+		<property name="contributors">
+			<list>
+				<ref local="listActions" />
+				<ref local="cardActions" />
+			</list>
+		</property>
+	</bean>
+	<bean id="cardActions" class="nc.ui.uif2.actions.StandAloneToftPanelActionContainer">
+		<constructor-arg ref="billForm"></constructor-arg>
+		<property name="actions">
+			<list>
+				<ref local="addAction" />
+				<ref local="editAction" />
+				<ref local="deleteAction" />
+				<ref local="refreshAction" />
+				<ref local="separatorAction" />
+				<ref local="queryAction" />
+				<ref local="printGroupAction" />
+			</list>
+		</property>
+		<property name="editActions">
+			<list>
+				<ref local="saveAction" />
+				<ref local="separatorAction" />
+				<ref local="cancelAction" />
+			</list>
+		</property>
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="listActions" class="nc.ui.uif2.actions.StandAloneToftPanelActionContainer">
+		<constructor-arg ref="billListView"></constructor-arg>
+		<property name="actions">
+			<list>
+				<ref local="addAction" />
+				<ref local="editAction" />
+				<ref local="deleteAction" />
+				<ref local="refreshAction" />
+				<ref local="separatorAction" />
+				<ref local="queryAction" />
+				<ref local="printGroupAction" />
+			</list>
+		</property>
+		<property name="editActions">
+			<list>
+				<ref local="saveAction" />
+				<ref local="separatorAction" />
+				<ref local="cancelAction" />
+			</list>
+		</property>
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="printGroupAction" class="nc.funcnode.ui.action.GroupAction">
+		<property name="actions">
+			<list>
+				<ref local="templatePrintAction" />
+				<ref local="templatePreviewAction" />
+				<ref local="outputAction" />
+			</list>
+		</property>
+	</bean>
+	<bean id="templatePrintAction" class="nc.ui.uif2.actions.TemplatePrintAction">
+		<property name="model" ref="model"></property>
+		<property name="datasource" ref="dataSource"></property>
+		<property name="nodeKey" value="printCountry"></property>
+	</bean>
+	<bean id="templatePreviewAction" class="nc.ui.uif2.actions.TemplatePreviewAction">
+		<property name="model" ref="model"></property>
+		<property name="datasource" ref="dataSource"></property>
+	</bean>
+	<bean id="outputAction" class="nc.ui.uif2.actions.OutputAction">
+		<property name="model" ref="model"></property>
+		<property name="datasource" ref="dataSource"></property>
+	</bean>
+	<bean id="dataSource" class="nc.ui.bd.pub.actions.print.MetaDataAllDatasSource">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="refreshAction" class="nc.ui.uif2.actions.RefreshAction">
+		<property name="model" ref="model"></property>
+		<property name="dataManager" ref="modelDataManager"></property>
+	</bean>
+	<bean id="modelDataManager" class="nc.ui.myemp.country.model.CountryModelDataManager">
+		<property name="model" ref="model"></property>
+		<property name="paginationModel" ref="paginationModel"></property>
+		<property name="paginationDelegator">
+			<bean
+				class="nc.ui.uif2.components.pagination.BillManagePaginationDelegator">
+				<property name="billModel" ref="model"></property>
+				<property name="paginationModel" ref="paginationModel"></property>
+			</bean>
+		</property>
+	</bean>
+	<bean id="cancelAction" class="nc.ui.uif2.actions.CancelAction">
+		<property name="model" ref="model"></property>
+		<property name="editor" ref="billForm"></property>
+	</bean>
+	<bean id="saveAction" class="nc.ui.uif2.actions.SaveAction">
+		<property name="model" ref="model"></property>
+		<property name="editor" ref="billForm"></property>
+		<property name="validationService">
+			<bean class="nc.bs.uif2.validation.DefaultValidationService">
+				<property name="validators">
+					<list>
+						<bean class="nc.ui.myemp.country.validator.DataNotNullValidator"></bean>
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+	<bean id="addAction" class="nc.ui.uif2.actions.AddAction">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="editAction" class="nc.ui.uif2.actions.EditAction">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="deleteAction" class="nc.ui.uif2.actions.DeleteAction">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="separatorAction" class="nc.funcnode.ui.action.SeparatorAction"></bean>
+	<bean id="billForm" class="nc.ui.myemp.country.view.CountryBillForm"
+		init-method="initUI">
+		<property name="model" ref="model"></property>
+		<property name="nodekey" value="country"></property>
+		<property name="templateContainer" ref="templateContainer"></property>
+	</bean>
+	<bean id="billListView" class="nc.ui.myemp.country.view.CountryBillListView"
+		init-method="initUI">
+		<property name="model" ref="model"></property>
+		<property name="nodekey" value="country"></property>
+		<property name="multiSelectionEnable" value="true"></property>
+		<property name="south" ref="paginationBar"></property>
+		<property name="templateContainer" ref="templateContainer"></property>
+	</bean>
+	<bean id="paginationBar" class="nc.ui.uif2.components.pagination.PaginationBar">
+		<property name="paginationModel" ref="paginationModel"></property>
+	</bean>
+	<bean id="paginationModel" class="nc.ui.uif2.components.pagination.PaginationModel"
+		init-method="init">
+		<property name="paginationQueryService" ref="service"></property>
+	</bean>
+	<bean id="model" class="nc.ui.uif2.model.BillManageModel">
+		<property name="context" ref="context"></property>
+		<property name="businessObjectAdapterFactory" ref="factory"></property>
+		<property name="service" ref="service"></property>
+	</bean>
+	<bean id="service" class="nc.ui.myemp.country.model.CountryModelService"></bean>
+	<bean id="factory" class="nc.vo.bd.meta.BDObjectAdpaterFactory"></bean>
+	<bean id="ClosingListener" class="nc.ui.uif2.FunNodeClosingHandler">
+		<property name="model" ref="model"></property>
+		<property name="saveaction" ref="saveAction"></property>
+		<property name="cancelaction" ref="cancelAction"></property>
+	</bean>
+</beans>

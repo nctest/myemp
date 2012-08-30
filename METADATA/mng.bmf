@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component conRouterType="手动" createTime="2012-08-01 14:25:40" creator="" description="" displayName="部门员工管理" fromSourceBmf="true" gencodestyle="标准样式" help="" id="208b43c8-2daa-4682-86d5-2c7e2a17614e" isbizmodel="false" mainEntity="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" modifier="" modifyTime="2012-08-22 17:54:07" name="mng" namespace="myemp" ownModule="myemp" preLoad="false" resModuleName="mng" resid="" version="10" versionType="0">
+    <celllist>
+        <Reference componentID="208b43c8-2daa-4682-86d5-2c7e2a17614e" createTime="2012-08-01 14:25:51" creator="" description="" displayName="displayname" fullClassName="nc.vomyemp.mng.reference" height="193" help="" id="2d496bfe-a9fc-4821-994b-cc3091bf7d1a" mdFilePath="\meta\general_interface.bmf" modifier="" modifyTime="2012-08-22 17:54:07" moduleName="uap" name="reference" refId="6c8722b9-911a-489b-8d0d-18bd3734fcf6" resid="" versionType="0" visibility="public" width="100" x="47" y="103"/>
+        <entity accessorClassName="nc.md.model.access.javamap.POJOStyle" bizItfImpClassName="" componentID="208b43c8-2daa-4682-86d5-2c7e2a17614e" createTime="2012-08-01 14:25:56" creator="" czlist="" description="" displayName="部门" fullClassName="nc.vo.myemp.mng.Dept" height="170" help="" id="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" isAuthen="true" isCreateSQL="true" isExtendBean="false" isPrimary="true" keyAttributeId="7f89d7d3-5e72-4b83-8c9f-3ab85d53e7f9" modInfoClassName="" modifier="" modifyTime="2012-08-22 19:34:39" name="Dept" resid="" stereoType="" tableName="mdept" userDefClassName="" versionType="0" visibility="public" width="80" x="276" y="115">
+            <attributelist>
+                <attribute accessStrategy="" accesspower="false" accesspowergroup="" calculation="false" classID="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" dataType="BS000010000100001051" dataTypeStyle="SINGLE" dbtype="char" defaultValue="" description="" displayName="部门ID" dynamic="false" dynamicTable="" fieldName="d_id" fieldType="char" fixedLength="false" forLocale="false" help="" id="7f89d7d3-5e72-4b83-8c9f-3ab85d53e7f9" isActive="true" isAuthorization="true" isDefaultDimensionAttribute="false" isDefaultMeasureAttribute="false" isFeature="false" isGlobalization="false" isHide="false" isKey="true" isNullable="false" isReadOnly="false" isShare="false" length="20" maxValue="" minValue="" name="d_id" notSerialize="false" precise="" refModelName="" resid="" sequence="0" typeDisplayName="UFID" typeName="UFID" versionType="0" visibility="public"/>
+                <attribute accessStrategy="" accesspower="false" accesspowergroup="" calculation="false" classID="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" dataType="BS000010000100001001" dataTypeStyle="SINGLE" dbtype="varchar" defaultValue="" description="" displayName="部门编码" dynamic="false" dynamicTable="" fieldName="code" fieldType="varchar" fixedLength="false" forLocale="false" help="" id="bb7dd479-3db7-4cd3-b097-48ce2b05b73c" isActive="true" isAuthorization="true" isDefaultDimensionAttribute="false" isDefaultMeasureAttribute="false" isFeature="false" isGlobalization="false" isHide="false" isKey="false" isNullable="true" isReadOnly="false" isShare="false" length="50" maxValue="" minValue="" name="code" notSerialize="false" precise="" refModelName="" resid="" sequence="1" typeDisplayName="String" typeName="String" versionType="0" visibility="public"/>
+                <attribute accessStrategy="" accesspower="false" accesspowergroup="" calculation="false" classID="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" dataType="BS000010000100001001" dataTypeStyle="SINGLE" dbtype="varchar" defaultValue="" description="" displayName="部门名称" dynamic="false" dynamicTable="" fieldName="name" fieldType="varchar" fixedLength="false" forLocale="false" help="" id="7424ac0f-d828-4086-9b06-9d43d1b3b86b" isActive="true" isAuthorization="true" isDefaultDimensionAttribute="false" isDefaultMeasureAttribute="false" isFeature="false" isGlobalization="false" isHide="false" isKey="false" isNullable="true" isReadOnly="false" isShare="false" length="50" maxValue="" minValue="" name="name" notSerialize="false" precise="" refModelName="" resid="" sequence="2" typeDisplayName="String" typeName="String" versionType="0" visibility="public"/>
+                <attribute accessStrategy="" accesspower="false" accesspowergroup="" calculation="false" classID="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" dataType="1ce58693-3d2e-42a0-8bea-4ea5c9df4e5c" dataTypeStyle="ARRAY" dbtype="" defaultValue="~" description="" displayName="雇员" dynamic="false" dynamicTable="" fieldName="d_id" fieldType="varchar" fixedLength="false" forLocale="false" help="" id="0691631c-a0ec-412d-944f-8aab278dfc32" isActive="true" isAuthorization="true" isDefaultDimensionAttribute="false" isDefaultMeasureAttribute="false" isFeature="false" isGlobalization="false" isHide="false" isKey="false" isNullable="true" isReadOnly="false" isShare="false" length="" maxValue="" minValue="" name="employees" notSerialize="false" precise="" refModelName="" resid="" sequence="3" typeDisplayName="雇员" typeName="Entity" versionType="0" visibility="public"/>
+                <attribute accessStrategy="" accesspower="false" accesspowergroup="" calculation="false" classID="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" dataType="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" dataTypeStyle="REF" dbtype="" defaultValue="~" description="" displayName="上级部门" dynamic="false" dynamicTable="" fieldName="p_id" fieldType="varchar" fixedLength="false" forLocale="false" help="" id="20e4382b-6442-4861-a915-1a660a6ad04e" isActive="true" isAuthorization="true" isDefaultDimensionAttribute="false" isDefaultMeasureAttribute="false" isFeature="false" isGlobalization="false" isHide="false" isKey="false" isNullable="true" isReadOnly="false" isShare="false" length="20" maxValue="" minValue="" name="p_id" notSerialize="false" precise="" refModelName="" resid="" sequence="4" typeDisplayName="部门" typeName="Dept" versionType="0" visibility="public"/>
+            </attributelist>
+            <operationlist/>
+            <busiitfs>
+                <itfid>6c8722b9-911a-489b-8d0d-18bd3734fcf6</itfid>
+            </busiitfs>
+            <busimaps>
+                <busimap attrid="7f89d7d3-5e72-4b83-8c9f-3ab85d53e7f9" attrpath="" attrpathid="" busiitfattrid="5dd3c721-22ad-42b1-9c10-4351c236bc77" busiitfid="6c8722b9-911a-489b-8d0d-18bd3734fcf6" cellid="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f"/>
+                <busimap attrid="20e4382b-6442-4861-a915-1a660a6ad04e" attrpath="" attrpathid="" busiitfattrid="c8334364-7ab9-4266-8d4b-e74537935e46" busiitfid="6c8722b9-911a-489b-8d0d-18bd3734fcf6" cellid="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f"/>
+                <busimap attrid="" attrpath="" attrpathid="" busiitfattrid="ecf1b76a-6e44-42e2-a55e-87596504775b" busiitfid="6c8722b9-911a-489b-8d0d-18bd3734fcf6" cellid="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f"/>
+                <busimap attrid="bb7dd479-3db7-4cd3-b097-48ce2b05b73c" attrpath="" attrpathid="" busiitfattrid="d32cc17b-f415-415a-923f-0764443eb102" busiitfid="6c8722b9-911a-489b-8d0d-18bd3734fcf6" cellid="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f"/>
+                <busimap attrid="7424ac0f-d828-4086-9b06-9d43d1b3b86b" attrpath="" attrpathid="" busiitfattrid="89578a97-42fe-439b-827c-8eabd9e3604c" busiitfid="6c8722b9-911a-489b-8d0d-18bd3734fcf6" cellid="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f"/>
+                <busimap attrid="" attrpath="" attrpathid="" busiitfattrid="a47e6cda-09e4-480b-923f-ec6f41e3e06c" busiitfid="6c8722b9-911a-489b-8d0d-18bd3734fcf6" cellid="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f"/>
+            </busimaps>
+            <canzhaolist/>
+            <accessor classFullname="nc.md.model.access.javamap.POJOStyle" displayName="POJO" name="pojo">
+                <properties/>
+            </accessor>
+        </entity>
+        <entity accessorClassName="nc.md.model.access.javamap.POJOStyle" bizItfImpClassName="" componentID="208b43c8-2daa-4682-86d5-2c7e2a17614e" createTime="2012-08-01 14:25:58" creator="" czlist="" description="" displayName="雇员" fullClassName="nc.vo.myemp.mng.Emp" height="129" help="" id="1ce58693-3d2e-42a0-8bea-4ea5c9df4e5c" isAuthen="true" isCreateSQL="true" isExtendBean="false" isPrimary="false" keyAttributeId="041ebbb7-c5e4-4c1a-8c2e-10b4641cd947" modInfoClassName="" modifier="" modifyTime="2012-08-22 19:34:39" name="Emp" resid="" stereoType="" tableName="memp" userDefClassName="" versionType="0" visibility="public" width="80" x="504" y="133">
+            <attributelist>
+                <attribute accessStrategy="" accesspower="false" accesspowergroup="" calculation="false" classID="1ce58693-3d2e-42a0-8bea-4ea5c9df4e5c" dataType="BS000010000100001051" dataTypeStyle="SINGLE" dbtype="char" defaultValue="" description="" displayName="雇员ID" dynamic="false" dynamicTable="" fieldName="e_id" fieldType="char" fixedLength="false" forLocale="false" help="" id="041ebbb7-c5e4-4c1a-8c2e-10b4641cd947" isActive="true" isAuthorization="true" isDefaultDimensionAttribute="false" isDefaultMeasureAttribute="false" isFeature="false" isGlobalization="false" isHide="false" isKey="true" isNullable="false" isReadOnly="false" isShare="false" length="20" maxValue="" minValue="" name="e_id" notSerialize="false" precise="" refModelName="" resid="" sequence="0" typeDisplayName="UFID" typeName="UFID" versionType="0" visibility="public"/>
+                <attribute accessStrategy="" accesspower="false" accesspowergroup="" calculation="false" classID="1ce58693-3d2e-42a0-8bea-4ea5c9df4e5c" dataType="BS000010000100001001" dataTypeStyle="SINGLE" dbtype="varchar" defaultValue="" description="" displayName="雇员名称" dynamic="false" dynamicTable="" fieldName="name" fieldType="varchar" fixedLength="false" forLocale="false" help="" id="b9a08d1e-d911-4c8a-b1f1-6d5927631508" isActive="true" isAuthorization="true" isDefaultDimensionAttribute="false" isDefaultMeasureAttribute="false" isFeature="false" isGlobalization="false" isHide="false" isKey="false" isNullable="true" isReadOnly="false" isShare="false" length="50" maxValue="" minValue="" name="name" notSerialize="false" precise="" refModelName="" resid="" sequence="1" typeDisplayName="String" typeName="String" versionType="0" visibility="public"/>
+                <attribute accessStrategy="" accesspower="false" accesspowergroup="" calculation="false" classID="1ce58693-3d2e-42a0-8bea-4ea5c9df4e5c" dataType="BS000010000100001001" dataTypeStyle="SINGLE" dbtype="varchar" defaultValue="" description="" displayName="雇员编号" dynamic="false" dynamicTable="" fieldName="no" fieldType="varchar" fixedLength="false" forLocale="false" help="" id="97b8f150-49ec-4723-9b85-00eb586fdd6e" isActive="true" isAuthorization="true" isDefaultDimensionAttribute="false" isDefaultMeasureAttribute="false" isFeature="false" isGlobalization="false" isHide="false" isKey="false" isNullable="true" isReadOnly="false" isShare="false" length="50" maxValue="" minValue="" name="no" notSerialize="false" precise="" refModelName="" resid="" sequence="2" typeDisplayName="String" typeName="String" versionType="0" visibility="public"/>
+            </attributelist>
+            <operationlist/>
+            <busiitfs/>
+            <busimaps/>
+            <canzhaolist/>
+            <accessor classFullname="nc.md.model.access.javamap.POJOStyle" displayName="POJO" name="pojo">
+                <properties/>
+            </accessor>
+        </entity>
+    </celllist>
+    <connectlist>
+        <busiitfconnection bizItfImpClassName="" componentID="208b43c8-2daa-4682-86d5-2c7e2a17614e" createTime="2012-08-01 14:30:15" creator="" description="" displayName="" help="" id="31b74798-439d-4f0a-8f59-a7dbbe25567a" modifier="" modifyTime="2012-08-01 14:30:15" name="busiItf connection" realsource="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" realtarget="6c8722b9-911a-489b-8d0d-18bd3734fcf6" source="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" target="2d496bfe-a9fc-4821-994b-cc3091bf7d1a" versionType="0">
+            <points/>
+        </busiitfconnection>
+        <AggregationRelation componentID="208b43c8-2daa-4682-86d5-2c7e2a17614e" createTime="2012-08-01 14:29:44" creator="" description="" displayName="" help="" id="f49540d0-23a1-476c-93cd-0a32a22d9982" modifier="" modifyTime="2012-08-01 14:29:54" name="Aggregation Relation" realsource="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" realtarget="1ce58693-3d2e-42a0-8bea-4ea5c9df4e5c" source="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" sourceConstraint="1" srcAttributeid="0691631c-a0ec-412d-944f-8aab278dfc32" target="1ce58693-3d2e-42a0-8bea-4ea5c9df4e5c" targetConstraint="1..n" versionType="0">
+            <points/>
+        </AggregationRelation>
+        <relation componentID="208b43c8-2daa-4682-86d5-2c7e2a17614e" createTime="2012-08-01 14:39:04" creator="" description="" displayName="" help="" id="012eeb19-4a39-4e5f-b398-e6adcb181247" modifier="" modifyTime="2012-08-22 17:54:07" name="relation" realsource="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" realtarget="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" source="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" sourceConstraint="1" srcAttributeid="20e4382b-6442-4861-a915-1a660a6ad04e" target="f3b905d3-c0e3-42f7-95ae-b9f7ae5b4c2f" targetConstraint="1" versionType="0">
+            <points>
+                <point x="316" y="95"/>
+                <point x="376" y="95"/>
+                <point x="376" y="200"/>
+            </points>
+        </relation>
+    </connectlist>
+    <refdepends>
+        <dependfile entityid="6c8722b9-911a-489b-8d0d-18bd3734fcf6"/>
+    </refdepends>
+    <refdependLoseIDs/>
+    <cellRemoveLog/>
+    <rulers>
+        <ruler isHorizontal="true" unit="0">
+            <guideList/>
+        </ruler>
+        <ruler isHorizontal="false" unit="0">
+            <guideList/>
+        </ruler>
+    </rulers>
+</component>
