@@ -54,26 +54,26 @@
 		<property name="dataManager" ref="modelDataManager"></property>
 		<property name="templateContainer" ref="queryTemplateContainer"></property>
 	</bean>
-	<bean id="templateContainer" class="nc.ui.uif2.editor.TemplateContainer">
-		<property name="context" ref="context"></property>
-		<property name="nodeKeies">
-			<list>
-				<value>country</value>
-			</list>
-		</property>
-	</bean>
+<!-- 	<bean id="templateContainer" class="nc.ui.uif2.editor.TemplateContainer"> -->
+<!-- 		<property name="context" ref="context"></property> -->
+<!-- 		<property name="nodeKeies"> -->
+<!-- 			<list> -->
+<!-- 				<value>country</value> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
 	<bean id="queryTemplateContainer" class="nc.ui.uif2.editor.QueryTemplateContainer">
 		<property name="context" ref="context"></property>
 		<property name="nodeKey" value="queryCountry"></property>
 	</bean>
-	<bean id="remoteCallCombinatorCaller" class="nc.ui.uif2.editor.UIF2RemoteCallCombinatorCaller">
-		<property name="remoteCallers">
-			<list>
-				<ref local="templateContainer" />
-				<ref local="queryTemplateContainer" />
-			</list>
-		</property>
-	</bean>
+<!-- 	<bean id="remoteCallCombinatorCaller" class="nc.ui.uif2.editor.UIF2RemoteCallCombinatorCaller"> -->
+<!-- 		<property name="remoteCallers"> -->
+<!-- 			<list> -->
+<!-- 				<ref local="templateContainer" /> -->
+<!-- 				<ref local="queryTemplateContainer" /> -->
+<!-- 			</list> -->
+<!-- 		</property> -->
+<!-- 	</bean> -->
 	<bean id="toolbarPanel" class="nc.ui.uif2.tangramlayout.CardLayoutToolbarPanel">
 		<property name="titleAction">
 			<bean class="nc.ui.uif2.actions.ShowMeUpAction">
@@ -222,7 +222,7 @@
 		init-method="initUI">
 		<property name="model" ref="model"></property>
 		<property name="nodekey" value="country"></property>
-		<property name="templateContainer" ref="templateContainer"></property>
+<!-- 		<property name="templateContainer" ref="templateContainer"></property> -->
 	</bean>
 	<bean id="billListView" class="nc.ui.myemp.country.view.CountryBillListView"
 		init-method="initUI">
@@ -230,7 +230,7 @@
 		<property name="nodekey" value="country"></property>
 		<property name="multiSelectionEnable" value="true"></property>
 		<property name="south" ref="paginationBar"></property>
-		<property name="templateContainer" ref="templateContainer"></property>
+<!-- 		<property name="templateContainer" ref="templateContainer"></property> -->
 	</bean>
 	<bean id="paginationBar" class="nc.ui.uif2.components.pagination.PaginationBar">
 		<property name="paginationModel" ref="paginationModel"></property>
