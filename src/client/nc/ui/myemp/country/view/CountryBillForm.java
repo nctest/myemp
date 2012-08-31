@@ -27,8 +27,8 @@ public class CountryBillForm extends BillForm implements
 	@Override
 	public void handleEvent(AppEvent event) {
 		if (AppEventConst.UISTATE_CHANGED == event.getType()
-				&& (getModel().getUiState() == UIState.ADD)
-				|| getModel().getUiState() == UIState.EDIT
+				&& (getModel().getUiState() == UIState.ADD
+				|| getModel().getUiState() == UIState.EDIT)
 				|| AppEventConst.SHOW_EDITOR == event.getType()) {
 			showMeUp();
 		}
