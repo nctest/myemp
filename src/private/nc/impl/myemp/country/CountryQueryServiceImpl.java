@@ -55,11 +55,7 @@ public class CountryQueryServiceImpl implements ICountryQueryService {
 		@SuppressWarnings("unchecked")
 		List<String> list = (List<String>) new BaseDAO().executeQuery(
 				sb.toString(), new ColumnListProcessor("pk_country"));
-		String[] pks = new String[list.size()];
-		for (int i = 0; i < pks.length; i++) {
-			pks[i] = list.get(i);
-		}
-		return pks;
+		return list.toArray(new String[list.size()]);
 	}
 
 	@SuppressWarnings("unused")
