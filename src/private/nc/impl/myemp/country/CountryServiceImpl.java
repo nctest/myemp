@@ -19,17 +19,6 @@ public class CountryServiceImpl extends ManageTypeBaseService<CountryVO>
 
 	@Override
 	public CountryVO insert(CountryVO vo) throws BusinessException {
-		// FIXME just for test,need to delete
-		String name = vo.getName();
-		for (int i = 0; i < 300; i++) {
-			vo.setName(name+i);
-			if (vo.getPk_country() != null) {
-				vo.setPk_country(null);
-			}
-			insertVO(vo);
-			vo.setName(name);
-		}
-		vo.setPk_country(null);
 		return insertVO(vo);
 	}
 
