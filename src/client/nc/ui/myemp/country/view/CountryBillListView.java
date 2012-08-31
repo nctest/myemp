@@ -23,8 +23,8 @@ public class CountryBillListView extends BillListView implements
 
 	@Override
 	public boolean canBeHidden() {
-		return true;
-//		return tabbedPaneAwareComponent.canBeHidden();
+//		return true;
+		return tabbedPaneAwareComponent.canBeHidden();
 	}
 
 	@Override

@@ -19,7 +19,7 @@ public class DataNotNullValidator implements Validator {
 			sb.append("[国家名称]");
 		}
 		if (StringUtils.trimToNull(vo.getCode()) == null) {
-			sb.append("[]国家编码]");
+			sb.append("[国家编码]");
 		}
 		if (sb.length() > 0) {
 			return new ValidationFailure(sb.append("不能为空!").toString());

@@ -53,13 +53,13 @@
 		<property name="model" ref="model"></property>
 		<property name="dataManager" ref="modelDataManager"></property>
 		<property name="templateContainer" ref="queryTemplateContainer"></property>
-		<property name="queryDelegator" ref="queryDelegator"></property>
+<!-- 		<property name="queryDelegator" ref="queryDelegator"></property> -->
 	</bean>
-	<bean id="queryDelegator" class="nc.ui.org.OrgQueryDelegatorWithGroupSet">
-		<property name="context" ref="context"></property>
-		<property name="nodeKey" value="queryCountry"></property>
-		<property name="templateContainer" ref="queryTemplateContainer"></property>
-	</bean>
+<!-- 	<bean id="queryDelegator" class="nc.ui.org.OrgQueryDelegatorWithGroupSet"> -->
+<!-- 		<property name="context" ref="context"></property> -->
+<!-- 		<property name="nodeKey" value="queryCountry"></property> -->
+<!-- 		<property name="templateContainer" ref="queryTemplateContainer"></property> -->
+<!-- 	</bean> -->
 	<bean id="templateContainer" class="nc.ui.uif2.editor.TemplateContainer">
 		<property name="context" ref="context"></property>
 		<property name="nodeKeies">
