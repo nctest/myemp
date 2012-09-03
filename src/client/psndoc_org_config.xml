@@ -2,30 +2,17 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
-	<!-- 环境变量 -->
 	<bean id="context" class="nc.vo.uif2.LoginContext"></bean>
-
-	<!-- 模型部分配置########################################################### -->
-
-	<!-- 应用服务类，负责进行模型操作的处理 -->
+	
 	<bean id="manageModelService" class="nc.ui.bd.psn.psndoc.model.PsndocAppModelService">
-
 		<property name="model" ref="PsndocManageAppModel"></property>
 	</bean>
 
-	<!-- 对象转换器工厂，由此获取操作对象的特征信息 -->
-	<bean id="boadatorfactory" class="nc.vo.bd.meta.BDObjectAdpaterFactory" />
+	<bean id="factory" class="nc.vo.bd.meta.BDObjectAdpaterFactory" />
 
-	<!-- 层次结构构造策略 -->
 	<bean id="treeCreateStrategy" class="nc.vo.bd.meta.BDObjectTreeCreateStrategy">
-		<property name="factory" ref="boadatorfactory" />
-		<property name="rootName">
-			<bean class="nc.ui.uif2.I18nFB">
-				<property name="resDir" value="10140psn"></property>
-				<property name="defaultValue" value="部门"></property>
-				<property name="resId" value="010140psn0085"></property>
-			</bean>
-		</property>
+		<property name="factory" ref="factory" />
+		<property name="rootName" value="部门"></property>
 	</bean>
 
 	<!-- 用户定义属性加载器，同一家在所有页签的用户定义属性 -->
@@ -46,13 +33,13 @@
 	<!-- 应用模型 -->
 	<bean id="DeptTreeAppModel" class="nc.ui.uif2.model.HierachicalDataAppModel">
 		<property name="treeCreateStrategy" ref="treeCreateStrategy" />
-		<property name="businessObjectAdapterFactory" ref="boadatorfactory" />
+		<property name="businessObjectAdapterFactory" ref="factory" />
 		<property name="context" ref="context" />
 	</bean>
 
 	<bean id="PsndocManageAppModel" class="nc.ui.bd.psn.psndoc.model.PsndocAppModel">
 		<property name="service" ref="manageModelService"></property>
-		<property name="businessObjectAdapterFactory" ref="boadatorfactory">
+		<property name="businessObjectAdapterFactory" ref="factory">
 		</property>
 		<property name="context" ref="context"></property>
 	</bean>
