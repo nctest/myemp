@@ -5,6 +5,7 @@ import nc.itf.myemp.country.ICountryService;
 import nc.vo.myemp.country.CountryVO;
 import nc.vo.pub.BusinessException;
 
+@SuppressWarnings("deprecation")
 public class CountryServiceImpl extends ManageTypeBaseService<CountryVO>
 		implements ICountryService {
 
