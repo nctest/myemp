@@ -7,7 +7,6 @@ import nc.vo.myemp.country.CountryVO;
 import org.apache.commons.lang.StringUtils;
 
 public class DataNotNullValidator implements Validator {
-	private static final long serialVersionUID = -2413873185793514451L;
 
 	@Override
 	public ValidationFailure validate(Object obj) {

@@ -16,6 +16,8 @@
 		<config>src/client/job_config.xml</config>
 		<config>src/client/psndoc_org_config.xml</config>
 		<config>src/client/config2.xml</config>
+		<config>src/client/method.xml</config>
+		<config>src/client/method_org.xml</config>
 	</configs>
 	<configSets>
 	</configSets>

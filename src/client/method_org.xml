@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<import resource="method.xml" />
+	<!-- 上下文环境 -->
+	<bean id="context" class="nc.vo.uif2.LoginContext">
+		<property name="nodeType">
+			<value>ORG_NODE</value>
+		</property>
+	</bean>
+
+	<bean id="orgPanel" class="nc.ui.resa.allocmethod.view.LiabookRefPanel"
+		init-method="initUI">
+		<property name="model" ref="allocmethodModel" />
+		<property name="methodcontainer" ref="methodcontainer" />
+		<property name="datamanager" ref="modelDataManager" />
+		<property name="context" ref="context"></property>
+	</bean>
+
+	<bean id="addAction" class="nc.ui.resa.allocmethod.actions.AllocMethodAddAction">
+		<property name="model" ref="allocmethodModel" />
+		<property name="container" ref="methodcontainer" />
+		<property name="interceptor" ref="actioninteceptor"></property>
+	</bean>
+
+	<bean id="actioninteceptor"
+		class="nc.ui.resa.allocmethod.actions.AllocMethodAddEditInterceptor">
+		<property name="toppane" ref="orgPanel"></property>
+	</bean>
+
+	<bean id="container" class="nc.ui.uif2.TangramContainer"
+		init-method="initUI">
+		<property name="constraints">
+			<list>
+				<bean class="nc.ui.uif2.tangramlayout.TangramLayoutConstraint">
+					<property name="newComponent">
+						<ref bean="orgPanel" />
+					</property>
+				</bean>
+				<bean class="nc.ui.uif2.tangramlayout.TangramLayoutConstraint">
+					<property name="newComponent">
+						<ref bean="methodcontainer" />
+					</property>
+					<property name="targetComponent">
+						<ref bean="orgPanel" />
+					</property>
+					<property name="direction">
+						<value>down</value>
+					</property>
+					<property name="dividerLocation">
+						<value>30</value>
+					</property>
+				</bean>
+			</list>
+		</property>
+		<property name="editActions">
+			<list>
+				<ref bean="saveAction" />
+				<ref bean="saveAddAction" />
+				<ref bean="nullAction" />
+				<ref bean="cancelAction" />
+			</list>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean='addAction' />
+				<ref bean='editAction' />
+				<ref bean='deleteAction' />
+
+				<ref bean="nullAction" />
+				<ref bean="refreshAction" />
+				<!--<ref bean="nullAction"/> <ref bean="printActionGroup" /> -->
+			</list>
+		</property>
+		<property name="model">
+			<ref bean="allocmethodModel" />
+		</property>
+	</bean>
+
+</beans>

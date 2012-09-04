@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- 上下文环境 -->
+	<bean id="context" class="nc.vo.uif2.LoginContext">
+		<property name="nodeType"><value>GROUP_NODE</value></property>
+	</bean>
+	<!-- service -->
+	<bean id="modelservice" class="nc.ui.resa.allocmethod.model.AllocMethodModelService"/>
+	
+	<!-- models -->
+	<bean id="allocmethodModel" class="nc.ui.resa.allocmethod.model.AllocMethodModel">
+		<property name="context" ref="context"/>
+		<property name="businessObjectAdapterFactory" ref="boAdapterFactory"></property>
+		<property name="service" ref="modelservice"></property>
+	</bean>
+	
+	<bean id="boAdapterFactory" class="nc.vo.bd.meta.BDObjectAdpaterFactory"/>
+
+	<bean id="modelDataManager" class="nc.ui.resa.allocmethod.model.AllocMethodManager">
+		<property name="model" ref="allocmethodModel"/>
+		<!-- 
+		<property name="service" ref="modelservice"></property>
+		<property name="context" ref="context"></property>
+		 -->
+	</bean>
+	
+	<!-- 模板容器 -->
+	<bean id="templateContainer" class="nc.ui.uif2.editor.TemplateContainer" init-method="load">
+		<property name="context" ref="context"/>
+		<property name="nodeKeies">
+			<list>
+				<value>allocmethod</value>
+				<value>corule_fixedrate</value>
+				<value>corule_org</value>
+				<value>allocmethodcondition</value>
+				<value>allocmethod_h</value>
+				<!--
+				<value>allocmethodcondtion_h</value>
+				-->
+				<value>corule_dynmethod</value>
+			</list>
+		</property>
+	</bean>
+    
+	<!-- 视图界面 -->
+	<bean id="methodList" class="nc.ui.resa.allocmethod.view.AllocMethodHeadeditor" init-method="initUI">
+		<property name="model" ref="allocmethodModel"/>
+		<property name="nodekey" value="allocmethod_h"/>
+		<property name="templateContainer" ref="templateContainer"/>
+	</bean>
+	
+	<bean id="dynfactorMethodRuleForm" class="nc.ui.resa.allocmethod.view.DynAllocGistEditor" init-method="initUI">
+		<property name="model" ref="allocmethodModel"/>
+		<property name="condeditor" ref="allocmethodcondition"/>
+		<property name="nodekey" value="corule_dynmethod"/>
+		<property name="templateContainer" ref="templateContainer"/>
+		<!--<property name="bodyActionMap">
+			<map>
+				<entry key="coarrange">
+					<list>
+						<bean class="nc.ui.resa.allocmethod.actions.DynFactorAddLineAction">
+							<property name="model" ref="allocmethodModel" />
+							<property name="cardpanel" ref="dynfactorMethodRuleForm" />
+						</bean>
+						<bean class="nc.ui.resa.allocmethod.actions.DynFactorDelLineAction">
+							<property name="model" ref="allocmethodModel" />
+							<property name="cardpanel" ref="dynfactorMethodRuleForm" />
+						</bean>
+					</list>
+				</entry>
+			</map>
+		</property>
+	--></bean>
+	
+	<bean id="fixedRateMethodRuleForm" class="nc.ui.resa.allocmethod.view.FixedRateMethodEditor" init-method="initUI">
+		<property name="model" ref="allocmethodModel"/>
+		<property name="nodekey" value="corule_fixedrate"/>
+		<property name="templateContainer" ref="templateContainer"/>
+		<property name="methodList" ref="methodList"/>
+		<property name="bodyActionMap">
+			<map>
+				<entry key="fixedrate">
+					<list>
+						<bean class="nc.ui.resa.allocmethod.actions.FixedRateAddLineAction">
+							<property name="model" ref="allocmethodModel" />
+							<property name="cardpanel" ref="fixedRateMethodRuleForm" />
+						</bean>
+						<bean class="nc.ui.resa.allocmethod.actions.FixedRateDelLineAction">
+							<property name="model" ref="allocmethodModel" />
+							<property name="cardpanel" ref="fixedRateMethodRuleForm" />
+						</bean>
+					</list>
+				</entry>
+			</map>
+		</property>
+	</bean>
+	<bean id="allocmethodcondition" class="nc.ui.resa.allocmethod.view.AllocMethodConditionEditor" init-method="initUI">
+		<property name="model" ref="allocmethodModel"/>
+		<property name="gisteditor" ref="dynfactorMethodRuleForm"/>
+		<property name="nodekey" value="allocmethodcondition"/>
+		<property name="templateContainer" ref="templateContainer"/>
+	</bean>
+	
+	<bean id="methodcontainer" class="nc.ui.resa.allocmethod.view.AllocMethodContainer" init-method="initUI">
+	     <property name="model" ref="allocmethodModel"/>
+	     <property name="headEditor" ref="methodList"/>
+		 <property name="alloccondition" ref="allocmethodcondition"/>
+		 <property name="map">
+			<map>
+				<entry key="0001Z3methodtyperate"><ref bean="dynfactorMethodRuleForm"/></entry>
+				<entry key="0001Z3methodtypefixd"><ref bean="fixedRateMethodRuleForm"/></entry>
+			</map>
+		</property>
+	</bean>
+	
+  <!-- ############## UI Layout ########################## -->
+	<bean id="container" class="nc.ui.uif2.TangramContainer" init-method="initUI">
+		<property name="constraints">
+			<list>
+				<bean class="nc.ui.uif2.tangramlayout.TangramLayoutConstraint">
+					<property name="newComponent" ref="methodcontainer" />
+				</bean>
+			</list>
+		</property>
+		<property name="editActions">
+			<list>
+			   <ref bean="saveAction" />
+				<ref bean="saveAddAction" />
+				<ref bean="nullAction"/>
+				<ref bean="cancelAction" />
+			</list>
+		</property>
+		<property name="actions">
+			<list>
+				<ref bean='addAction' />
+			    <ref bean='editAction' />
+			    <ref bean='deleteAction' />
+			    
+				<ref bean="nullAction"/>
+				<ref bean="refreshAction" />
+				<!--<ref bean="nullAction"/>
+				<ref bean="printActionGroup" />
+			--></list>
+		</property>
+		<property name="model">
+			<ref bean="allocmethodModel" />
+		</property>
+	</bean>
+	
+	<!-- actions -->
+	<bean id="addAction" class="nc.ui.resa.allocmethod.actions.AllocMethodAddAction">
+		<property name="model" ref="allocmethodModel"/>
+		<property name="container" ref="methodcontainer"/>
+	</bean>
+	
+	<bean id="editAction" class="nc.ui.resa.allocmethod.actions.AllocMethodEditAction">
+		<property name="model" ref="allocmethodModel"/>
+		<property name="container" ref="methodcontainer"/>
+	</bean>
+	
+	<bean id="deleteAction" class="nc.ui.resa.allocmethod.actions.AllocMethodDelAction">
+		<property name="model" ref="allocmethodModel"/>
+		<property name="headeditor" ref="methodList"/>
+	</bean>
+	
+	<bean id="nullAction" class="nc.funcnode.ui.action.SeparatorAction" />
+	
+	<bean id="refreshAction" class="nc.ui.uif2.actions.RefreshAction">
+		<property name="model" ref="allocmethodModel"/>
+		<property name="dataManager" ref="modelDataManager"/>
+	</bean>
+	
+	<bean id="saveAction" class="nc.ui.resa.allocmethod.actions.AllocMethodSaveAction">
+		<property name="model" ref="allocmethodModel"/>
+		<property name="methodContainer" ref="methodcontainer"/>
+		<property name="validationService" ref="validationservice"/>
+	</bean>
+	
+	<bean id="validationservice" class="nc.ui.resa.allocmethod.model.AllocMethodValidateService">
+		<property name="methodContainer" ref="methodcontainer"/>
+	</bean>
+	
+	<!--<bean name="validationservice" class="nc.bs.uif2.validation.DefaultValidationService">
+		<property name="validators">
+			<list>
+				<ref bean="defaultValidationService" />
+				<ref bean="partValidationService" />
+			</list>
+		</property>
+	</bean>
+	<bean id="defaultValidationService" class="nc.ui.resa.allocmethod.model.DetaultValidateService">
+		<property name="methodContainer" ref="methodcontainer"/>
+	</bean>
+	<bean id="partValidationService" class="nc.ui.resa.allocmethod.model.AllocMethodValidateService">
+		<property name="methodContainer" ref="methodcontainer"/>
+	</bean>
+	-->
+	
+	<bean id="saveAddAction" class="nc.ui.resa.allocmethod.actions.AllocMethodSAveAddAction">
+	    <property name="saveaction" ref="saveAction"/>
+		<property name="addAction" ref="addAction"/>
+		<property name="model" ref="allocmethodModel"/>
+		<property name="validationService" ref="validationservice"/>
+	</bean>
+	
+	<bean id="cancelAction" class="nc.ui.resa.allocmethod.actions.AllocMethodCancelAction">
+		<property name="model" ref="allocmethodModel"/>
+	</bean>
+	
+	<!-- 打印按钮组 -->
+	<bean id="printActionGroup" class="nc.funcnode.ui.action.GroupAction">
+		<property name="code" value="listPrintGroup" />
+		<property name="actions">
+			<list>
+				<ref bean="printAction" />
+				<ref bean="printPreAction" />
+			</list>
+		</property>
+	</bean>
+	<!--列表打印action组 -->
+	<bean id="printPreAction" class="nc.ui.uif2.actions.TemplatePreviewAction">
+		<property name="model" ref="allocmethodModel" />
+	</bean>
+	<bean id="printAction" class="nc.ui.uif2.actions.TemplatePrintAction">
+		<property name="model" ref="allocmethodModel" />
+	</bean>
+
+</beans>
