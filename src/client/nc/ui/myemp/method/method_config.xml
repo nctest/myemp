@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="context" class="nc.vo.uif2.LoginContext"></bean>
+	<bean id="container" class="nc.ui.uif2.TangramContainer"
+		init-method="initUI">
+		<property name="tangramLayoutRoot">
+			<bean class="nc.ui.uif2.tangramlayout.node.VSNode">
+				<property name="up">
+					<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+						<property name="component" ref="methodListView"></property>
+					</bean>
+				</property>
+				<property name="down">
+					<bean class="nc.ui.uif2.tangramlayout.node.TBNode">
+						<property name="tabs">
+							<bean class="nc.ui.uif2.tangramlayout.node.CNode">
+								<property name="component" ref="basisListView"></property>
+								<property name="name" value="分摊依据"></property>
+							</bean>
+						</property>
+					</bean>
+				</property>
+				<property name="dividerLocation" value="300f"></property>
+			</bean>
+		</property>
+		<property name="actions">
+			<ref local="addAction" />
+		</property>
+		<property name="editActions">
+			<ref local="cancelAction" />
+		</property>
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="basisListView" class="nc.ui.uif2.editor.BillListView"
+		init-method="initUI">
+		<property name="model" ref="model"></property>
+		<property name="nodekey" value="basis"></property>
+		<property name="multiSelectionEnable" value="true"></property>
+	</bean>
+	<bean id="methodListView" class="nc.ui.uif2.editor.BillListView"
+		init-method="initUI">
+		<property name="model" ref="model"></property>
+		<property name="nodekey" value="method"></property>
+	</bean>
+	<bean id="model" class="nc.ui.uif2.model.BillManageModel">
+		<property name="businessObjectAdapterFactory" ref="businessObjectAdapterFactory"></property>
+		<property name="context" ref="context"></property>
+		<property name="service" ref="modelService"></property>
+	</bean>
+	<bean id="modelService" class="nc.ui.myemp.method.model.MethodModelService"></bean>
+	<bean id="businessObjectAdapterFactory" class="nc.vo.bd.meta.BDObjectAdpaterFactory"></bean>
+	<bean id="addAction" class="nc.ui.uif2.actions.AddAction">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="cancelAction" class="nc.ui.uif2.actions.CancelAction">
+		<property name="model" ref="model"></property>
+	</bean>
+
+</beans>
