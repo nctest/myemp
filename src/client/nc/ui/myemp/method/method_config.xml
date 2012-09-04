@@ -49,7 +49,7 @@
 		<property name="model" ref="model"></property>
 		<property name="nodekey" value="basis"></property>
 	</bean>
-	<bean id="methodForm" class="nc.ui.uif2.editor.BillForm"
+	<bean id="methodForm" class="nc.ui.myemp.method.view.MethodBillForm"
 		init-method="initUI">
 		<property name="model" ref="model"></property>
 		<property name="nodekey" value="method"></property>
@@ -110,5 +110,10 @@
 	</bean>
 	<bean id="dataSource" class="nc.ui.bd.pub.actions.print.MetaDataAllDatasSource">
 		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="ClosingListener" class="nc.ui.uif2.FunNodeClosingHandler">
+		<property name="model" ref="model"></property>
+		<property name="saveaction" ref="saveAction"></property>
+		<property name="cancelaction" ref="cancelAction"></property>
 	</bean>
 </beans>
