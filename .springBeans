@@ -18,6 +18,7 @@
 		<config>src/client/config2.xml</config>
 		<config>src/client/method.xml</config>
 		<config>src/client/method_org.xml</config>
+		<config>src/public/nc/vo/myemp/method/method_config.xml</config>
 	</configs>
 	<configSets>
 	</configSets>
