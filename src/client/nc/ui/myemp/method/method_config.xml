@@ -9,14 +9,14 @@
 			<bean class="nc.ui.uif2.tangramlayout.node.VSNode">
 				<property name="up">
 					<bean class="nc.ui.uif2.tangramlayout.node.CNode">
-						<property name="component" ref="methodListView"></property>
+						<property name="component" ref="methodForm"></property>
 					</bean>
 				</property>
 				<property name="down">
 					<bean class="nc.ui.uif2.tangramlayout.node.TBNode">
 						<property name="tabs">
 							<bean class="nc.ui.uif2.tangramlayout.node.CNode">
-								<property name="component" ref="basisListView"></property>
+								<property name="component" ref="basisForm"></property>
 								<property name="name" value="分摊依据"></property>
 							</bean>
 						</property>
@@ -26,20 +26,30 @@
 			</bean>
 		</property>
 		<property name="actions">
-			<ref local="addAction" />
+			<list>
+				<ref local="addAction" />
+				<ref local="editAction" />
+				<ref local="deleteAction" />
+				<ref local="refreshAction" />
+				<ref local="separatorAction" />
+				<ref local="printGroupAction" />
+			</list>
 		</property>
 		<property name="editActions">
-			<ref local="cancelAction" />
+			<list>
+				<ref local="saveAction" />
+				<ref local="separatorAction" />
+				<ref local="cancelAction" />
+			</list>
 		</property>
 		<property name="model" ref="model"></property>
 	</bean>
-	<bean id="basisListView" class="nc.ui.uif2.editor.BillListView"
+	<bean id="basisForm" class="nc.ui.uif2.editor.BillForm"
 		init-method="initUI">
 		<property name="model" ref="model"></property>
 		<property name="nodekey" value="basis"></property>
-		<property name="multiSelectionEnable" value="true"></property>
 	</bean>
-	<bean id="methodListView" class="nc.ui.uif2.editor.BillListView"
+	<bean id="methodForm" class="nc.ui.uif2.editor.BillForm"
 		init-method="initUI">
 		<property name="model" ref="model"></property>
 		<property name="nodekey" value="method"></property>
@@ -54,8 +64,51 @@
 	<bean id="addAction" class="nc.ui.uif2.actions.AddAction">
 		<property name="model" ref="model"></property>
 	</bean>
-	<bean id="cancelAction" class="nc.ui.uif2.actions.CancelAction">
+	<bean id="saveAction" class="nc.ui.uif2.actions.SaveAction">
+		<property name="model" ref="model"></property>
+		<property name="editor" ref="methodForm"></property>
+	</bean>
+	<bean id="editAction" class="nc.ui.uif2.actions.EditAction">
 		<property name="model" ref="model"></property>
 	</bean>
-
+	<bean id="deleteAction" class="nc.ui.uif2.actions.DeleteAction">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="refreshAction" class="nc.ui.uif2.actions.RefreshAction">
+		<property name="model" ref="model"></property>
+		<property name="dataManager" ref="modelDataManager"></property>
+	</bean>
+	<bean id="modelDataManager" class="nc.ui.myemp.method.model.MethodModelDataManager">
+		<property name="model" ref="model"></property>
+	</bean>
+	<bean id="separatorAction" class="nc.funcnode.ui.action.SeparatorAction"></bean>
+	<bean id="cancelAction" class="nc.ui.uif2.actions.CancelAction">
+		<property name="model" ref="model"></property>
+		<property name="editor" ref="methodForm"></property>
+	</bean>
+	<bean id="printGroupAction" class="nc.funcnode.ui.action.GroupAction">
+		<property name="actions">
+			<list>
+				<ref local="templatePrintAction" />
+				<ref local="templatePreviewAction" />
+				<ref local="outputAction" />
+			</list>
+		</property>
+	</bean>
+	<bean id="templatePrintAction" class="nc.ui.uif2.actions.TemplatePrintAction">
+		<property name="model" ref="model"></property>
+		<property name="datasource" ref="dataSource"></property>
+		<property name="nodeKey" value="printCountry"></property>
+	</bean>
+	<bean id="templatePreviewAction" class="nc.ui.uif2.actions.TemplatePreviewAction">
+		<property name="model" ref="model"></property>
+		<property name="datasource" ref="dataSource"></property>
+	</bean>
+	<bean id="outputAction" class="nc.ui.uif2.actions.OutputAction">
+		<property name="model" ref="model"></property>
+		<property name="datasource" ref="dataSource"></property>
+	</bean>
+	<bean id="dataSource" class="nc.ui.bd.pub.actions.print.MetaDataAllDatasSource">
+		<property name="model" ref="model"></property>
+	</bean>
 </beans>
