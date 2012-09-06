@@ -7,6 +7,7 @@ import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.uif2.AppEvent;
+import nc.ui.uif2.UIState;
 import nc.ui.uif2.editor.BillForm;
 import nc.ui.uif2.model.AppEventConst;
 import nc.ui.uif2.model.BillManageModel;
@@ -23,23 +24,47 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 			billItem.getItemEditor().addBillEditListener(this);
 		}
 	}
+
 	@Override
 	public void handleEvent(AppEvent event) {
 		super.handleEvent(event);
-		if(AppEventConst.MODEL_INITIALIZED==event.getType()){
+		if (AppEventConst.MODEL_INITIALIZED == event.getType()) {
 			reloadDataFromModel();
 		}
 	}
+
 	private void reloadDataFromModel() {
-		BillManageModel model=(BillManageModel) getModel();
+		BillManageModel model = (BillManageModel) getModel();
 		@SuppressWarnings("unchecked")
 		List<MethodVO> list = model.getData();
 		int rowCount = billCardPanel.getRowCount();
-		//只需要添加list.size()-rowCount行。
-		for (int i = 0; i < list.size()-rowCount; i++) {
+		int size = list.size();
+		// 只需要添加size-rowCount行。
+		for (int i = 0; i < size - rowCount; i++) {
 			billCardPanel.addLine();
 		}
-		billCardPanel.getBillModel().setBodyRowObjectByMetaData(list.toArray(new MethodVO[0]), 0);
+		if (size > 0) {
+			billCardPanel.getBillModel().setBodyRowObjectByMetaData(
+					list.toArray(new MethodVO[0]), 0);
+		}
+	}
+
+	@Override
+	public Object getValue() {
+		Object value = super.getValue();
+		if (isUIStateAdd() && value.getClass().isArray()) {
+			MethodVO[] objs = (MethodVO[]) value;
+			for (MethodVO vo : objs) {
+				if (vo.getPk_method() == null) {
+					return vo;
+				}
+			}
+		}
+		return value;
+	}
+
+	private boolean isUIStateAdd() {
+		return getModel().getUiState() == UIState.ADD;
 	}
 
 	@Override
@@ -50,12 +75,20 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 	}
 
 	@Override
+	protected void onNotEdit() {
+		super.onNotEdit();
+		reloadDataFromModel();
+		getModel().directlyUpdate(getModel().getSelectedData());
+	}
+
+	@Override
 	public void afterEdit(BillEditEvent e) {
-		if(MethodVO.CONTROLAREA.equals(e.getKey())){
-//			UIRefPane refPane = (UIRefPane) billCardPanel.getBodyItem(MethodVO.CONTROLAREA).getComponent();
-//			refPane.getRefName();
-			((UIRefPane)e.getSource()).getRefName();
-			
+		if (MethodVO.CONTROLAREA.equals(e.getKey())) {
+			// UIRefPane refPane = (UIRefPane)
+			// billCardPanel.getBodyItem(MethodVO.CONTROLAREA).getComponent();
+			// refPane.getRefName();
+			((UIRefPane) e.getSource()).getRefName();
+
 		}
 	}
 
