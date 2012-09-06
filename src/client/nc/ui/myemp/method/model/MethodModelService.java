@@ -29,7 +29,10 @@ public class MethodModelService implements IAppModelService {
 
 	@Override
 	public Object update(Object object) throws Exception {
-		return getService().update(((MethodVO[]) object)[0]);
+		if (object.getClass().isArray()) {
+			return getService().update(((MethodVO[]) object));
+		}
+		return null;
 	}
 
 	@Override
