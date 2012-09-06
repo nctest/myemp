@@ -52,6 +52,7 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 	@Override
 	public Object getValue() {
 		Object value = super.getValue();
+		// 增加时只返回一条数据（主键为空）
 		if (isUIStateAdd() && value.getClass().isArray()) {
 			MethodVO[] objs = (MethodVO[]) value;
 			for (MethodVO vo : objs) {
@@ -59,8 +60,15 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 					return vo;
 				}
 			}
+		} else if (isUIStateEdit()) {
+			// 编辑时会返回数组
+			return value;
 		}
 		return value;
+	}
+
+	private boolean isUIStateEdit() {
+		return getModel().getUiState() == UIState.EDIT;
 	}
 
 	private boolean isUIStateAdd() {
