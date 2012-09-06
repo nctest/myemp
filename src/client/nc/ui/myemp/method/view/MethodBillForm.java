@@ -27,19 +27,25 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 	public void handleEvent(AppEvent event) {
 		super.handleEvent(event);
 		if(AppEventConst.MODEL_INITIALIZED==event.getType()){
-			BillManageModel model=(BillManageModel) getModel();
-			@SuppressWarnings("unchecked")
-			List<MethodVO> list = model.getData();
-			for (int i = 0; i < list.size(); i++) {
-				billCardPanel.addLine();
-			}
-			billCardPanel.getBillModel().setBodyRowObjectByMetaData(list.toArray(new MethodVO[0]), 0);
+			reloadDataFromModel();
 		}
+	}
+	private void reloadDataFromModel() {
+		BillManageModel model=(BillManageModel) getModel();
+		@SuppressWarnings("unchecked")
+		List<MethodVO> list = model.getData();
+		int rowCount = billCardPanel.getRowCount();
+		//只需要添加list.size()-rowCount行。
+		for (int i = 0; i < list.size()-rowCount; i++) {
+			billCardPanel.addLine();
+		}
+		billCardPanel.getBillModel().setBodyRowObjectByMetaData(list.toArray(new MethodVO[0]), 0);
 	}
 
 	@Override
 	protected void onAdd() {
 		super.onAdd();
+		reloadDataFromModel();
 		billCardPanel.addLine();
 	}
 
