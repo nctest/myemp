@@ -13,19 +13,10 @@ public class MethodModelService implements IAppModelService {
 
 	@Override
 	public Object insert(Object object) throws Exception {
-		// the comment is because of the override method getValue in
-		// MethodBillForm,so when add operation object is a single object.
-
-		// MethodVO[] vos=null;
-		// if (object.getClass().isArray()) {
-		// vos = (MethodVO[]) object;
-		// } else {
-		// vos = new MethodVO[] { (MethodVO) object };
-		// }
-		getService().insert(toList(object));
-		return null;
+		return getService().insert((MethodVO) object);
 	}
 
+	@SuppressWarnings("unused")
 	private List<MethodVO> toList(Object object) {
 		MethodVO[] vos = new MethodVO[] { (MethodVO) object };
 		List<MethodVO> list = (List<MethodVO>) Arrays.asList(vos);

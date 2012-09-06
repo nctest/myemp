@@ -1,9 +1,7 @@
 package nc.impl.myemp.method;
 
-import java.util.List;
 
 import nc.bs.bd.baseservice.md.SingleBaseService;
-import nc.bs.dao.BaseDAO;
 import nc.itf.myemp.method.IMethodService;
 import nc.vo.myemp.method.MethodVO;
 import nc.vo.pub.BusinessException;
@@ -19,8 +17,8 @@ public class MethodServiceImpl extends SingleBaseService<MethodVO> implements
 	}
 
 	@Override
-	public String[] insert(List<MethodVO> list) throws BusinessException {
-		return new BaseDAO().insertVOList(list);
+	public MethodVO insert(MethodVO vo) throws BusinessException {
+		return insertVO(vo);
 	}
 
 	@Override
