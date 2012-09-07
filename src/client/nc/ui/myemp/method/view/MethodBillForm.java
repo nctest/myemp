@@ -29,9 +29,17 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 	@Override
 	public void handleEvent(AppEvent event) {
 		super.handleEvent(event);
-		if (AppEventConst.MODEL_INITIALIZED == event.getType()) {
+		if (isModelInitializedEvent(event) || isDataDeletedEvent(event)) {
 			reloadDataFromModel();
 		}
+	}
+
+	private boolean isDataDeletedEvent(AppEvent event) {
+		return AppEventConst.DATA_DELETED == event.getType();
+	}
+
+	private boolean isModelInitializedEvent(AppEvent event) {
+		return AppEventConst.MODEL_INITIALIZED == event.getType();
 	}
 
 	private void reloadDataFromModel() {
