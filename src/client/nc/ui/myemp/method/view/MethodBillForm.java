@@ -19,6 +19,7 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 	@Override
 	public void initUI() {
 		super.initUI();
+		billCardPanel.setBodyAutoAddLine(false);
 		BillItem[] bodyItems = billCardPanel.getBodyItems();
 		for (BillItem billItem : bodyItems) {
 			billItem.getItemEditor().addBillEditListener(this);
