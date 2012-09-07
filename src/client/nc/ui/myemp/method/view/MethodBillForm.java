@@ -34,9 +34,24 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 	}
 
 	private void reloadDataFromModel() {
+		addOrDelLines();
+		setRowObject();
+	}
+
+	@SuppressWarnings("unchecked")
+	private void setRowObject() {
 		BillManageModel model = (BillManageModel) getModel();
-		@SuppressWarnings("unchecked")
-		List<MethodVO> list = model.getData();
+		List<MethodVO> list = (List<MethodVO>) model.getData();
+		if (list.size() > 0) {
+			billCardPanel.getBillModel().setBodyRowObjectByMetaData(
+					list.toArray(new MethodVO[0]), 0);
+		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void addOrDelLines() {
+		BillManageModel model = (BillManageModel) getModel();
+		List<MethodVO> list = (List<MethodVO>) model.getData();
 		int rowCount = billCardPanel.getRowCount();
 		int size = list.size();
 		if (size >= rowCount) {
@@ -45,13 +60,10 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 				billCardPanel.addLine();
 			}
 		} else {
+			// 只需要删除rowCount-size行
 			for (int i = 0; i < rowCount - size; i++) {
 				billCardPanel.delLine();
 			}
-		}
-		if (size > 0) {
-			billCardPanel.getBillModel().setBodyRowObjectByMetaData(
-					list.toArray(new MethodVO[0]), 0);
 		}
 	}
 
