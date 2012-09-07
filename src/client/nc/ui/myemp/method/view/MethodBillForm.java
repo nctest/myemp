@@ -87,13 +87,11 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 					return vo;
 				}
 			}
-		} else if (isUIStateEdit()) {
-			// 编辑时会返回数组
-			return value;
 		}
 		return value;
 	}
 
+	@SuppressWarnings("unused")
 	private boolean isUIStateEdit() {
 		return getModel().getUiState() == UIState.EDIT;
 	}
