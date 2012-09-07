@@ -39,9 +39,15 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 		List<MethodVO> list = model.getData();
 		int rowCount = billCardPanel.getRowCount();
 		int size = list.size();
-		// 只需要添加size-rowCount行。
-		for (int i = 0; i < size - rowCount; i++) {
-			billCardPanel.addLine();
+		if (size >= rowCount) {
+			// 只需要添加size-rowCount行。
+			for (int i = 0; i < size - rowCount; i++) {
+				billCardPanel.addLine();
+			}
+		} else {
+			for (int i = 0; i < rowCount - size; i++) {
+				billCardPanel.delLine();
+			}
 		}
 		if (size > 0) {
 			billCardPanel.getBillModel().setBodyRowObjectByMetaData(
