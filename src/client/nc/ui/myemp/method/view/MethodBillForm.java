@@ -1,8 +1,11 @@
 package nc.ui.myemp.method.view;
 
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 import nc.ui.pub.beans.UIRefPane;
+import nc.ui.pub.beans.UITable;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillItem;
@@ -20,6 +23,17 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 	public void initUI() {
 		super.initUI();
 		billCardPanel.setBodyAutoAddLine(false);
+		final UITable billTable = billCardPanel.getBillTable();
+		billTable.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				int selectedRow = billTable.rowAtPoint(e.getPoint());
+				BillManageModel model = (BillManageModel) getModel();
+				if (model.getSelectedRow() != selectedRow) {
+					model.setSelectedRow(selectedRow);
+				}
+			}
+		});
 		BillItem[] bodyItems = billCardPanel.getBodyItems();
 		for (BillItem billItem : bodyItems) {
 			billItem.getItemEditor().addBillEditListener(this);
