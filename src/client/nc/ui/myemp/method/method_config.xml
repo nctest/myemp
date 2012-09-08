@@ -44,7 +44,7 @@
 		</property>
 		<property name="model" ref="model"></property>
 	</bean>
-	<bean id="basisForm" class="nc.ui.uif2.editor.BillForm"
+	<bean id="basisForm" class="nc.ui.myemp.method.view.BasisBillForm"
 		init-method="initUI">
 		<property name="model" ref="model"></property>
 		<property name="nodekey" value="basis"></property>

@@ -4,6 +4,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
+import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.beans.UITable;
 import nc.ui.pub.bill.BillEditEvent;
@@ -15,6 +16,7 @@ import nc.ui.uif2.editor.BillForm;
 import nc.ui.uif2.model.AppEventConst;
 import nc.ui.uif2.model.BillManageModel;
 import nc.vo.myemp.method.MethodVO;
+
 
 public class MethodBillForm extends BillForm implements BillEditListener {
 	private static final long serialVersionUID = 1L;
@@ -87,6 +89,15 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 			for (int i = 0; i < rowCount - size; i++) {
 				billCardPanel.delLine();
 			}
+		}
+	}
+
+	@Override
+	protected void synchronizeDataFromModel() {
+		try {
+			super.synchronizeDataFromModel();
+		} catch (Exception e) {
+			Logger.info("在新增状态时，选中的数据的行数大于model中的总行数，这里异常不作处理");
 		}
 	}
 
