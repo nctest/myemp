@@ -2,7 +2,9 @@ package nc.ui.myemp.method.view;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import nc.bs.logging.Logger;
 import nc.ui.pub.beans.UIRefPane;
@@ -10,6 +12,7 @@ import nc.ui.pub.beans.UITable;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillItem;
+import nc.ui.pub.bill.BillModel;
 import nc.ui.uif2.AppEvent;
 import nc.ui.uif2.UIState;
 import nc.ui.uif2.editor.BillForm;
@@ -17,9 +20,9 @@ import nc.ui.uif2.model.AppEventConst;
 import nc.ui.uif2.model.BillManageModel;
 import nc.vo.myemp.method.MethodVO;
 
-
 public class MethodBillForm extends BillForm implements BillEditListener {
 	private static final long serialVersionUID = 1L;
+	private Set<Integer> editRows = new HashSet<Integer>();
 
 	@Override
 	public void initUI() {
@@ -116,6 +119,16 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 		return value;
 	}
 
+	@Override
+	protected void beforeGetValue() {
+		super.beforeGetValue();
+		//在这里设置那些修改行为修改状态,因为当发生SELECTION_CHANGED事件时，会把所有的行状态设为Normal
+		for (Integer editRow : editRows) {
+			billCardPanel.getBillModel().setRowState(editRow,
+					BillModel.MODIFICATION);
+		}
+	}
+
 	@SuppressWarnings("unused")
 	private boolean isUIStateEdit() {
 		return getModel().getUiState() == UIState.EDIT;
@@ -137,10 +150,18 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 		super.onNotEdit();
 		reloadDataFromModel();
 		getModel().directlyUpdate(getModel().getSelectedData());
+		editRows.clear();
 	}
 
 	@Override
 	public void afterEdit(BillEditEvent e) {
+		if (e.getOldValue() != e.getValue()) {
+			int selectedRow = ((BillManageModel) getModel()).getSelectedRow();
+			if (!editRows.contains(selectedRow)) {
+				editRows.add(selectedRow);
+			}
+		}
+
 		if (MethodVO.CONTROLAREA.equals(e.getKey())) {
 			// UIRefPane refPane = (UIRefPane)
 			// billCardPanel.getBodyItem(MethodVO.CONTROLAREA).getComponent();
