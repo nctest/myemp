@@ -67,6 +67,11 @@
 	<bean id="saveAction" class="nc.ui.uif2.actions.SaveAction">
 		<property name="model" ref="model"></property>
 		<property name="editor" ref="methodForm"></property>
+		<property name="validationService">
+			<bean class="nc.ui.myemp.method.validator.MethodValidationService">
+				<property name="billForm" ref="methodForm"></property>
+			</bean>
+		</property>
 	</bean>
 	<bean id="editAction" class="nc.ui.uif2.actions.EditAction">
 		<property name="model" ref="model"></property>
