@@ -98,7 +98,15 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 	@Override
 	protected void synchronizeDataFromModel() {
 		try {
-			super.synchronizeDataFromModel();
+			// super.synchronizeDataFromModel();
+			Logger.debug("entering synchronizeDataFromModel");
+			Object selectedData = ((BillManageModel) getModel())
+					.getSelectedData();
+			// 这里必须加以处理，即当新增状态选中行数据为null时,不再调用setValue方法，否则，新增的行又会消失。
+			if (!(getModel().getUiState() == UIState.ADD && selectedData == null)) {
+				setValue(selectedData);
+			}
+			Logger.debug("leaving synchronizeDataFromModel");
 		} catch (Exception e) {
 			Logger.info("在新增状态时，选中的数据的行数大于model中的总行数，这里异常不作处理");
 		}
@@ -122,7 +130,7 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 	@Override
 	protected void beforeGetValue() {
 		super.beforeGetValue();
-		//在这里设置那些修改行为修改状态,因为当发生SELECTION_CHANGED事件时，会把所有的行状态设为Normal
+		// 在这里设置那些修改行为修改状态,因为当发生SELECTION_CHANGED事件时，会把所有的行状态设为Normal
 		for (Integer editRow : editRows) {
 			billCardPanel.getBillModel().setRowState(editRow,
 					BillModel.MODIFICATION);
