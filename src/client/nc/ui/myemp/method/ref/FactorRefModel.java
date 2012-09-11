@@ -3,6 +3,7 @@ package nc.ui.myemp.method.ref;
 import nc.ui.bd.ref.AbstractRefModel;
 import nc.vo.resa.factor.FactorVO;
 
+@Deprecated
 public class FactorRefModel extends AbstractRefModel {
 	public FactorRefModel() {
 		reset();

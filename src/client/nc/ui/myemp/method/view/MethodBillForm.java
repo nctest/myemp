@@ -13,6 +13,8 @@ import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillItem;
 import nc.ui.pub.bill.BillModel;
+import nc.ui.pub.bill.IBillItem;
+import nc.ui.resa.refmodel.FactorRefModel;
 import nc.ui.uif2.AppEvent;
 import nc.ui.uif2.UIState;
 import nc.ui.uif2.editor.BillForm;
@@ -102,8 +104,8 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 			Logger.debug("entering synchronizeDataFromModel");
 			Object selectedData = ((BillManageModel) getModel())
 					.getSelectedData();
-			// 这里必须加以处理，即当新增状态选中行数据为null时,不再调用setValue方法，否则，新增的行又会消失。
-			if (!(getModel().getUiState() == UIState.ADD && selectedData == null)) {
+			// 这里必须加以处理，即选中行数据为null时,不再调用setValue方法，否则，新增的行又会消失。
+			if (selectedData != null) {
 				setValue(selectedData);
 			}
 			Logger.debug("leaving synchronizeDataFromModel");
@@ -157,7 +159,7 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 	protected void onNotEdit() {
 		super.onNotEdit();
 		reloadDataFromModel();
-		getModel().directlyUpdate(getModel().getSelectedData());
+		// getModel().directlyUpdate(getModel().getSelectedData());
 		editRows.clear();
 	}
 
@@ -169,13 +171,20 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 				editRows.add(selectedRow);
 			}
 		}
+		String controlArea = (String) billCardPanel.getBillModel().getValueAt(
+				0, MethodVO.CONTROLAREA + IBillItem.ID_SUFFIX);
+		// boolean flag = controlArea != null && !"".equals(controlArea.trim())
+		// ? true
+		// : false;
+		// billCardPanel.getBillModel().setCellEditable(selectedRow,
+		// MethodVO.FACTOR, flag);
 
 		if (MethodVO.CONTROLAREA.equals(e.getKey())) {
-			// UIRefPane refPane = (UIRefPane)
-			// billCardPanel.getBodyItem(MethodVO.CONTROLAREA).getComponent();
-			// refPane.getRefName();
-			((UIRefPane) e.getSource()).getRefName();
-
+			UIRefPane factorRefPane = (UIRefPane) billCardPanel.getBodyItem(
+					MethodVO.FACTOR).getComponent();
+			FactorRefModel factorRefModel = (FactorRefModel) factorRefPane
+					.getRefModel();
+			factorRefModel.setPk_controlarea(controlArea);
 		}
 	}
 

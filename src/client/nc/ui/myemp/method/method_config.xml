@@ -42,30 +42,39 @@
 				<ref local="cancelAction" />
 			</list>
 		</property>
-		<property name="model" ref="model"></property>
+		<property name="model" ref="methodModel"></property>
 	</bean>
 	<bean id="basisForm" class="nc.ui.myemp.method.view.BasisBillForm"
 		init-method="initUI">
-		<property name="model" ref="model"></property>
+		<property name="model" ref="basisModel"></property>
 		<property name="nodekey" value="basis"></property>
 	</bean>
-	<bean id="methodForm" class="nc.ui.myemp.method.view.MethodBillForm"
-		init-method="initUI">
-		<property name="model" ref="model"></property>
-		<property name="nodekey" value="method"></property>
-	</bean>
-	<bean id="model" class="nc.ui.uif2.model.BillManageModel">
+	<bean id="basisModel" class="nc.ui.uif2.model.BillManageModel">
 		<property name="businessObjectAdapterFactory" ref="businessObjectAdapterFactory"></property>
 		<property name="context" ref="context"></property>
 		<property name="service" ref="modelService"></property>
 	</bean>
+	<bean id="methodForm" class="nc.ui.myemp.method.view.MethodBillForm"
+		init-method="initUI">
+		<property name="model" ref="methodModel"></property>
+		<property name="nodekey" value="method"></property>
+	</bean>
+	<bean id="methodModel" class="nc.ui.myemp.method.model.MethodBillManageModel">
+		<property name="businessObjectAdapterFactory" ref="businessObjectAdapterFactory"></property>
+		<property name="context" ref="context"></property>
+		<property name="service" ref="modelService"></property>
+	</bean>
+	<bean id="mediator" class="nc.ui.myemp.method.model.MethodBasisMediator">
+		<property name="methodModel" ref="methodModel"></property>
+		<property name="basisModel" ref="basisModel"></property>
+	</bean>
 	<bean id="modelService" class="nc.ui.myemp.method.model.MethodModelService"></bean>
 	<bean id="businessObjectAdapterFactory" class="nc.vo.bd.meta.BDObjectAdpaterFactory"></bean>
 	<bean id="addAction" class="nc.ui.uif2.actions.AddAction">
-		<property name="model" ref="model"></property>
+		<property name="model" ref="methodModel"></property>
 	</bean>
 	<bean id="saveAction" class="nc.ui.uif2.actions.SaveAction">
-		<property name="model" ref="model"></property>
+		<property name="model" ref="methodModel"></property>
 		<property name="editor" ref="methodForm"></property>
 		<property name="validationService">
 			<bean class="nc.ui.myemp.method.validator.MethodValidationService">
@@ -74,21 +83,21 @@
 		</property>
 	</bean>
 	<bean id="editAction" class="nc.ui.uif2.actions.EditAction">
-		<property name="model" ref="model"></property>
+		<property name="model" ref="methodModel"></property>
 	</bean>
 	<bean id="deleteAction" class="nc.ui.uif2.actions.DeleteAction">
-		<property name="model" ref="model"></property>
+		<property name="model" ref="methodModel"></property>
 	</bean>
 	<bean id="refreshAction" class="nc.ui.uif2.actions.RefreshAction">
-		<property name="model" ref="model"></property>
+		<property name="model" ref="methodModel"></property>
 		<property name="dataManager" ref="modelDataManager"></property>
 	</bean>
 	<bean id="modelDataManager" class="nc.ui.myemp.method.model.MethodModelDataManager">
-		<property name="model" ref="model"></property>
+		<property name="model" ref="methodModel"></property>
 	</bean>
 	<bean id="separatorAction" class="nc.funcnode.ui.action.SeparatorAction"></bean>
 	<bean id="cancelAction" class="nc.ui.uif2.actions.CancelAction">
-		<property name="model" ref="model"></property>
+		<property name="model" ref="methodModel"></property>
 		<property name="editor" ref="methodForm"></property>
 	</bean>
 	<bean id="printGroupAction" class="nc.funcnode.ui.action.GroupAction">
@@ -101,23 +110,23 @@
 		</property>
 	</bean>
 	<bean id="templatePrintAction" class="nc.ui.myemp.method.actions.MethodTemplatePrintAction">
-		<property name="model" ref="model"></property>
+		<property name="model" ref="methodModel"></property>
 		<property name="datasource" ref="dataSource"></property>
 		<property name="nodeKey" value="printCountry"></property>
 	</bean>
 	<bean id="templatePreviewAction" class="nc.ui.myemp.method.actions.MethodTemplatePreviewAction">
-		<property name="model" ref="model"></property>
+		<property name="model" ref="methodModel"></property>
 		<property name="datasource" ref="dataSource"></property>
 	</bean>
 	<bean id="outputAction" class="nc.ui.myemp.method.actions.MethodOutputAction">
-		<property name="model" ref="model"></property>
+		<property name="model" ref="methodModel"></property>
 		<property name="datasource" ref="dataSource"></property>
 	</bean>
 	<bean id="dataSource" class="nc.ui.bd.pub.actions.print.MetaDataAllDatasSource">
-		<property name="model" ref="model"></property>
+		<property name="model" ref="methodModel"></property>
 	</bean>
 	<bean id="ClosingListener" class="nc.ui.uif2.FunNodeClosingHandler">
-		<property name="model" ref="model"></property>
+		<property name="model" ref="methodModel"></property>
 		<property name="saveaction" ref="saveAction"></property>
 		<property name="cancelaction" ref="cancelAction"></property>
 	</bean>
