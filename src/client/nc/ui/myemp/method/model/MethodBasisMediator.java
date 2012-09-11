@@ -1,11 +1,10 @@
 package nc.ui.myemp.method.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import nc.bs.framework.common.NCLocator;
 import nc.bs.logging.Logger;
-import nc.pubitf.resa.factor.IFactorAssPubService;
 import nc.ui.uif2.AppEvent;
 import nc.ui.uif2.AppEventListener;
 import nc.ui.uif2.model.AppEventConst;
@@ -14,6 +13,7 @@ import nc.vo.myemp.allocbasis.AllocBasisVO;
 import nc.vo.myemp.method.MethodVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.BusinessRuntimeException;
+import nc.vo.pub.lang.UFBoolean;
 import nc.vo.resa.factor.FactorAssVO;
 
 public class MethodBasisMediator implements AppEventListener {
@@ -23,33 +23,39 @@ public class MethodBasisMediator implements AppEventListener {
 	@Override
 	public void handleEvent(AppEvent event) {
 		if (event.getType() == AppEventConst.SELECTION_CHANGED) {
-			BillManageModel methodModel = (BillManageModel) event.getSource();
-			MethodVO selectedData=null;
-			try {
-				selectedData = (MethodVO) methodModel.getSelectedData();
-			} catch (Exception e1) {
-				Logger.info("在新增状态时，选中的数据的行数大于model中的总行数，这里异常不作处理");
-			}
-			if (selectedData != null) {
-				String pk_factor = selectedData.getFactor();
-				try {
-					Map<String, List<FactorAssVO>> map = getFactorAssPubService()
-							.queryAllByAccPKs(new String[] { pk_factor }, "");
-					// FIXME
-					List<FactorAssVO> list = map.get(pk_factor);
-					if (list != null) {
-						basisModel.initModel(list.toArray(new AllocBasisVO[0]));
-					}
-				} catch (BusinessException e) {
-					Logger.debug(e.getMessage());
-					throw new BusinessRuntimeException(e.getMessage(), e);
-				}
-			}
+			doSelectedChanged(event);
 		}
 	}
 
-	private IFactorAssPubService getFactorAssPubService() {
-		return NCLocator.getInstance().lookup(IFactorAssPubService.class);
+	private void doSelectedChanged(AppEvent event) {
+		BillManageModel methodModel = (BillManageModel) event.getSource();
+		MethodVO selectedData = (MethodVO) methodModel.getSelectedData();
+		if (selectedData == null) {
+			return;
+		}
+		String pk_factor = selectedData.getFactor();
+		try {
+			Map<String, List<FactorAssVO>> map = ((BasisModelService) basisModel
+					.getService()).queryAllByAccPKs(
+					new String[] { pk_factor }, "0000-00-00");
+			List<FactorAssVO> list = map.get(pk_factor);
+			if (list != null) {
+				List<AllocBasisVO> basisVOs = new ArrayList<AllocBasisVO>(
+						list.size());
+				for (int i = 0; i < list.size(); i++) {
+					AllocBasisVO basisVO = new AllocBasisVO();
+					basisVO.setSelected(UFBoolean.FALSE);
+					basisVO.setAllocdimen(list.get(i).getPk_entity());
+					basisVOs.add(basisVO);
+				}
+				basisModel.initModel(basisVOs.toArray(new AllocBasisVO[0]));
+			}else{
+				basisModel.initModel(null);
+			}
+		} catch (BusinessException e) {
+			Logger.debug(e.getMessage());
+			throw new BusinessRuntimeException(e.getMessage(), e);
+		}
 	}
 
 	public BillManageModel getMethodModel() {

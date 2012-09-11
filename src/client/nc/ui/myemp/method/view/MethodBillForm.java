@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import nc.bs.logging.Logger;
+import nc.desktop.ui.WorkbenchEnvironment;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.beans.UITable;
 import nc.ui.pub.bill.BillEditEvent;
@@ -96,7 +97,6 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 			}
 		}
 	}
-
 	@Override
 	protected void synchronizeDataFromModel() {
 		try {
@@ -184,6 +184,8 @@ public class MethodBillForm extends BillForm implements BillEditListener {
 					MethodVO.FACTOR).getComponent();
 			FactorRefModel factorRefModel = (FactorRefModel) factorRefPane
 					.getRefModel();
+			factorRefModel.setDate(WorkbenchEnvironment.getInstance()
+					.getBusiDate().toLocalString());
 			factorRefModel.setPk_controlarea(controlArea);
 		}
 	}

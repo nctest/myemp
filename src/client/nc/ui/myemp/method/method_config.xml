@@ -52,7 +52,7 @@
 	<bean id="basisModel" class="nc.ui.uif2.model.BillManageModel">
 		<property name="businessObjectAdapterFactory" ref="businessObjectAdapterFactory"></property>
 		<property name="context" ref="context"></property>
-		<property name="service" ref="modelService"></property>
+		<property name="service" ref="basisModelService"></property>
 	</bean>
 	<bean id="methodForm" class="nc.ui.myemp.method.view.MethodBillForm"
 		init-method="initUI">
@@ -69,6 +69,7 @@
 		<property name="basisModel" ref="basisModel"></property>
 	</bean>
 	<bean id="modelService" class="nc.ui.myemp.method.model.MethodModelService"></bean>
+	<bean id="basisModelService" class="nc.ui.myemp.method.model.BasisModelService"></bean>
 	<bean id="businessObjectAdapterFactory" class="nc.vo.bd.meta.BDObjectAdpaterFactory"></bean>
 	<bean id="addAction" class="nc.ui.uif2.actions.AddAction">
 		<property name="model" ref="methodModel"></property>
