@@ -6,6 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.swing.ListSelectionModel;
+
 import nc.bs.logging.Logger;
 import nc.desktop.ui.WorkbenchEnvironment;
 import nc.ui.pub.beans.UIRefPane;
@@ -35,6 +37,8 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		billCardPanel.setBodyAutoAddLine(false);
 		billCardPanel.addBodyEditListener2(this);
 		final UITable billTable = billCardPanel.getBillTable();
+		billTable.getSelectionModel().setSelectionMode(
+				ListSelectionModel.SINGLE_SELECTION);
 		billTable.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
