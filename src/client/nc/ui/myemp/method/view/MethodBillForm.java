@@ -64,6 +64,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 			reloadDataFromModel();
 			billCardPanel.getBillTable().getSelectionModel()
 					.setSelectionInterval(0, 0);
+			((BillManageModel) getModel()).setSelectedRow(0);
 		}
 	}
 

@@ -25,13 +25,16 @@ public class MethodBasisMediator implements AppEventListener {
 
 	@Override
 	public void handleEvent(AppEvent event) {
-		if (event.getType() == AppEventConst.SELECTION_CHANGED) {
+		if (event.getType() == AppEventConst.SELECTION_CHANGED
+				|| event.getType() == AppEventConst.MODEL_INITIALIZED) {
 			doSelectedChanged(event);
 		} else if (event.getType() == AppEventConst.UISTATE_CHANGED) {
 			if (methodModel.getUiState() == UIState.ADD) {
 				basisModel.setUiState(UIState.ADD);
 			} else if (methodModel.getUiState() == UIState.EDIT) {
 				basisModel.setUiState(UIState.EDIT);
+			} else {
+				basisModel.setUiState(UIState.NOT_EDIT);
 			}
 		} else if ("Factor_Changed".equals(event.getType())) {
 			doFactorChanged(event);
@@ -50,6 +53,7 @@ public class MethodBasisMediator implements AppEventListener {
 	private void doSelectedChanged(AppEvent event) {
 		BillManageModel methodModel = (BillManageModel) event.getSource();
 		MethodVO selectedData = (MethodVO) methodModel.getSelectedData();
+		// FIXME MODEL_INITIALIZED ±£¨selectedData»‘»ª∑µªÿnull
 		if (selectedData == null) {
 			return;
 		}
