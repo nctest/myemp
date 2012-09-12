@@ -1,12 +1,15 @@
 package nc.ui.myemp.method.model;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import nc.bs.logging.Logger;
+import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.uif2.AppEvent;
 import nc.ui.uif2.AppEventListener;
+import nc.ui.uif2.UIState;
 import nc.ui.uif2.model.AppEventConst;
 import nc.ui.uif2.model.BillManageModel;
 import nc.vo.myemp.allocbasis.AllocBasisVO;
@@ -24,6 +27,23 @@ public class MethodBasisMediator implements AppEventListener {
 	public void handleEvent(AppEvent event) {
 		if (event.getType() == AppEventConst.SELECTION_CHANGED) {
 			doSelectedChanged(event);
+		} else if (event.getType() == AppEventConst.UISTATE_CHANGED) {
+			if (methodModel.getUiState() == UIState.ADD) {
+				basisModel.setUiState(UIState.ADD);
+			} else if (methodModel.getUiState() == UIState.EDIT) {
+				basisModel.setUiState(UIState.EDIT);
+			}
+		} else if ("Factor_Changed".equals(event.getType())) {
+			doFactorChanged(event);
+		}
+	}
+
+	private void doFactorChanged(AppEvent event) {
+		BillEditEvent e = (BillEditEvent) event.getContextObject();
+		Object factorPks = e.getValue();
+		if (String[].class.isInstance(factorPks)
+				&& Array.getLength(factorPks) > 0) {
+			initBasisModelByFactorPK((String) Array.get(factorPks, 0));
 		}
 	}
 
@@ -33,11 +53,14 @@ public class MethodBasisMediator implements AppEventListener {
 		if (selectedData == null) {
 			return;
 		}
-		String pk_factor = selectedData.getFactor();
+		initBasisModelByFactorPK(selectedData.getFactor());
+	}
+
+	private void initBasisModelByFactorPK(String pk_factor) {
 		try {
 			Map<String, List<FactorAssVO>> map = ((BasisModelService) basisModel
-					.getService()).queryAllByAccPKs(
-					new String[] { pk_factor }, "0000-00-00");
+					.getService()).queryAllByAccPKs(new String[] { pk_factor },
+					"0000-00-00");
 			List<FactorAssVO> list = map.get(pk_factor);
 			if (list != null) {
 				List<AllocBasisVO> basisVOs = new ArrayList<AllocBasisVO>(
@@ -49,7 +72,7 @@ public class MethodBasisMediator implements AppEventListener {
 					basisVOs.add(basisVO);
 				}
 				basisModel.initModel(basisVOs.toArray(new AllocBasisVO[0]));
-			}else{
+			} else {
 				basisModel.initModel(null);
 			}
 		} catch (BusinessException e) {

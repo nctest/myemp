@@ -8,6 +8,8 @@ import java.util.Set;
 
 import javax.swing.ListSelectionModel;
 
+import org.apache.commons.lang.StringUtils;
+
 import nc.bs.logging.Logger;
 import nc.desktop.ui.WorkbenchEnvironment;
 import nc.ui.pub.beans.UIRefPane;
@@ -60,6 +62,8 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		super.handleEvent(event);
 		if (isModelInitializedEvent(event) || isDataDeletedEvent(event)) {
 			reloadDataFromModel();
+			billCardPanel.getBillTable().getSelectionModel()
+					.setSelectionInterval(0, 0);
 		}
 	}
 
@@ -173,27 +177,33 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	@Override
 	public void afterEdit(BillEditEvent e) {
+		BillManageModel model = (BillManageModel) getModel();
 		if (e.getOldValue() != e.getValue()) {
-			int selectedRow = ((BillManageModel) getModel()).getSelectedRow();
+			int selectedRow = model.getSelectedRow();
 			if (!editRows.contains(selectedRow)) {
 				editRows.add(selectedRow);
 			}
 		}
 		if (MethodVO.CONTROLAREA.equals(e.getKey())) {
-			UIRefPane factorRefPane = (UIRefPane) billCardPanel.getBodyItem(
-					MethodVO.FACTOR).getComponent();
-			FactorRefModel factorRefModel = (FactorRefModel) factorRefPane
-					.getRefModel();
-			factorRefModel.setDate(WorkbenchEnvironment.getInstance()
-					.getBusiDate().toLocalString());
-			String controlArea = (String) billCardPanel.getBillModel()
-					.getValueAt(0, MethodVO.CONTROLAREA + IBillItem.ID_SUFFIX);
-			factorRefModel.setPk_controlarea(controlArea);
+			relateControlAreaAndFactor();
 			// …Ë÷√Œ™ø…±‡º≠
 			billCardPanel.getBillModel().setCellEditable(
-					((BillManageModel) getModel()).getSelectedRow(),
-					MethodVO.FACTOR, true);
+					model.getSelectedRow(), MethodVO.FACTOR, true);
+		} else if (MethodVO.FACTOR.equals(e.getKey())) {
+			model.fireEvent(new AppEvent("Factor_Changed", model, e));
 		}
+	}
+
+	private void relateControlAreaAndFactor() {
+		UIRefPane factorRefPane = (UIRefPane) billCardPanel.getBodyItem(
+				MethodVO.FACTOR).getComponent();
+		FactorRefModel factorRefModel = (FactorRefModel) factorRefPane
+				.getRefModel();
+		factorRefModel.setDate(WorkbenchEnvironment.getInstance().getBusiDate()
+				.toLocalString());
+		String controlArea = (String) billCardPanel.getBillModel().getValueAt(
+				0, MethodVO.CONTROLAREA + IBillItem.ID_SUFFIX);
+		factorRefModel.setPk_controlarea(controlArea);
 	}
 
 	@Override
@@ -204,10 +214,11 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	public boolean beforeEdit(BillEditEvent e) {
 		String controlArea = (String) billCardPanel.getBillModel().getValueAt(
 				e.getRow(), MethodVO.CONTROLAREA + IBillItem.ID_SUFFIX);
-		boolean flag = controlArea != null && !"".equals(controlArea.trim()) ? true
-				: false;
 		billCardPanel.getBillModel().setCellEditable(e.getRow(),
-				MethodVO.FACTOR, flag);
+				MethodVO.FACTOR, StringUtils.isNotBlank(controlArea));
+		if (StringUtils.isNotBlank(controlArea)) {
+			relateControlAreaAndFactor();
+		}
 		return true;
 	}
 }

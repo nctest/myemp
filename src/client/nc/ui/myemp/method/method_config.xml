@@ -110,16 +110,16 @@
 			</list>
 		</property>
 	</bean>
-	<bean id="templatePrintAction" class="nc.ui.myemp.method.actions.MethodTemplatePrintAction">
+	<bean id="templatePrintAction" class="nc.ui.uif2.actions.TemplatePrintAction">
 		<property name="model" ref="methodModel"></property>
 		<property name="datasource" ref="dataSource"></property>
 		<property name="nodeKey" value="printCountry"></property>
 	</bean>
-	<bean id="templatePreviewAction" class="nc.ui.myemp.method.actions.MethodTemplatePreviewAction">
+	<bean id="templatePreviewAction" class="nc.ui.uif2.actions.TemplatePreviewAction">
 		<property name="model" ref="methodModel"></property>
 		<property name="datasource" ref="dataSource"></property>
 	</bean>
-	<bean id="outputAction" class="nc.ui.myemp.method.actions.MethodOutputAction">
+	<bean id="outputAction" class="nc.ui.uif2.actions.OutputAction">
 		<property name="model" ref="methodModel"></property>
 		<property name="datasource" ref="dataSource"></property>
 	</bean>

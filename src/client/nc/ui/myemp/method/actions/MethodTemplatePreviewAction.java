@@ -3,6 +3,7 @@ package nc.ui.myemp.method.actions;
 import nc.ui.uif2.UIState;
 import nc.ui.uif2.actions.TemplatePreviewAction;
 
+@Deprecated
 public class MethodTemplatePreviewAction extends TemplatePreviewAction {
 	private static final long serialVersionUID = -9150991744608039863L;
 

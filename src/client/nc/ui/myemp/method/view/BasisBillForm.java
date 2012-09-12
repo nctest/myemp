@@ -12,12 +12,14 @@ import nc.vo.myemp.allocbasis.AllocBasisVO;
 public class BasisBillForm extends BillForm {
 
 	private static final long serialVersionUID = 2540172321607743066L;
-	
+
 	@Override
 	public void handleEvent(AppEvent event) {
 		super.handleEvent(event);
 		if (isModelInitializedEvent(event) || isDataDeletedEvent(event)) {
 			reloadDataFromModel();
+			billCardPanel.getBillTable().getSelectionModel()
+					.setSelectionInterval(0, 0);
 		}
 	}
 
@@ -62,6 +64,7 @@ public class BasisBillForm extends BillForm {
 			}
 		}
 	}
+
 	@Override
 	protected void synchronizeDataFromModel() {
 		try {
