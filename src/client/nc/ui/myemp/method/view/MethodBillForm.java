@@ -8,8 +8,6 @@ import java.util.Set;
 
 import javax.swing.ListSelectionModel;
 
-import org.apache.commons.lang.StringUtils;
-
 import nc.bs.logging.Logger;
 import nc.desktop.ui.WorkbenchEnvironment;
 import nc.ui.pub.beans.UIRefPane;
@@ -27,6 +25,8 @@ import nc.ui.uif2.editor.BillForm;
 import nc.ui.uif2.model.AppEventConst;
 import nc.ui.uif2.model.BillManageModel;
 import nc.vo.myemp.method.MethodVO;
+
+import org.apache.commons.lang.StringUtils;
 
 public class MethodBillForm extends BillForm implements BillEditListener,
 		BillEditListener2 {
@@ -178,14 +178,9 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	@Override
 	public void afterEdit(BillEditEvent e) {
+		addToEditRows(e);
 		BillManageModel model = (BillManageModel) getModel();
-		if (e.getOldValue() != e.getValue()) {
-			int selectedRow = model.getSelectedRow();
-			if (!editRows.contains(selectedRow)) {
-				editRows.add(selectedRow);
-			}
-		}
-		if (MethodVO.CONTROLAREA.equals(e.getKey())) {
+		if (MethodVO.CONTROLAREA.equals(e.getKey())&&StringUtils.isNotBlank(((String[]) e.getValue())[0])) {
 			relateControlAreaAndFactor();
 			// …Ë÷√Œ™ø…±‡º≠
 			billCardPanel.getBillModel().setCellEditable(
@@ -193,6 +188,17 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		} else if (MethodVO.FACTOR.equals(e.getKey())) {
 			model.fireEvent(new AppEvent("Factor_Changed", model, e));
 		}
+	}
+
+	private BillManageModel addToEditRows(BillEditEvent e) {
+		BillManageModel model = (BillManageModel) getModel();
+		if (e.getOldValue() != e.getValue()) {
+			int selectedRow = model.getSelectedRow();
+			if (!editRows.contains(selectedRow)) {
+				editRows.add(selectedRow);
+			}
+		}
+		return model;
 	}
 
 	private void relateControlAreaAndFactor() {
@@ -213,6 +219,9 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
+		if (!MethodVO.FACTOR.equals(e.getKey())) {
+			return true;
+		}
 		String controlArea = (String) billCardPanel.getBillModel().getValueAt(
 				e.getRow(), MethodVO.CONTROLAREA + IBillItem.ID_SUFFIX);
 		billCardPanel.getBillModel().setCellEditable(e.getRow(),

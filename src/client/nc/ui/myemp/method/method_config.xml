@@ -49,7 +49,7 @@
 		<property name="model" ref="basisModel"></property>
 		<property name="nodekey" value="basis"></property>
 	</bean>
-	<bean id="basisModel" class="nc.ui.uif2.model.BillManageModel">
+	<bean id="basisModel" class="nc.ui.myemp.method.model.BasisBillManageModel">
 		<property name="businessObjectAdapterFactory" ref="businessObjectAdapterFactory"></property>
 		<property name="context" ref="context"></property>
 		<property name="service" ref="basisModelService"></property>
