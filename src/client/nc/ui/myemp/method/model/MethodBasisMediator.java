@@ -38,8 +38,7 @@ public class MethodBasisMediator implements AppEventListener {
 			}
 		} else if ("Factor_Changed".equals(event.getType())) {
 			doFactorChanged(event);
-		} else if (MethodBillManageModel.SELECT_METHODVO
-				.equals(event.getType())) {
+		} else if ("SELECT_METHODVO".equals(event.getType())) {
 			MethodVO vo = (MethodVO) event.getSource();
 			if (vo != null) {
 				initBasisModelByFactorPK(vo.getFactor());

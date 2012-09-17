@@ -20,6 +20,7 @@ public class BasisBillForm extends BillForm implements BillEditListener2 {
 		super.initUI();
 		billCardPanel.addBodyEditListener2(this);
 	}
+
 	@Override
 	public Object getValue() {
 		return billCardPanel.getBillModel().getBodyValueByMetaData();
@@ -29,7 +30,6 @@ public class BasisBillForm extends BillForm implements BillEditListener2 {
 	public void handleEvent(AppEvent event) {
 		super.handleEvent(event);
 		if (isModelInitializedEvent(event) || isDataDeletedEvent(event)) {
-			reloadDataFromModel();
 			billCardPanel.getBillTable().getSelectionModel()
 					.setSelectionInterval(0, 0);
 			((BillManageModel) getModel()).setSelectedRow(0);
@@ -44,56 +44,28 @@ public class BasisBillForm extends BillForm implements BillEditListener2 {
 		return AppEventConst.MODEL_INITIALIZED == event.getType();
 	}
 
-	private void reloadDataFromModel() {
-		addOrDelLines();
-		setRowObject();
-	}
-
-	@SuppressWarnings("unchecked")
-	private void setRowObject() {
-		BillManageModel model = (BillManageModel) getModel();
-		List<AllocBasisVO> list = (List<AllocBasisVO>) model.getData();
-		if (list.size() > 0) {
-			billCardPanel.getBillModel().setBodyRowObjectByMetaData(
-					list.toArray(new AllocBasisVO[0]), 0);
-		}
-	}
-
-	@SuppressWarnings("unchecked")
-	private void addOrDelLines() {
-		BillManageModel model = (BillManageModel) getModel();
-		List<AllocBasisVO> list = (List<AllocBasisVO>) model.getData();
-		int rowCount = billCardPanel.getRowCount();
-		int size = list.size();
-		if (size >= rowCount) {
-			// 只需要添加size-rowCount行。
-			for (int i = 0; i < size - rowCount; i++) {
-				billCardPanel.addLine();
-			}
-		} else {
-			// 只需要删除rowCount-size行
-			for (int i = 0; i < rowCount - size; i++) {
-				billCardPanel.delLine();
-			}
-		}
-	}
-
 	@Override
 	protected void synchronizeDataFromModel() {
-		try {
-			super.synchronizeDataFromModel();
-		} catch (Exception e) {
-			Logger.info("在新增状态时，选中的数据的行数大于model中的总行数，这里异常不作处理");
+		Logger.debug("entering synchronizeDataFromModel");
+		@SuppressWarnings("unchecked")
+		List<AllocBasisVO> data = ((BillManageModel) getModel()).getData();
+		// 如果无数据，还应把以前界面上的数据清空
+		billCardPanel.getBillModel().clearBodyData();
+		if (data != null && data.size() > 0) {
+			for (int i = 0; i < data.size(); i++) {
+				billCardPanel.addLine();
+			}
+			billCardPanel.getBillModel().setBodyRowObjectByMetaData(
+					data.toArray(new AllocBasisVO[0]), 0);
 		}
+		Logger.debug("leaving synchronizeDataFromModel");
 	}
 
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
 		if (AllocBasisVO.ALLOCDIMEN.equals(e.getKey())) {
-			for (int i = 0; i < ((BillManageModel) getModel()).getRowCount(); i++) {
-				billCardPanel.getBillModel().setCellEditable(i, e.getKey(),
-						false);
-			}
+			billCardPanel.getBillModel().setCellEditable(e.getRow(),
+					e.getKey(), false);
 		}
 		return true;
 	}

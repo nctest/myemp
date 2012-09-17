@@ -6,11 +6,9 @@ import nc.ui.uif2.model.BillManageModel;
 import nc.vo.myemp.method.MethodVO;
 
 public class MethodBillManageModel extends BillManageModel {
-	
-	public static String SELECT_METHODVO="select_methodvo";
-	public void setMethodVO(MethodVO methodvo){
-		fireEvent(new AppEvent(SELECT_METHODVO,methodvo,null));
-	}
+	final String SELECT_METHODVO = "SELECT_METHODVO";
+	private int selectedRow;
+
 	@Override
 	public Object getSelectedData() {
 		try {
@@ -21,4 +19,15 @@ public class MethodBillManageModel extends BillManageModel {
 		}
 		return null;
 	}
+
+	public void setMethodVO(MethodVO vo) {
+		fireEvent(new AppEvent(SELECT_METHODVO, vo, null));
+		selectedRow = getData().indexOf(vo);
+	}
+
+	@Override
+	public int getSelectedRow() {
+		return selectedRow;
+	}
+	
 }

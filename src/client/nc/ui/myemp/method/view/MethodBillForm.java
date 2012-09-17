@@ -120,9 +120,14 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	@Override
 	protected void onAdd() {
-		// 新增方式与原封装逻辑不同,
+		// 新增方式与原封装逻辑不同
 		setEditable(true);
 		billCardPanel.addLine();
+	}
+
+	@Override
+	protected void onEdit() {
+		setEditable(true);
 	}
 
 	@Override
@@ -142,10 +147,6 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 			billCardPanel.getBillModel().setCellEditable(
 					model.getSelectedRow(), MethodVO.FACTOR, true);
 		}
-		// else if (MethodVO.FACTOR.equals(e.getKey())) {
-		// model.fireEvent(new AppEvent("Factor_Changed", model, e));
-		// }
-
 	}
 
 	private BillManageModel addToEditRows(BillEditEvent e) {
@@ -174,15 +175,14 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	@Override
 	public void bodyRowChange(BillEditEvent e) {
 		MethodBillManageModel model = (MethodBillManageModel) getModel();
-		if (getModel().getUiState() == UIState.NOT_EDIT) {
-			int row = e.getRow();
-			@SuppressWarnings("unchecked")
-			List<MethodVO> data = ((BillManageModel) getModel()).getData();
-			MethodVO vo = data.get(row);
-			model.setMethodVO(vo);
-		} else {
-
+		int row = e.getRow();
+		@SuppressWarnings("unchecked")
+		List<MethodVO> list = (List<MethodVO>) model.getData();
+		if (list.size() <= row) {
+			return;
 		}
+		MethodVO vo = list.get(row);
+		model.setMethodVO(vo);
 	}
 
 	@Override
