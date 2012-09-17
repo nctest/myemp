@@ -9,6 +9,7 @@ import javax.swing.ListSelectionModel;
 
 import nc.bs.logging.Logger;
 import nc.desktop.ui.WorkbenchEnvironment;
+import nc.ui.myemp.method.model.MethodBillManageModel;
 import nc.ui.pub.beans.UIRefPane;
 import nc.ui.pub.beans.UITable;
 import nc.ui.pub.beans.ValueChangedEvent;
@@ -43,31 +44,15 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		final UITable billTable = billCardPanel.getBillTable();
 		billTable.getSelectionModel().setSelectionMode(
 				ListSelectionModel.SINGLE_SELECTION);
-		// billTable.addMouseListener(new MouseAdapter() {
-		// @Override
-		// public void mouseClicked(MouseEvent e) {
-		// int selectedRow = billTable.rowAtPoint(e.getPoint());
-		// BillManageModel model = (BillManageModel) getModel();
-		// if (model.getSelectedRow() != selectedRow) {
-		// model.setSelectedRow(selectedRow);
-		// }
-		// }
-		// });
-		/*
-		 * BillItem[] bodyItems = billCardPanel.getBodyItems(); for (BillItem
-		 * billItem : bodyItems) {
-		 * billItem.getItemEditor().addBillEditListener(this); }
-		 */
-		UIRefPane sss = (UIRefPane) billCardPanel.getBodyItem("factor")
-				.getComponent();
-		sss.addValueChangedListener(this);
+		UIRefPane factorRefPane = (UIRefPane) billCardPanel.getBodyItem(
+				"factor").getComponent();
+		factorRefPane.addValueChangedListener(this);
 	}
 
 	@Override
 	public void handleEvent(AppEvent event) {
 		super.handleEvent(event);
 		if (isModelInitializedEvent(event) || isDataDeletedEvent(event)) {
-			// reloadDataFromModel();
 			billCardPanel.getBillTable().getSelectionModel()
 					.setSelectionInterval(0, 0);
 			((BillManageModel) getModel()).setSelectedRow(0);
@@ -82,68 +67,20 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		return AppEventConst.MODEL_INITIALIZED == event.getType();
 	}
 
-	/*
-	 * private void reloadDataFromModel() { addOrDelLines(); setRowObject(); }
-	 */
-
-	// @SuppressWarnings("unchecked")
-	// private void setRowObject() {
-	// BillManageModel model = (BillManageModel) getModel();
-	// List<MethodVO> list = (List<MethodVO>) model.getData();
-	// if (list.size() > 0) {
-	// billCardPanel.getBillModel().setBodyRowObjectByMetaData(
-	// list.toArray(new MethodVO[0]), 0);
-	// }
-	// }
-
-	/*
-	 * @SuppressWarnings("unchecked") private void addOrDelLines() {
-	 * BillManageModel model = (BillManageModel) getModel(); List<MethodVO> list
-	 * = (List<MethodVO>) model.getData(); int rowCount =
-	 * billCardPanel.getRowCount(); int size = list.size(); if (size >=
-	 * rowCount) { // 只需要添加size-rowCount行。 for (int i = 0; i < size - rowCount;
-	 * i++) { billCardPanel.addLine(); } } else { // 只需要删除rowCount-size行 for
-	 * (int i = 0; i < rowCount - size; i++) { billCardPanel.delLine(); } } }
-	 */
 	@Override
 	protected void synchronizeDataFromModel() {
-		try {
-			// super.synchronizeDataFromModel();
-			Logger.debug("entering synchronizeDataFromModel");
-			@SuppressWarnings("unchecked")
-			List<MethodVO> data = ((BillManageModel) getModel()).getData();
-			// setValue(data);
-			if (data != null && data.size() > 0) {
-				billCardPanel.getBillModel().clearBodyData();
-				for (int i = 0; i < data.size(); i++) {
-					billCardPanel.addLine();
-				}
-				// List<NCObject> ncvos = new ArrayList<NCObject>();
-				// NCObject ncobject = null;
-				// IBusinessEntity be =
-				// billCardPanel.getBillModel().getTabvo().getBillMetaDataBusinessEntity();
-				// for (Iterator iterator = data.iterator();
-				// iterator.hasNext();) {
-				// Object object = (Object) iterator.next();
-				// ncobject = DASFacade.newInstanceWithContainedObject(be,
-				// object);
-				// ncvos.add(ncobject);
-				// }
-				billCardPanel.getBillModel().setBodyRowObjectByMetaData(
-						data.toArray(new MethodVO[0]), 0);
-				// getBillCardPanel().getBillModel().setBodyDataVO((CircularlyAccessibleValueObject[])
-				// data.toArray(new CircularlyAccessibleValueObject[0]));
+		Logger.debug("entering synchronizeDataFromModel");
+		@SuppressWarnings("unchecked")
+		List<MethodVO> data = ((BillManageModel) getModel()).getData();
+		if (data != null && data.size() > 0) {
+			billCardPanel.getBillModel().clearBodyData();
+			for (int i = 0; i < data.size(); i++) {
+				billCardPanel.addLine();
 			}
-			// Object selectedData = ((BillManageModel) getModel())
-			// .getSelectedData();
-			// // 这里必须加以处理，即选中行数据为null时,不再调用setValue方法，否则，新增的行又会消失。
-			// if (selectedData != null) {
-			// setValue(selectedData);
-			// }
-			Logger.debug("leaving synchronizeDataFromModel");
-		} catch (Exception e) {
-			Logger.info("在新增状态时，选中的数据的行数大于model中的总行数，这里异常不作处理");
+			billCardPanel.getBillModel().setBodyRowObjectByMetaData(
+					data.toArray(new MethodVO[0]), 0);
 		}
+		Logger.debug("leaving synchronizeDataFromModel");
 	}
 
 	@Override
@@ -191,9 +128,6 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	@Override
 	protected void onNotEdit() {
 		super.onNotEdit();
-		// reloadDataFromModel();
-		// getModel().directlyUpdate(getModel().getSelectedData());
-		//
 		editRows.clear();
 	}
 
@@ -207,9 +141,11 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 			// 设置为可编辑
 			billCardPanel.getBillModel().setCellEditable(
 					model.getSelectedRow(), MethodVO.FACTOR, true);
-		} else if (MethodVO.FACTOR.equals(e.getKey())) {
-			model.fireEvent(new AppEvent("Factor_Changed", model, e));
 		}
+		// else if (MethodVO.FACTOR.equals(e.getKey())) {
+		// model.fireEvent(new AppEvent("Factor_Changed", model, e));
+		// }
+
 	}
 
 	private BillManageModel addToEditRows(BillEditEvent e) {
@@ -237,6 +173,16 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	@Override
 	public void bodyRowChange(BillEditEvent e) {
+		MethodBillManageModel model = (MethodBillManageModel) getModel();
+		if (getModel().getUiState() == UIState.NOT_EDIT) {
+			int row = e.getRow();
+			@SuppressWarnings("unchecked")
+			List<MethodVO> data = ((BillManageModel) getModel()).getData();
+			MethodVO vo = data.get(row);
+			model.setMethodVO(vo);
+		} else {
+
+		}
 	}
 
 	@Override
@@ -252,6 +198,12 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 			relateControlAreaAndFactor();
 		}
 		return true;
+	}
+
+	@Override
+	public void valueChanged(ValueChangedEvent event) {
+		BillManageModel model = (BillManageModel) getModel();
+		model.fireEvent(new AppEvent("Factor_Changed", model, event));
 	}
 
 	public Set<Integer> getEditRows() {
@@ -272,11 +224,6 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
-	}
-
-	@Override
-	public void valueChanged(ValueChangedEvent event) {
-
 	}
 
 }

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import nc.bs.logging.Logger;
-import nc.ui.pub.bill.BillEditEvent;
+import nc.ui.pub.beans.ValueChangedEvent;
 import nc.ui.uif2.AppEvent;
 import nc.ui.uif2.AppEventListener;
 import nc.ui.uif2.UIState;
@@ -38,12 +38,18 @@ public class MethodBasisMediator implements AppEventListener {
 			}
 		} else if ("Factor_Changed".equals(event.getType())) {
 			doFactorChanged(event);
+		} else if (MethodBillManageModel.SELECT_METHODVO
+				.equals(event.getType())) {
+			MethodVO vo = (MethodVO) event.getSource();
+			if (vo != null) {
+				initBasisModelByFactorPK(vo.getFactor());
+			}
 		}
 	}
 
 	private void doFactorChanged(AppEvent event) {
-		BillEditEvent e = (BillEditEvent) event.getContextObject();
-		Object factorPks = e.getValue();
+		ValueChangedEvent e = (ValueChangedEvent) event.getContextObject();
+		Object factorPks = e.getNewValue();
 		if (String[].class.isInstance(factorPks)
 				&& Array.getLength(factorPks) > 0) {
 			initBasisModelByFactorPK((String) Array.get(factorPks, 0));
