@@ -20,6 +20,10 @@ public class BasisBillForm extends BillForm implements BillEditListener2 {
 		super.initUI();
 		billCardPanel.addBodyEditListener2(this);
 	}
+	@Override
+	public Object getValue() {
+		return billCardPanel.getBillModel().getBodyValueByMetaData();
+	}
 
 	@Override
 	public void handleEvent(AppEvent event) {

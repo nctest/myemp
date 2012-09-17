@@ -3,16 +3,20 @@
  * code generator for NC product. It is based on Velocity.     *
 \***************************************************************/
 package nc.vo.myemp.method;
-	
+
+import java.util.List;
+
+import nc.vo.myemp.allocbasis.AllocBasisVO;
 import nc.vo.pub.SuperVO;
 
 /**
  * <b> 在此处简要描述此类的功能 </b>
  * <p>
- *     在此处添加此类的描述信息
+ * 在此处添加此类的描述信息
  * </p>
  * 创建日期:
- * @author 
+ * 
+ * @author
  * @version NCPrj ??
  */
 @SuppressWarnings("serial")
@@ -29,6 +33,7 @@ public class MethodVO extends SuperVO {
 	private nc.vo.pub.lang.UFDateTime modifiedtime;
 	private java.lang.Integer dr = 0;
 	private nc.vo.pub.lang.UFDateTime ts;
+	private List<? super AllocBasisVO> basisVOs;
 
 	public static final String PK_METHOD = "pk_method";
 	public static final String CONTROLAREA = "controlarea";
@@ -40,248 +45,302 @@ public class MethodVO extends SuperVO {
 	public static final String CREATIONTIME = "creationtime";
 	public static final String MODIFIER = "modifier";
 	public static final String MODIFIEDTIME = "modifiedtime";
-			
+
 	/**
-	 * 属性pk_method的Getter方法.属性名：方法主键
-	 * 创建日期:
+	 * 属性pk_method的Getter方法.属性名：方法主键 创建日期:
+	 * 
 	 * @return java.lang.String
 	 */
-	public java.lang.String getPk_method () {
+	public java.lang.String getPk_method() {
 		return pk_method;
-	}   
+	}
+
 	/**
-	 * 属性pk_method的Setter方法.属性名：方法主键
-	 * 创建日期:
-	 * @param newPk_method java.lang.String
+	 * 属性pk_method的Setter方法.属性名：方法主键 创建日期:
+	 * 
+	 * @param newPk_method
+	 *            java.lang.String
 	 */
-	public void setPk_method (java.lang.String newPk_method ) {
-	 	this.pk_method = newPk_method;
-	} 	  
+	public void setPk_method(java.lang.String newPk_method) {
+		this.pk_method = newPk_method;
+	}
+
 	/**
-	 * 属性controlarea的Getter方法.属性名：管控范围
-	 * 创建日期:
+	 * 属性controlarea的Getter方法.属性名：管控范围 创建日期:
+	 * 
 	 * @return java.lang.String
 	 */
-	public java.lang.String getControlarea () {
+	public java.lang.String getControlarea() {
 		return controlarea;
-	}   
+	}
+
 	/**
-	 * 属性controlarea的Setter方法.属性名：管控范围
-	 * 创建日期:
-	 * @param newControlarea java.lang.String
+	 * 属性controlarea的Setter方法.属性名：管控范围 创建日期:
+	 * 
+	 * @param newControlarea
+	 *            java.lang.String
 	 */
-	public void setControlarea (java.lang.String newControlarea ) {
-	 	this.controlarea = newControlarea;
-	} 	  
+	public void setControlarea(java.lang.String newControlarea) {
+		this.controlarea = newControlarea;
+	}
+
 	/**
-	 * 属性methodcode的Getter方法.属性名：方法编码
-	 * 创建日期:
+	 * 属性methodcode的Getter方法.属性名：方法编码 创建日期:
+	 * 
 	 * @return java.lang.String
 	 */
-	public java.lang.String getMethodcode () {
+	public java.lang.String getMethodcode() {
 		return methodcode;
-	}   
+	}
+
 	/**
-	 * 属性methodcode的Setter方法.属性名：方法编码
-	 * 创建日期:
-	 * @param newMethodcode java.lang.String
+	 * 属性methodcode的Setter方法.属性名：方法编码 创建日期:
+	 * 
+	 * @param newMethodcode
+	 *            java.lang.String
 	 */
-	public void setMethodcode (java.lang.String newMethodcode ) {
-	 	this.methodcode = newMethodcode;
-	} 	  
+	public void setMethodcode(java.lang.String newMethodcode) {
+		this.methodcode = newMethodcode;
+	}
+
 	/**
-	 * 属性methodname的Getter方法.属性名：方法名称
-	 * 创建日期:
+	 * 属性methodname的Getter方法.属性名：方法名称 创建日期:
+	 * 
 	 * @return java.lang.String
 	 */
-	public java.lang.String getMethodname () {
+	public java.lang.String getMethodname() {
 		return methodname;
-	}   
+	}
+
 	/**
-	 * 属性methodname的Setter方法.属性名：方法名称
-	 * 创建日期:
-	 * @param newMethodname java.lang.String
+	 * 属性methodname的Setter方法.属性名：方法名称 创建日期:
+	 * 
+	 * @param newMethodname
+	 *            java.lang.String
 	 */
-	public void setMethodname (java.lang.String newMethodname ) {
-	 	this.methodname = newMethodname;
-	} 	  
+	public void setMethodname(java.lang.String newMethodname) {
+		this.methodname = newMethodname;
+	}
+
 	/**
-	 * 属性methodtype的Getter方法.属性名：分摊方法类型
-	 * 创建日期:
+	 * 属性methodtype的Getter方法.属性名：分摊方法类型 创建日期:
+	 * 
 	 * @return java.lang.String
 	 */
-	public java.lang.String getMethodtype () {
+	public java.lang.String getMethodtype() {
 		return methodtype;
-	}   
+	}
+
 	/**
-	 * 属性methodtype的Setter方法.属性名：分摊方法类型
-	 * 创建日期:
-	 * @param newMethodtype java.lang.String
+	 * 属性methodtype的Setter方法.属性名：分摊方法类型 创建日期:
+	 * 
+	 * @param newMethodtype
+	 *            java.lang.String
 	 */
-	public void setMethodtype (java.lang.String newMethodtype ) {
-	 	this.methodtype = newMethodtype;
-	} 	  
+	public void setMethodtype(java.lang.String newMethodtype) {
+		this.methodtype = newMethodtype;
+	}
+
 	/**
-	 * 属性factor的Getter方法.属性名：要素
-	 * 创建日期:
+	 * 属性factor的Getter方法.属性名：要素 创建日期:
+	 * 
 	 * @return java.lang.String
 	 */
-	public java.lang.String getFactor () {
+	public java.lang.String getFactor() {
 		return factor;
-	}   
+	}
+
 	/**
-	 * 属性factor的Setter方法.属性名：要素
-	 * 创建日期:
-	 * @param newFactor java.lang.String
+	 * 属性factor的Setter方法.属性名：要素 创建日期:
+	 * 
+	 * @param newFactor
+	 *            java.lang.String
 	 */
-	public void setFactor (java.lang.String newFactor ) {
-	 	this.factor = newFactor;
-	} 	  
+	public void setFactor(java.lang.String newFactor) {
+		this.factor = newFactor;
+	}
+
 	/**
-	 * 属性creator的Getter方法.属性名：创建人
-	 * 创建日期:
+	 * 属性creator的Getter方法.属性名：创建人 创建日期:
+	 * 
 	 * @return java.lang.String
 	 */
-	public java.lang.String getCreator () {
+	public java.lang.String getCreator() {
 		return creator;
-	}   
+	}
+
 	/**
-	 * 属性creator的Setter方法.属性名：创建人
-	 * 创建日期:
-	 * @param newCreator java.lang.String
+	 * 属性creator的Setter方法.属性名：创建人 创建日期:
+	 * 
+	 * @param newCreator
+	 *            java.lang.String
 	 */
-	public void setCreator (java.lang.String newCreator ) {
-	 	this.creator = newCreator;
-	} 	  
+	public void setCreator(java.lang.String newCreator) {
+		this.creator = newCreator;
+	}
+
 	/**
-	 * 属性creationtime的Getter方法.属性名：创建时间
-	 * 创建日期:
+	 * 属性creationtime的Getter方法.属性名：创建时间 创建日期:
+	 * 
 	 * @return nc.vo.pub.lang.UFDateTime
 	 */
-	public nc.vo.pub.lang.UFDateTime getCreationtime () {
+	public nc.vo.pub.lang.UFDateTime getCreationtime() {
 		return creationtime;
-	}   
+	}
+
 	/**
-	 * 属性creationtime的Setter方法.属性名：创建时间
-	 * 创建日期:
-	 * @param newCreationtime nc.vo.pub.lang.UFDateTime
+	 * 属性creationtime的Setter方法.属性名：创建时间 创建日期:
+	 * 
+	 * @param newCreationtime
+	 *            nc.vo.pub.lang.UFDateTime
 	 */
-	public void setCreationtime (nc.vo.pub.lang.UFDateTime newCreationtime ) {
-	 	this.creationtime = newCreationtime;
-	} 	  
+	public void setCreationtime(nc.vo.pub.lang.UFDateTime newCreationtime) {
+		this.creationtime = newCreationtime;
+	}
+
 	/**
-	 * 属性modifier的Getter方法.属性名：修改人
-	 * 创建日期:
+	 * 属性modifier的Getter方法.属性名：修改人 创建日期:
+	 * 
 	 * @return java.lang.String
 	 */
-	public java.lang.String getModifier () {
+	public java.lang.String getModifier() {
 		return modifier;
-	}   
+	}
+
 	/**
-	 * 属性modifier的Setter方法.属性名：修改人
-	 * 创建日期:
-	 * @param newModifier java.lang.String
+	 * 属性modifier的Setter方法.属性名：修改人 创建日期:
+	 * 
+	 * @param newModifier
+	 *            java.lang.String
 	 */
-	public void setModifier (java.lang.String newModifier ) {
-	 	this.modifier = newModifier;
-	} 	  
+	public void setModifier(java.lang.String newModifier) {
+		this.modifier = newModifier;
+	}
+
 	/**
-	 * 属性modifiedtime的Getter方法.属性名：修改时间
-	 * 创建日期:
+	 * 属性modifiedtime的Getter方法.属性名：修改时间 创建日期:
+	 * 
 	 * @return nc.vo.pub.lang.UFDateTime
 	 */
-	public nc.vo.pub.lang.UFDateTime getModifiedtime () {
+	public nc.vo.pub.lang.UFDateTime getModifiedtime() {
 		return modifiedtime;
-	}   
+	}
+
 	/**
-	 * 属性modifiedtime的Setter方法.属性名：修改时间
-	 * 创建日期:
-	 * @param newModifiedtime nc.vo.pub.lang.UFDateTime
+	 * 属性modifiedtime的Setter方法.属性名：修改时间 创建日期:
+	 * 
+	 * @param newModifiedtime
+	 *            nc.vo.pub.lang.UFDateTime
 	 */
-	public void setModifiedtime (nc.vo.pub.lang.UFDateTime newModifiedtime ) {
-	 	this.modifiedtime = newModifiedtime;
-	} 	  
+	public void setModifiedtime(nc.vo.pub.lang.UFDateTime newModifiedtime) {
+		this.modifiedtime = newModifiedtime;
+	}
+
 	/**
-	 * 属性dr的Getter方法.属性名：dr
-	 * 创建日期:
+	 * 属性dr的Getter方法.属性名：dr 创建日期:
+	 * 
 	 * @return java.lang.Integer
 	 */
-	public java.lang.Integer getDr () {
+	public java.lang.Integer getDr() {
 		return dr;
-	}   
+	}
+
 	/**
-	 * 属性dr的Setter方法.属性名：dr
-	 * 创建日期:
-	 * @param newDr java.lang.Integer
+	 * 属性dr的Setter方法.属性名：dr 创建日期:
+	 * 
+	 * @param newDr
+	 *            java.lang.Integer
 	 */
-	public void setDr (java.lang.Integer newDr ) {
-	 	this.dr = newDr;
-	} 	  
+	public void setDr(java.lang.Integer newDr) {
+		this.dr = newDr;
+	}
+
 	/**
-	 * 属性ts的Getter方法.属性名：ts
-	 * 创建日期:
+	 * 属性ts的Getter方法.属性名：ts 创建日期:
+	 * 
 	 * @return nc.vo.pub.lang.UFDateTime
 	 */
-	public nc.vo.pub.lang.UFDateTime getTs () {
+	public nc.vo.pub.lang.UFDateTime getTs() {
 		return ts;
-	}   
-	/**
-	 * 属性ts的Setter方法.属性名：ts
-	 * 创建日期:
-	 * @param newTs nc.vo.pub.lang.UFDateTime
-	 */
-	public void setTs (nc.vo.pub.lang.UFDateTime newTs ) {
-	 	this.ts = newTs;
-	} 	  
- 
-	/**
-	  * <p>取得父VO主键字段.
-	  * <p>
-	  * 创建日期:
-	  * @return java.lang.String
-	  */
-	public java.lang.String getParentPKFieldName() {
-	    return null;
-	}   
-    
-	/**
-	  * <p>取得表主键.
-	  * <p>
-	  * 创建日期:
-	  * @return java.lang.String
-	  */
-	public java.lang.String getPKFieldName() {
-	  return "pk_method";
 	}
-    
+
 	/**
-	 * <p>返回表名称.
+	 * 属性ts的Setter方法.属性名：ts 创建日期:
+	 * 
+	 * @param newTs
+	 *            nc.vo.pub.lang.UFDateTime
+	 */
+	public void setTs(nc.vo.pub.lang.UFDateTime newTs) {
+		this.ts = newTs;
+	}
+
+	/**
+	 * <p>
+	 * 取得父VO主键字段.
 	 * <p>
 	 * 创建日期:
+	 * 
+	 * @return java.lang.String
+	 */
+	public java.lang.String getParentPKFieldName() {
+		return null;
+	}
+
+	/**
+	 * <p>
+	 * 取得表主键.
+	 * <p>
+	 * 创建日期:
+	 * 
+	 * @return java.lang.String
+	 */
+	public java.lang.String getPKFieldName() {
+		return "pk_method";
+	}
+
+	/**
+	 * <p>
+	 * 返回表名称.
+	 * <p>
+	 * 创建日期:
+	 * 
 	 * @return java.lang.String
 	 */
 	public java.lang.String getTableName() {
 		return "myemp_methodvo";
-	}    
-	
+	}
+
 	/**
-	 * <p>返回表名称.
+	 * <p>
+	 * 返回表名称.
 	 * <p>
 	 * 创建日期:
+	 * 
 	 * @return java.lang.String
 	 */
 	public static java.lang.String getDefaultTableName() {
 		return "myemp_methodvo";
-	}    
-    
-    /**
-	  * 按照默认方式创建构造子.
-	  *
-	  * 创建日期:
-	  */
-     public MethodVO() {
-		super();	
-	}    
-} 
+	}
+
+	/**
+	 * 按照默认方式创建构造子.
+	 * 
+	 * 创建日期:
+	 */
+	public MethodVO() {
+		super();
+	}
 
 
+	public List<? super AllocBasisVO> getBasisVOs() {
+		return basisVOs;
+	}
+
+	public void setBasisVOs(List<? super AllocBasisVO> basisVOs) {
+		this.basisVOs = basisVOs;
+	}
+
+	public static String getPkMethod() {
+		return PK_METHOD;
+	}
+}

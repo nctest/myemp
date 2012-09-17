@@ -31,11 +31,11 @@ public class MethodModelDataManager implements IAppModelDataManagerEx {
 
 	@Override
 	public void refresh() {
-		int selectedRow = model.getSelectedRow();
+//		int selectedRow = model.getSelectedRow();
 		initModel();
-		if (selectedRow > 0) {
-			model.setSelectedRow(selectedRow);
-		}
+//		if (selectedRow > 0) {
+//			model.setSelectedRow(selectedRow);
+//		}
 
 	}
 
