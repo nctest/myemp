@@ -22,6 +22,7 @@ public class AllocBasisVO extends SuperVO {
 	private java.lang.String allocdimen;
 	private java.lang.String type;
 	private java.lang.String pk_factor;
+	private java.lang.String pk_method;
 	private java.lang.Integer dr = 0;
 	private nc.vo.pub.lang.UFDateTime ts;
 
@@ -30,6 +31,7 @@ public class AllocBasisVO extends SuperVO {
 	public static final String ALLOCDIMEN = "allocdimen";
 	public static final String TYPE = "type";
 	public static final String PK_FACTOR = "pk_factor";
+	public static final String PK_METHOD = "pk_method";
 			
 	/**
 	 * 属性pk_allocbasis的Getter方法.属性名：分摊依据主键
@@ -110,6 +112,22 @@ public class AllocBasisVO extends SuperVO {
 	 */
 	public void setPk_factor (java.lang.String newPk_factor ) {
 	 	this.pk_factor = newPk_factor;
+	} 	  
+	/**
+	 * 属性pk_method的Getter方法.属性名：分摊方法
+	 * 创建日期:
+	 * @return java.lang.String
+	 */
+	public java.lang.String getPk_method () {
+		return pk_method;
+	}   
+	/**
+	 * 属性pk_method的Setter方法.属性名：分摊方法
+	 * 创建日期:
+	 * @param newPk_method java.lang.String
+	 */
+	public void setPk_method (java.lang.String newPk_method ) {
+	 	this.pk_method = newPk_method;
 	} 	  
 	/**
 	 * 属性dr的Getter方法.属性名：dr
