@@ -67,6 +67,9 @@ public class MethodBasisMediator implements AppEventListener {
 		MethodVO vo = (MethodVO) event.getSource();
 		if (vo != null) {
 			initBasisModelByFactorPK(vo.getFactor());
+		} else {
+			basisModel.fireEvent(new AppEvent(MethodAppEventConst.SELECT_NULL
+					.toString()));
 		}
 	}
 

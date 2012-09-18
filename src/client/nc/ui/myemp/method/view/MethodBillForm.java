@@ -31,7 +31,6 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		BillEditListener2, ValueChangedListener {
 	private static final long serialVersionUID = 1L;
 	private Set<Integer> editRows = new HashSet<Integer>();
-	private BasisBillForm basisForm;
 
 	@Override
 	public void initUI() {
@@ -176,16 +175,14 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	@Override
 	public void bodyRowChange(BillEditEvent e) {
-		// 清空basisBillForm的表体内容,若在新增状态下，不执行该操作，界面数据不会消失
-		basisForm.getBillCardPanel().getBillModel().clearBodyData();
 		MethodBillManageModel model = (MethodBillManageModel) getModel();
 		int row = e.getRow();
 		@SuppressWarnings("unchecked")
 		List<MethodVO> list = (List<MethodVO>) model.getData();
-		if (list.size() <= row) {
-			return;
+		MethodVO vo=null;
+		if (list.size() > row) {
+			vo = list.get(row);
 		}
-		MethodVO vo = list.get(row);
 		// 调用setMethodVO方法，在该方法中触发SELECT_METHODVO事件
 		model.setMethodVO(vo);
 	}
@@ -224,14 +221,6 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	public void setEditRows(Set<Integer> editRows) {
 		this.editRows = editRows;
-	}
-
-	public BasisBillForm getBasisForm() {
-		return basisForm;
-	}
-
-	public void setBasisForm(BasisBillForm basisForm) {
-		this.basisForm = basisForm;
 	}
 
 	public static long getSerialversionuid() {
