@@ -4,9 +4,6 @@
 \***************************************************************/
 package nc.vo.myemp.method;
 
-import java.util.List;
-
-import nc.vo.myemp.allocbasis.AllocBasisVO;
 import nc.vo.pub.SuperVO;
 
 /**
@@ -33,7 +30,6 @@ public class MethodVO extends SuperVO {
 	private nc.vo.pub.lang.UFDateTime modifiedtime;
 	private java.lang.Integer dr = 0;
 	private nc.vo.pub.lang.UFDateTime ts;
-	private List<? super AllocBasisVO> basisVOs;
 
 	public static final String PK_METHOD = "pk_method";
 	public static final String CONTROLAREA = "controlarea";
@@ -329,15 +325,6 @@ public class MethodVO extends SuperVO {
 	 */
 	public MethodVO() {
 		super();
-	}
-
-
-	public List<? super AllocBasisVO> getBasisVOs() {
-		return basisVOs;
-	}
-
-	public void setBasisVOs(List<? super AllocBasisVO> basisVOs) {
-		this.basisVOs = basisVOs;
 	}
 
 	public static String getPkMethod() {

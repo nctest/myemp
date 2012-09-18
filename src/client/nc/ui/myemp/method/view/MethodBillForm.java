@@ -1,6 +1,5 @@
 package nc.ui.myemp.method.view;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -77,7 +76,6 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 			MethodVO[] objs = (MethodVO[]) value;
 			for (MethodVO vo : objs) {
 				if (vo.getPk_method() == null) {
-					vo.setBasisVOs(Arrays.asList(basisForm.getValue()));
 					return vo;
 				}
 			}
