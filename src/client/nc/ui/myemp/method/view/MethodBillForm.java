@@ -165,13 +165,13 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	@Override
 	public void bodyRowChange(BillEditEvent e) {
+		// 清空basisBillForm的表体内容,若在新增状态下，不执行该操作，界面数据不会消失
+		basisForm.getBillCardPanel().getBillModel().clearBodyData();
 		MethodBillManageModel model = (MethodBillManageModel) getModel();
 		int row = e.getRow();
 		@SuppressWarnings("unchecked")
 		List<MethodVO> list = (List<MethodVO>) model.getData();
 		if (list.size() <= row) {
-			// 清空basisBillForm的表体内容
-			basisForm.getBillCardPanel().getBillModel().clearBodyData();
 			return;
 		}
 		MethodVO vo = list.get(row);
