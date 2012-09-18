@@ -1,5 +1,6 @@
 package nc.ui.myemp.method.model;
 
+import nc.ui.myemp.method.event.MethodAppEventConst;
 import nc.ui.uif2.AppEvent;
 import nc.ui.uif2.model.AppEventConst;
 import nc.ui.uif2.model.BillManageModel;
@@ -7,10 +8,11 @@ import nc.ui.uif2.model.RowOperationInfo;
 import nc.vo.myemp.method.MethodVO;
 
 public class MethodBillManageModel extends BillManageModel {
-	final String SELECT_METHODVO = "SELECT_METHODVO";
-
 	private int bodySelectedRow = -1;
 
+	/**
+	 * 覆盖该方法，主要是替换为用bodySelectedRow
+	 */
 	@Override
 	public Object getSelectedData() {
 		if (bodySelectedRow == -1 || getData() == null || getData().size() == 0) {
@@ -20,6 +22,9 @@ public class MethodBillManageModel extends BillManageModel {
 		}
 	}
 
+	/**
+	 * 覆盖该方法，主要是替换为用bodySelectedRow
+	 */
 	@Override
 	public void directlyDelete(Object obj) throws Exception {
 		if (obj == null)
@@ -41,11 +46,20 @@ public class MethodBillManageModel extends BillManageModel {
 			setSelectedRow(Math.min(index, getData().size() - 1));
 	}
 
+	/**
+	 * 在这里触发SELECT_METHODVO事件，并且用bodySelectedRow存放当前选中行
+	 * 
+	 * @param vo
+	 */
 	public void setMethodVO(MethodVO vo) {
-		fireEvent(new AppEvent(SELECT_METHODVO, vo, null));
+		fireEvent(new AppEvent(MethodAppEventConst.SELECT_METHODVO.toString(),
+				vo, null));
 		bodySelectedRow = getData().indexOf(vo);
 	}
 
+	/**
+	 * 返回当前选中行
+	 */
 	@Override
 	public int getSelectedRow() {
 		return bodySelectedRow;

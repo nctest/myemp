@@ -9,9 +9,9 @@ import javax.swing.ListSelectionModel;
 
 import nc.bs.logging.Logger;
 import nc.desktop.ui.WorkbenchEnvironment;
+import nc.ui.myemp.method.event.MethodAppEventConst;
 import nc.ui.myemp.method.model.MethodBillManageModel;
 import nc.ui.pub.beans.UIRefPane;
-import nc.ui.pub.beans.UITable;
 import nc.ui.pub.beans.ValueChangedEvent;
 import nc.ui.pub.beans.ValueChangedListener;
 import nc.ui.pub.bill.BillEditEvent;
@@ -23,7 +23,6 @@ import nc.ui.resa.refmodel.FactorRefModel;
 import nc.ui.uif2.AppEvent;
 import nc.ui.uif2.UIState;
 import nc.ui.uif2.editor.BillForm;
-import nc.ui.uif2.model.AppEventConst;
 import nc.ui.uif2.model.BillManageModel;
 import nc.vo.myemp.method.MethodVO;
 
@@ -41,30 +40,11 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		billCardPanel.setBodyAutoAddLine(false);
 		billCardPanel.addBodyEditListener2(this);
 		billCardPanel.addEditListener(this);
-		final UITable billTable = billCardPanel.getBillTable();
-		billTable.getSelectionModel().setSelectionMode(
-				ListSelectionModel.SINGLE_SELECTION);
+		billCardPanel.getBillTable().getSelectionModel()
+				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		UIRefPane factorRefPane = (UIRefPane) billCardPanel.getBodyItem(
 				"factor").getComponent();
 		factorRefPane.addValueChangedListener(this);
-	}
-
-	@Override
-	public void handleEvent(AppEvent event) {
-		super.handleEvent(event);
-		if (isModelInitializedEvent(event) || isDataDeletedEvent(event)) {
-			billCardPanel.getBillTable().getSelectionModel()
-					.setSelectionInterval(0, 0);
-			((BillManageModel) getModel()).setSelectedRow(0);
-		}
-	}
-
-	private boolean isDataDeletedEvent(AppEvent event) {
-		return AppEventConst.DATA_DELETED == event.getType();
-	}
-
-	private boolean isModelInitializedEvent(AppEvent event) {
-		return AppEventConst.MODEL_INITIALIZED == event.getType();
 	}
 
 	@Override
@@ -80,7 +60,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 			billCardPanel.getBillModel().setBodyRowObjectByMetaData(
 					data.toArray(new MethodVO[0]), 0);
 		}
-		//设置第一行选中
+		// 设置第一行选中
 		billCardPanel.getBillTable().getSelectionModel()
 				.setSelectionInterval(0, 0);
 		Logger.debug("leaving synchronizeDataFromModel");
@@ -112,18 +92,13 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		}
 	}
 
-	@SuppressWarnings("unused")
-	private boolean isUIStateEdit() {
-		return getModel().getUiState() == UIState.EDIT;
-	}
-
 	private boolean isUIStateAdd() {
 		return getModel().getUiState() == UIState.ADD;
 	}
 
 	@Override
 	protected void onAdd() {
-		// 新增方式与原封装逻辑不同
+		// 新增方式与原封装逻辑不同，不需要清除数据
 		setEditable(true);
 		billCardPanel.addLine();
 	}
@@ -136,20 +111,30 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	@Override
 	protected void onNotEdit() {
 		super.onNotEdit();
-		//清空editRows,防止影响下次的修改操作
+		// 清空editRows,防止影响下次的修改操作
 		editRows.clear();
 	}
 
 	@Override
 	public void afterEdit(BillEditEvent e) {
+		// 将修改的行添加到editRows中，以便在beforeGetValue方法中将它们恢复为修改状态
 		addToEditRows(e);
-		if (MethodVO.CONTROLAREA.equals(e.getKey())
-				&& StringUtils.isNotBlank((String) e.getValue())) {
+		if (isControlAreaAndNotBlank(e)) {
+			// 关联管控范围和要素
 			relateControlAreaAndFactor();
-			// 设置为可编辑
-			billCardPanel.getBillModel().setCellEditable(e.getRow(),
-					MethodVO.FACTOR, true);
+			// 设置要素为可编辑
+			setFactorEditable(e, true);
 		}
+	}
+
+	private void setFactorEditable(BillEditEvent e, boolean isEditable) {
+		billCardPanel.getBillModel().setCellEditable(e.getRow(),
+				MethodVO.FACTOR, isEditable);
+	}
+
+	private boolean isControlAreaAndNotBlank(BillEditEvent e) {
+		return MethodVO.CONTROLAREA.equals(e.getKey())
+				&& StringUtils.isNotBlank((String) e.getValue());
 	}
 
 	private BillManageModel addToEditRows(BillEditEvent e) {
@@ -163,6 +148,9 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		return model;
 	}
 
+	/**
+	 * 关联管控范围和要素
+	 */
 	private void relateControlAreaAndFactor() {
 		UIRefPane factorRefPane = (UIRefPane) billCardPanel.getBodyItem(
 				MethodVO.FACTOR).getComponent();
@@ -182,12 +170,18 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		@SuppressWarnings("unchecked")
 		List<MethodVO> list = (List<MethodVO>) model.getData();
 		if (list.size() <= row) {
+			// 清空basisBillForm的表体内容
+			basisForm.getBillCardPanel().getBillModel().clearBodyData();
 			return;
 		}
 		MethodVO vo = list.get(row);
+		// 调用setMethodVO方法，在该方法中触发SELECT_METHODVO事件
 		model.setMethodVO(vo);
 	}
 
+	/**
+	 * 该方法只在编辑要素时进行，根据管控范围是否为空来设置要素是否可以编辑
+	 */
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
 		if (!MethodVO.FACTOR.equals(e.getKey())) {
@@ -195,18 +189,22 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		}
 		String controlArea = (String) billCardPanel.getBillModel().getValueAt(
 				e.getRow(), MethodVO.CONTROLAREA + IBillItem.ID_SUFFIX);
-		billCardPanel.getBillModel().setCellEditable(e.getRow(),
-				MethodVO.FACTOR, StringUtils.isNotBlank(controlArea));
+		// 根据管控范围是否为空，设置factor是否可以编辑
+		setFactorEditable(e, StringUtils.isNotBlank(controlArea));
 		if (StringUtils.isNotBlank(controlArea)) {
 			relateControlAreaAndFactor();
 		}
 		return true;
 	}
 
+	/**
+	 * 当要素的值发生改变时，触发自定义Factor_Changed事件。
+	 */
 	@Override
 	public void valueChanged(ValueChangedEvent event) {
 		BillManageModel model = (BillManageModel) getModel();
-		model.fireEvent(new AppEvent("Factor_Changed", model, event));
+		model.fireEvent(new AppEvent(MethodAppEventConst.FACTOR_CHANGE
+				.toString(), model, event));
 	}
 
 	public Set<Integer> getEditRows() {

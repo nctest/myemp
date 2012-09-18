@@ -5,9 +5,7 @@ import java.util.List;
 import nc.bs.logging.Logger;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener2;
-import nc.ui.uif2.AppEvent;
 import nc.ui.uif2.editor.BillForm;
-import nc.ui.uif2.model.AppEventConst;
 import nc.ui.uif2.model.BillManageModel;
 import nc.vo.myemp.allocbasis.AllocBasisVO;
 
@@ -19,24 +17,6 @@ public class BasisBillForm extends BillForm implements BillEditListener2 {
 	public void initUI() {
 		super.initUI();
 		billCardPanel.addBodyEditListener2(this);
-	}
-
-	@Override
-	public void handleEvent(AppEvent event) {
-		super.handleEvent(event);
-		if (isModelInitializedEvent(event) || isDataDeletedEvent(event)) {
-			billCardPanel.getBillTable().getSelectionModel()
-					.setSelectionInterval(0, 0);
-			((BillManageModel) getModel()).setSelectedRow(0);
-		}
-	}
-
-	private boolean isDataDeletedEvent(AppEvent event) {
-		return AppEventConst.DATA_DELETED == event.getType();
-	}
-
-	private boolean isModelInitializedEvent(AppEvent event) {
-		return AppEventConst.MODEL_INITIALIZED == event.getType();
 	}
 
 	@Override
@@ -60,6 +40,7 @@ public class BasisBillForm extends BillForm implements BillEditListener2 {
 
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
+		//分摊维度不可以编辑
 		if (AllocBasisVO.ALLOCDIMEN.equals(e.getKey())) {
 			billCardPanel.getBillModel().setCellEditable(e.getRow(),
 					e.getKey(), false);

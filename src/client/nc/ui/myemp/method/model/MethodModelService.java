@@ -13,13 +13,6 @@ public class MethodModelService implements IAppModelService {
 		return getService().insert((MethodVO) object);
 	}
 
-//	@SuppressWarnings("unused")
-//	private List<MethodVO> toList(Object object) {
-//		MethodVO[] vos = new MethodVO[] { (MethodVO) object };
-//		List<MethodVO> list = (List<MethodVO>) Arrays.asList(vos);
-//		return list;
-//	}
-
 	private IMethodService getService() {
 		return NCLocator.getInstance().lookup(IMethodService.class);
 	}

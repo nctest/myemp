@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 
 import nc.bs.logging.Logger;
+import nc.ui.myemp.method.event.MethodAppEventConst;
 import nc.ui.pub.beans.ValueChangedEvent;
 import nc.ui.uif2.AppEvent;
 import nc.ui.uif2.AppEventListener;
-import nc.ui.uif2.UIState;
 import nc.ui.uif2.model.AppEventConst;
 import nc.ui.uif2.model.BillManageModel;
 import nc.vo.myemp.allocbasis.AllocBasisVO;
@@ -20,34 +20,68 @@ import nc.vo.pub.lang.UFBoolean;
 import nc.vo.resa.factor.FactorAssVO;
 
 public class MethodBasisMediator implements AppEventListener {
-	private BillManageModel methodModel;
-	private BillManageModel basisModel;
+	private MethodBillManageModel methodModel;
+	private BasisBillManageModel basisModel;
 
 	@Override
 	public void handleEvent(AppEvent event) {
-		if (event.getType() == AppEventConst.SELECTION_CHANGED
-				|| event.getType() == AppEventConst.MODEL_INITIALIZED) {
+		if (isSelectionChangedEvent(event) || isModelInitializedEvent(event)) {
 			doSelectedChanged(event);
-		} else if (event.getType() == AppEventConst.UISTATE_CHANGED) {
-			if (methodModel.getUiState() == UIState.ADD) {
-				basisModel.setUiState(UIState.ADD);
-			} else if (methodModel.getUiState() == UIState.EDIT) {
-				basisModel.setUiState(UIState.EDIT);
-			} else {
-				basisModel.setUiState(UIState.NOT_EDIT);
-			}
-		} else if ("Factor_Changed".equals(event.getType())) {
+		} else if (isUIStateEvent(event)) {
+			doUIStateChanged();
+		} else if (isFactorChangeEvent(event)) {
 			doFactorChanged(event);
-		} else if ("SELECT_METHODVO".equals(event.getType())) {
-			MethodVO vo = (MethodVO) event.getSource();
-			if (vo != null) {
-				initBasisModelByFactorPK(vo.getFactor());
-			}
+		} else if (isSelectMethodVOEvent(event)) {
+			doSelectMethodVO(event);
 		}
 	}
 
+	private boolean isModelInitializedEvent(AppEvent event) {
+		return event.getType() == AppEventConst.MODEL_INITIALIZED;
+	}
+
+	private boolean isSelectionChangedEvent(AppEvent event) {
+		return event.getType() == AppEventConst.SELECTION_CHANGED;
+	}
+
+	private boolean isSelectMethodVOEvent(AppEvent event) {
+		return MethodAppEventConst.SELECT_METHODVO.toString().equals(
+				event.getType());
+	}
+
+	private boolean isFactorChangeEvent(AppEvent event) {
+		return MethodAppEventConst.FACTOR_CHANGE.toString().equals(
+				event.getType());
+	}
+
+	private boolean isUIStateEvent(AppEvent event) {
+		return event.getType() == AppEventConst.UISTATE_CHANGED;
+	}
+
+	/**
+	 * 当发生SELECT_METHODVO事件时，调用该方法
+	 * 
+	 * @param event
+	 */
+	private void doSelectMethodVO(AppEvent event) {
+		MethodVO vo = (MethodVO) event.getSource();
+		if (vo != null) {
+			initBasisModelByFactorPK(vo.getFactor());
+		}
+	}
+
+	private void doUIStateChanged() {
+		basisModel.setUiState(methodModel.getUiState());
+	}
+
+	/**
+	 * 当要素的值发生改变时，调用该方法，根据新的要素主键时来初始化分摊依据界面
+	 * 
+	 * @param event
+	 */
 	private void doFactorChanged(AppEvent event) {
 		ValueChangedEvent e = (ValueChangedEvent) event.getContextObject();
+		// 得到新的要素主键值
 		Object factorPks = e.getNewValue();
 		if (String[].class.isInstance(factorPks)
 				&& Array.getLength(factorPks) > 0) {
@@ -55,16 +89,25 @@ public class MethodBasisMediator implements AppEventListener {
 		}
 	}
 
+	/**
+	 * 当发生选择行改变时，调用该方法来初始化分摊依据界面
+	 * 
+	 * @param event
+	 */
 	private void doSelectedChanged(AppEvent event) {
 		BillManageModel methodModel = (BillManageModel) event.getSource();
 		MethodVO selectedData = (MethodVO) methodModel.getSelectedData();
-		// FIXME MODEL_INITIALIZED时，selectedData仍然返回null
 		if (selectedData == null) {
 			return;
 		}
 		initBasisModelByFactorPK(selectedData.getFactor());
 	}
 
+	/**
+	 * 根据要素主键来初始化界面
+	 * 
+	 * @param pk_factor
+	 */
 	private void initBasisModelByFactorPK(String pk_factor) {
 		try {
 			Map<String, List<FactorAssVO>> map = ((BasisModelService) basisModel
@@ -90,20 +133,20 @@ public class MethodBasisMediator implements AppEventListener {
 		}
 	}
 
-	public BillManageModel getMethodModel() {
+	public MethodBillManageModel getMethodModel() {
 		return methodModel;
 	}
 
-	public void setMethodModel(BillManageModel methodModel) {
+	public void setMethodModel(MethodBillManageModel methodModel) {
 		this.methodModel = methodModel;
 		methodModel.addAppEventListener(this);
 	}
 
-	public BillManageModel getBasisModel() {
+	public BasisBillManageModel getBasisModel() {
 		return basisModel;
 	}
 
-	public void setBasisModel(BillManageModel basisModel) {
+	public void setBasisModel(BasisBillManageModel basisModel) {
 		this.basisModel = basisModel;
 	}
 
