@@ -22,11 +22,6 @@ public class BasisBillForm extends BillForm implements BillEditListener2 {
 	}
 
 	@Override
-	public Object getValue() {
-		return billCardPanel.getBillModel().getBodyValueByMetaData();
-	}
-
-	@Override
 	public void handleEvent(AppEvent event) {
 		super.handleEvent(event);
 		if (isModelInitializedEvent(event) || isDataDeletedEvent(event)) {
@@ -58,6 +53,8 @@ public class BasisBillForm extends BillForm implements BillEditListener2 {
 			billCardPanel.getBillModel().setBodyRowObjectByMetaData(
 					data.toArray(new AllocBasisVO[0]), 0);
 		}
+		billCardPanel.getBillTable().getSelectionModel()
+				.setSelectionInterval(0, 0);
 		Logger.debug("leaving synchronizeDataFromModel");
 	}
 

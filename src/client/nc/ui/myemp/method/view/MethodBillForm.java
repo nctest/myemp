@@ -80,6 +80,9 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 			billCardPanel.getBillModel().setBodyRowObjectByMetaData(
 					data.toArray(new MethodVO[0]), 0);
 		}
+		//设置第一行选中
+		billCardPanel.getBillTable().getSelectionModel()
+				.setSelectionInterval(0, 0);
 		Logger.debug("leaving synchronizeDataFromModel");
 	}
 
@@ -133,19 +136,19 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	@Override
 	protected void onNotEdit() {
 		super.onNotEdit();
+		//清空editRows,防止影响下次的修改操作
 		editRows.clear();
 	}
 
 	@Override
 	public void afterEdit(BillEditEvent e) {
 		addToEditRows(e);
-		BillManageModel model = (BillManageModel) getModel();
 		if (MethodVO.CONTROLAREA.equals(e.getKey())
 				&& StringUtils.isNotBlank((String) e.getValue())) {
 			relateControlAreaAndFactor();
 			// 设置为可编辑
-			billCardPanel.getBillModel().setCellEditable(
-					model.getSelectedRow(), MethodVO.FACTOR, true);
+			billCardPanel.getBillModel().setCellEditable(e.getRow(),
+					MethodVO.FACTOR, true);
 		}
 	}
 
