@@ -37,11 +37,14 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	@Override
 	public void initUI() {
 		super.initUI();
+		// 关闭自动增行
 		billCardPanel.setBodyAutoAddLine(false);
 		billCardPanel.addBodyEditListener2(this);
 		billCardPanel.addEditListener(this);
+		// 设置一次只能选择一行
 		billCardPanel.getBillTable().getSelectionModel()
 				.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		// 为要素添加ValueChangedListener
 		UIRefPane factorRefPane = (UIRefPane) billCardPanel.getBodyItem(
 				"factor").getComponent();
 		factorRefPane.addValueChangedListener(this);
@@ -119,6 +122,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	public void afterEdit(BillEditEvent e) {
 		// 将修改的行添加到editRows中，以便在beforeGetValue方法中将它们恢复为修改状态
 		addToEditRows(e);
+		// 如果编辑的是管控范围，并且值非空
 		if (isControlAreaAndNotBlank(e)) {
 			// 关联管控范围和要素
 			relateControlAreaAndFactor();
@@ -127,25 +131,34 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		}
 	}
 
+	/**
+	 * 设置要素是否可以编辑
+	 * 
+	 * @param e
+	 * @param isEditable
+	 */
 	private void setFactorEditable(BillEditEvent e, boolean isEditable) {
 		billCardPanel.getBillModel().setCellEditable(e.getRow(),
 				MethodVO.FACTOR, isEditable);
 	}
 
+	// 如果编辑的是管控范围，并且值非空
 	private boolean isControlAreaAndNotBlank(BillEditEvent e) {
 		return MethodVO.CONTROLAREA.equals(e.getKey())
 				&& StringUtils.isNotBlank((String) e.getValue());
 	}
 
-	private BillManageModel addToEditRows(BillEditEvent e) {
-		BillManageModel model = (BillManageModel) getModel();
-		if (e.getOldValue() != e.getValue()) {
-			int selectedRow = model.getSelectedRow();
-			if (!editRows.contains(selectedRow)) {
-				editRows.add(selectedRow);
-			}
+	/**
+	 * 将修改的行添加到editRows集合中
+	 * 
+	 * @param e
+	 * @return
+	 */
+	private void addToEditRows(BillEditEvent e) {
+		int selectedRow = e.getRow();
+		if (!editRows.contains(selectedRow)) {
+			editRows.add(selectedRow);
 		}
-		return model;
 	}
 
 	/**
