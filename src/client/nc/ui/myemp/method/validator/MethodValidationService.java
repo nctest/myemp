@@ -1,10 +1,12 @@
 package nc.ui.myemp.method.validator;
 
-import nc.bs.logging.Logger;
+import java.util.ArrayList;
+import java.util.List;
+
 import nc.bs.uif2.validation.IValidationService;
 import nc.bs.uif2.validation.ValidationException;
+import nc.bs.uif2.validation.ValidationFailure;
 import nc.ui.myemp.method.view.MethodBillForm;
-import nc.vo.pub.BusinessRuntimeException;
 
 public class MethodValidationService implements IValidationService {
 	private MethodBillForm billForm;
@@ -14,8 +16,10 @@ public class MethodValidationService implements IValidationService {
 		try {
 			billForm.getBillCardPanel().dataNotNullValidate();
 		} catch (nc.vo.pub.ValidationException e) {
-			Logger.debug(e.getMessage());
-			throw new BusinessRuntimeException(e.getMessage(), e);
+			ValidationFailure failure = new ValidationFailure(e.getMessage());
+			List<ValidationFailure>  list = new ArrayList<ValidationFailure>();
+			list.add(failure);
+			throw new ValidationException(list);
 		}
 	}
 

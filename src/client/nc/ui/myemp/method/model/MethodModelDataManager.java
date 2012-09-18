@@ -9,11 +9,13 @@ import nc.ui.uif2.model.BillManageModel;
 import nc.ui.uif2.model.IAppModelDataManagerEx;
 import nc.vo.myemp.method.MethodVO;
 import nc.vo.pub.BusinessException;
-import nc.vo.pub.BusinessRuntimeException;
 
 public class MethodModelDataManager implements IAppModelDataManagerEx {
 	private BillManageModel model;
-
+	
+	/**
+	 * ≥ı ºªØ
+	 */
 	@Override
 	public void initModel() {
 		try {
@@ -21,7 +23,6 @@ public class MethodModelDataManager implements IAppModelDataManagerEx {
 			model.initModel(list.toArray(new MethodVO[list.size()]));
 		} catch (BusinessException e) {
 			Logger.error(e.getMessage(), e);
-			throw new BusinessRuntimeException(e.getMessage(), e);
 		}
 	}
 

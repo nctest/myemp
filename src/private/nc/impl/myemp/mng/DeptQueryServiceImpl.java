@@ -9,7 +9,10 @@ import nc.vo.myemp.mng.Dept;
 import nc.vo.pub.BusinessException;
 
 public class DeptQueryServiceImpl implements IDeptQueryService {
-
+	
+	/**
+	 * 查询出所有部门
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Dept> getAll() throws BusinessException {

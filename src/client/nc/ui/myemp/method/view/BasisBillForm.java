@@ -11,6 +11,7 @@ import nc.ui.uif2.editor.BillForm;
 import nc.ui.uif2.model.BillManageModel;
 import nc.vo.myemp.allocbasis.AllocBasisVO;
 
+
 public class BasisBillForm extends BillForm implements BillEditListener2 {
 
 	private static final long serialVersionUID = 2540172321607743066L;

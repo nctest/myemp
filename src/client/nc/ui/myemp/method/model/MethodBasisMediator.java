@@ -1,24 +1,19 @@
 package nc.ui.myemp.method.model;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
-import nc.bs.logging.Logger;
 import nc.ui.myemp.method.event.MethodAppEventConst;
 import nc.ui.pub.beans.ValueChangedEvent;
 import nc.ui.uif2.AppEvent;
 import nc.ui.uif2.AppEventListener;
 import nc.ui.uif2.model.AppEventConst;
 import nc.ui.uif2.model.BillManageModel;
-import nc.vo.myemp.allocbasis.AllocBasisVO;
 import nc.vo.myemp.method.MethodVO;
-import nc.vo.pub.BusinessException;
-import nc.vo.pub.BusinessRuntimeException;
-import nc.vo.pub.lang.UFBoolean;
-import nc.vo.resa.factor.FactorAssVO;
-
+/**
+ * 分摊方法与分摊依据模型适配器，主要用于两个模型之间的事件适配与派发
+ * @author zhujk
+ *
+ */
 public class MethodBasisMediator implements AppEventListener {
 	private MethodBillManageModel methodModel;
 	private BasisBillManageModel basisModel;
@@ -66,7 +61,7 @@ public class MethodBasisMediator implements AppEventListener {
 	private void doSelectMethodVO(AppEvent event) {
 		MethodVO vo = (MethodVO) event.getSource();
 		if (vo != null) {
-			initBasisModelByFactorPK(vo.getFactor());
+			basisModel.initBasisModelByFactorPK(vo.getFactor());
 		} else {
 			basisModel.fireEvent(new AppEvent(MethodAppEventConst.SELECT_NULL
 					.toString()));
@@ -88,7 +83,7 @@ public class MethodBasisMediator implements AppEventListener {
 		Object factorPks = e.getNewValue();
 		if (String[].class.isInstance(factorPks)
 				&& Array.getLength(factorPks) > 0) {
-			initBasisModelByFactorPK((String) Array.get(factorPks, 0));
+			basisModel.initBasisModelByFactorPK((String) Array.get(factorPks, 0));
 		}
 	}
 
@@ -103,37 +98,7 @@ public class MethodBasisMediator implements AppEventListener {
 		if (selectedData == null) {
 			return;
 		}
-		initBasisModelByFactorPK(selectedData.getFactor());
-	}
-
-	/**
-	 * 根据要素主键来初始化界面
-	 * 
-	 * @param pk_factor
-	 */
-	private void initBasisModelByFactorPK(String pk_factor) {
-		try {
-			Map<String, List<FactorAssVO>> map = ((BasisModelService) basisModel
-					.getService()).queryAllByAccPKs(new String[] { pk_factor },
-					"0000-00-00");
-			List<FactorAssVO> list = map.get(pk_factor);
-			if (list != null) {
-				List<AllocBasisVO> basisVOs = new ArrayList<AllocBasisVO>(
-						list.size());
-				for (int i = 0; i < list.size(); i++) {
-					AllocBasisVO basisVO = new AllocBasisVO();
-					basisVO.setSelected(UFBoolean.FALSE);
-					basisVO.setAllocdimen(list.get(i).getPk_entity());
-					basisVOs.add(basisVO);
-				}
-				basisModel.initModel(basisVOs.toArray(new AllocBasisVO[0]));
-			} else {
-				basisModel.initModel(null);
-			}
-		} catch (BusinessException e) {
-			Logger.debug(e.getMessage());
-			throw new BusinessRuntimeException(e.getMessage(), e);
-		}
+		basisModel.initBasisModelByFactorPK(selectedData.getFactor());
 	}
 
 	public MethodBillManageModel getMethodModel() {

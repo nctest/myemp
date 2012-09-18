@@ -15,6 +15,9 @@ public class MethodServiceImpl extends SingleBaseService<MethodVO> implements
 		super("52d96209-b406-4077-8ffb-358b621aa577");
 	}
 
+	/**
+	 * ¸üÐÂ
+	 */
 	@Override
 	public MethodVO[] update(MethodVO... vos) throws BusinessException {
 		return baseService.updateVO(vos);
@@ -24,11 +27,17 @@ public class MethodServiceImpl extends SingleBaseService<MethodVO> implements
 		super(MDId);
 	}
 
+	/**
+	 * ±£´æ
+	 */
 	@Override
 	public MethodVO insert(MethodVO vo) throws BusinessException {
 		return insertVO(vo);
 	}
 
+	/**
+	 * É¾³ý
+	 */
 	@Override
 	public void delete(MethodVO vo) throws BusinessException {
 		deleteVO(vo);

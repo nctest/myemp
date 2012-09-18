@@ -11,6 +11,13 @@ import nc.vo.resa.factor.FactorAssVO;
 import nc.vo.uif2.LoginContext;
 
 public class BasisModelService implements IAppModelService {
+	/**
+	 * 根据要素主键，查询出FactorAssVO
+	 * @param pk_accasoas
+	 * @param period
+	 * @return
+	 * @throws BusinessException
+	 */
 	public Map<String, List<FactorAssVO>> queryAllByAccPKs(
 			String[] pk_accasoas, String period) throws BusinessException {
 		return getFactorAssPubService().queryAllByAccPKs(pk_accasoas, period);

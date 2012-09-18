@@ -8,7 +8,10 @@ import nc.vo.myemp.method.MethodVO;
 import nc.vo.pub.BusinessException;
 
 public class MethodQueryServiceImpl implements IMethodQueryService {
-
+	
+	/**
+	 * 查询出所有的MethodVO
+	 */
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<MethodVO> getAll() throws BusinessException {

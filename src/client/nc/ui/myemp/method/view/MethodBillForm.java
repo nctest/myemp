@@ -6,7 +6,6 @@ import java.util.Set;
 
 import javax.swing.ListSelectionModel;
 
-import nc.bs.logging.Logger;
 import nc.desktop.ui.WorkbenchEnvironment;
 import nc.ui.myemp.method.event.MethodAppEventConst;
 import nc.ui.myemp.method.model.MethodBillManageModel;
@@ -50,7 +49,6 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	@Override
 	protected void synchronizeDataFromModel() {
-		Logger.debug("entering synchronizeDataFromModel");
 		@SuppressWarnings("unchecked")
 		List<MethodVO> data = ((BillManageModel) getModel()).getData();
 		if (data != null && data.size() > 0) {
@@ -64,7 +62,6 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		// 设置第一行选中
 		billCardPanel.getBillTable().getSelectionModel()
 				.setSelectionInterval(0, 0);
-		Logger.debug("leaving synchronizeDataFromModel");
 	}
 
 	@Override
@@ -123,7 +120,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		if (isControlAreaAndNotBlank(e)) {
 			// 关联管控范围和要素
 			relateControlAreaAndFactor();
-			// 设置要素为可编辑
+			// 设置要素为可编辑,不可缺少
 			setFactorEditable(e, true);
 		}
 	}
@@ -179,7 +176,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		int row = e.getRow();
 		@SuppressWarnings("unchecked")
 		List<MethodVO> list = (List<MethodVO>) model.getData();
-		MethodVO vo=null;
+		MethodVO vo = null;
 		if (list.size() > row) {
 			vo = list.get(row);
 		}
@@ -195,14 +192,19 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		if (!MethodVO.FACTOR.equals(e.getKey())) {
 			return true;
 		}
-		String controlArea = (String) billCardPanel.getBillModel().getValueAt(
-				e.getRow(), MethodVO.CONTROLAREA + IBillItem.ID_SUFFIX);
+		String controlArea = getControlAreaValue(e);
 		// 根据管控范围是否为空，设置factor是否可以编辑
 		setFactorEditable(e, StringUtils.isNotBlank(controlArea));
 		if (StringUtils.isNotBlank(controlArea)) {
 			relateControlAreaAndFactor();
 		}
 		return true;
+	}
+
+	private String getControlAreaValue(BillEditEvent e) {
+		String controlArea = (String) billCardPanel.getBillModel().getValueAt(
+				e.getRow(), MethodVO.CONTROLAREA + IBillItem.ID_SUFFIX);
+		return controlArea;
 	}
 
 	/**
