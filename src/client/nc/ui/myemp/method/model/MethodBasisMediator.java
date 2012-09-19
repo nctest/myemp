@@ -9,10 +9,10 @@ import nc.ui.uif2.AppEventListener;
 import nc.ui.uif2.model.AppEventConst;
 import nc.ui.uif2.model.BillManageModel;
 import nc.vo.myemp.method.MethodVO;
+
 /**
  * 分摊方法与分摊依据模型适配器，主要用于两个模型之间的事件适配与派发
- * @author zhujk
- *
+ * 
  */
 public class MethodBasisMediator implements AppEventListener {
 	private MethodBillManageModel methodModel;
@@ -60,11 +60,13 @@ public class MethodBasisMediator implements AppEventListener {
 	 */
 	private void doSelectMethodVO(AppEvent event) {
 		MethodVO vo = (MethodVO) event.getSource();
-		if (vo != null) {
-			basisModel.initBasisModelByFactorPK(vo.getFactor());
+		if (vo == null) {
+			return;
+		}
+		if (vo.getBases() != null) {
+			basisModel.initModel(vo.getBases());
 		} else {
-			basisModel.fireEvent(new AppEvent(MethodAppEventConst.SELECT_NULL
-					.toString()));
+			basisModel.initByFactorPK(vo.getFactor());
 		}
 	}
 
@@ -83,7 +85,7 @@ public class MethodBasisMediator implements AppEventListener {
 		Object factorPks = e.getNewValue();
 		if (String[].class.isInstance(factorPks)
 				&& Array.getLength(factorPks) > 0) {
-			basisModel.initBasisModelByFactorPK((String) Array.get(factorPks, 0));
+			basisModel.initByFactorPK((String) Array.get(factorPks, 0));
 		}
 	}
 
@@ -98,7 +100,7 @@ public class MethodBasisMediator implements AppEventListener {
 		if (selectedData == null) {
 			return;
 		}
-		basisModel.initBasisModelByFactorPK(selectedData.getFactor());
+		basisModel.initByFactorPK(selectedData.getFactor());
 	}
 
 	public MethodBillManageModel getMethodModel() {

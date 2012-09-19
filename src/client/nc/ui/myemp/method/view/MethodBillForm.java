@@ -10,8 +10,10 @@ import nc.desktop.ui.WorkbenchEnvironment;
 import nc.ui.myemp.method.event.MethodAppEventConst;
 import nc.ui.myemp.method.model.MethodBillManageModel;
 import nc.ui.pub.beans.UIRefPane;
+import nc.ui.pub.beans.UITable;
 import nc.ui.pub.beans.ValueChangedEvent;
 import nc.ui.pub.beans.ValueChangedListener;
+import nc.ui.pub.beans.constenum.DefaultConstEnum;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillEditListener2;
@@ -22,6 +24,7 @@ import nc.ui.uif2.AppEvent;
 import nc.ui.uif2.UIState;
 import nc.ui.uif2.editor.BillForm;
 import nc.ui.uif2.model.BillManageModel;
+import nc.vo.myemp.method.BasisVO;
 import nc.vo.myemp.method.MethodVO;
 
 import org.apache.commons.lang.StringUtils;
@@ -30,6 +33,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		BillEditListener2, ValueChangedListener {
 	private static final long serialVersionUID = 1L;
 	private Set<Integer> editRows = new HashSet<Integer>();
+	private BasisBillForm basisForm;
 
 	@Override
 	public void initUI() {
@@ -66,17 +70,18 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	@Override
 	public Object getValue() {
-		Object value = super.getValue();
+		Object methosVOs = super.getValue();
 		// 增加时只返回一条数据（主键为空）
-		if (isUIStateAdd() && value.getClass().isArray()) {
-			MethodVO[] objs = (MethodVO[]) value;
+		if (isUIStateAdd() && methosVOs.getClass().isArray()) {
+			MethodVO[] objs = (MethodVO[]) methosVOs;
 			for (MethodVO vo : objs) {
 				if (vo.getPk_method() == null) {
+					vo.setBases((BasisVO[]) basisForm.getValue());
 					return vo;
 				}
 			}
 		}
-		return value;
+		return methosVOs;
 	}
 
 	@Override
@@ -181,6 +186,16 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 			vo = list.get(row);
 		}
 		// 调用setMethodVO方法，在该方法中触发SELECT_METHODVO事件
+		if (vo == null) {
+			vo = new MethodVO();
+			UITable billTable = billCardPanel.getBillTable();
+			int rowCount = billTable.getRowCount();
+			DefaultConstEnum defaultConstEnum = (DefaultConstEnum) billTable
+					.getValueAt(rowCount - 1, 4);//第4列
+			if (defaultConstEnum != null) {
+				vo.setFactor((String) defaultConstEnum.getValue());
+			}
+		}
 		model.setMethodVO(vo);
 	}
 
@@ -227,6 +242,14 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	public static long getSerialversionuid() {
 		return serialVersionUID;
+	}
+
+	public BasisBillForm getBasisForm() {
+		return basisForm;
+	}
+
+	public void setBasisForm(BasisBillForm basisForm) {
+		this.basisForm = basisForm;
 	}
 
 }

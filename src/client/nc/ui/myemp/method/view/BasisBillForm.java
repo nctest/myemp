@@ -3,10 +3,8 @@ package nc.ui.myemp.method.view;
 import java.util.List;
 
 import nc.bs.logging.Logger;
-import nc.ui.myemp.method.event.MethodAppEventConst;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener2;
-import nc.ui.uif2.AppEvent;
 import nc.ui.uif2.editor.BillForm;
 import nc.ui.uif2.model.BillManageModel;
 import nc.vo.myemp.method.BasisVO;
@@ -20,15 +18,6 @@ public class BasisBillForm extends BillForm implements BillEditListener2 {
 	public void initUI() {
 		super.initUI();
 		billCardPanel.addBodyEditListener2(this);
-	}
-
-	@Override
-	public void handleEvent(AppEvent event) {
-		super.handleEvent(event);
-		// 若发生SELECT_NULL事件，需要清空表体数据
-		if (MethodAppEventConst.SELECT_NULL.toString().equals(event.getType())) {
-			billCardPanel.getBillModel().clearBodyData();
-		}
 	}
 
 	@Override

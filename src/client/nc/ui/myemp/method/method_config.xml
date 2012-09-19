@@ -58,6 +58,7 @@
 		init-method="initUI">
 		<property name="model" ref="methodModel"></property>
 		<property name="nodekey" value="method"></property>
+		<property name="basisForm" ref="basisForm"></property>
 	</bean>
 	<bean id="methodModel" class="nc.ui.myemp.method.model.MethodBillManageModel">
 		<property name="businessObjectAdapterFactory" ref="businessObjectAdapterFactory"></property>

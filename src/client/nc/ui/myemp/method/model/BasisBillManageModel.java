@@ -17,14 +17,13 @@ public class BasisBillManageModel extends BillManageModel {
 	 * 
 	 * @param pk_factor
 	 */
-	public void initBasisModelByFactorPK(String pk_factor) {
+	public void initByFactorPK(String pk_factor) {
 		try {
 			Map<String, List<FactorAssVO>> map = ((BasisModelService) getService())
 					.queryAllByAccPKs(new String[] { pk_factor }, "0000-00-00");
 			List<FactorAssVO> list = map.get(pk_factor);
 			if (list != null) {
-				List<BasisVO> basisVOs = new ArrayList<BasisVO>(
-						list.size());
+				List<BasisVO> basisVOs = new ArrayList<BasisVO>(list.size());
 				for (int i = 0; i < list.size(); i++) {
 					BasisVO basisVO = new BasisVO();
 					basisVO.setSelected(UFBoolean.FALSE);
