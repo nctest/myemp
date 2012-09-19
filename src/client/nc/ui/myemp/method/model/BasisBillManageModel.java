@@ -6,7 +6,7 @@ import java.util.Map;
 
 import nc.bs.logging.Logger;
 import nc.ui.uif2.model.BillManageModel;
-import nc.vo.myemp.allocbasis.AllocBasisVO;
+import nc.vo.myemp.method.BasisVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFBoolean;
 import nc.vo.resa.factor.FactorAssVO;
@@ -23,15 +23,15 @@ public class BasisBillManageModel extends BillManageModel {
 					.queryAllByAccPKs(new String[] { pk_factor }, "0000-00-00");
 			List<FactorAssVO> list = map.get(pk_factor);
 			if (list != null) {
-				List<AllocBasisVO> basisVOs = new ArrayList<AllocBasisVO>(
+				List<BasisVO> basisVOs = new ArrayList<BasisVO>(
 						list.size());
 				for (int i = 0; i < list.size(); i++) {
-					AllocBasisVO basisVO = new AllocBasisVO();
+					BasisVO basisVO = new BasisVO();
 					basisVO.setSelected(UFBoolean.FALSE);
 					basisVO.setAllocdimen(list.get(i).getPk_entity());
 					basisVOs.add(basisVO);
 				}
-				initModel(basisVOs.toArray(new AllocBasisVO[0]));
+				initModel(basisVOs.toArray(new BasisVO[0]));
 			} else {
 				initModel(null);
 			}

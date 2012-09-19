@@ -9,7 +9,7 @@ import nc.ui.pub.bill.BillEditListener2;
 import nc.ui.uif2.AppEvent;
 import nc.ui.uif2.editor.BillForm;
 import nc.ui.uif2.model.BillManageModel;
-import nc.vo.myemp.allocbasis.AllocBasisVO;
+import nc.vo.myemp.method.BasisVO;
 
 
 public class BasisBillForm extends BillForm implements BillEditListener2 {
@@ -35,7 +35,7 @@ public class BasisBillForm extends BillForm implements BillEditListener2 {
 	protected void synchronizeDataFromModel() {
 		Logger.debug("entering synchronizeDataFromModel");
 		@SuppressWarnings("unchecked")
-		List<AllocBasisVO> data = ((BillManageModel) getModel()).getData();
+		List<BasisVO> data = ((BillManageModel) getModel()).getData();
 		// 如果无数据，还应把以前界面上的数据清空
 		billCardPanel.getBillModel().clearBodyData();
 		if (data != null && data.size() > 0) {
@@ -43,7 +43,7 @@ public class BasisBillForm extends BillForm implements BillEditListener2 {
 				billCardPanel.addLine();
 			}
 			billCardPanel.getBillModel().setBodyRowObjectByMetaData(
-					data.toArray(new AllocBasisVO[0]), 0);
+					data.toArray(new BasisVO[0]), 0);
 		}
 		billCardPanel.getBillTable().getSelectionModel()
 				.setSelectionInterval(0, 0);
@@ -53,7 +53,7 @@ public class BasisBillForm extends BillForm implements BillEditListener2 {
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
 		// 分摊维度不可以编辑
-		if (AllocBasisVO.ALLOCDIMEN.equals(e.getKey())) {
+		if (BasisVO.ALLOCDIMEN.equals(e.getKey())) {
 			billCardPanel.getBillModel().setCellEditable(e.getRow(),
 					e.getKey(), false);
 		}
