@@ -70,28 +70,50 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	@Override
 	public Object getValue() {
-		Object methosVOs = super.getValue();
+		Object methodVOs = super.getValue();
 		// 增加时只返回一条数据（主键为空）
-		if (isUIStateAdd() && methosVOs.getClass().isArray()) {
-			MethodVO[] objs = (MethodVO[]) methosVOs;
-			for (MethodVO vo : objs) {
+		if (isUIStateAdd() && methodVOs.getClass().isArray()) {
+			MethodVO[] vos = (MethodVO[]) methodVOs;
+			for (MethodVO vo : vos) {
 				if (vo.getPk_method() == null) {
 					vo.setBases((BasisVO[]) basisForm.getValue());
 					return vo;
 				}
 			}
+		} else if (isUIStateEdit() && methodVOs.getClass().isArray()) {
+			MethodVO[] vos = (MethodVO[]) methodVOs;
+			for (MethodVO vo : vos) {
+				vo.setBases((BasisVO[]) basisForm.getValue());
+			}
+			return vos;
 		}
-		return methosVOs;
+		return methodVOs;
+	}
+
+	private boolean isUIStateEdit() {
+		return getModel().getUiState() == UIState.EDIT;
 	}
 
 	@Override
 	protected void beforeGetValue() {
 		super.beforeGetValue();
-		// 在这里设置那些修改行为修改状态,因为当发生SELECTION_CHANGED事件时，会把所有的行状态设为Normal
-		for (Integer editRow : editRows) {
-			billCardPanel.getBillModel().setRowState(editRow,
-					BillModel.MODIFICATION);
+		int rowCount = billCardPanel.getRowCount();
+		for (int i = 0; i < rowCount; i++) {
+			// 如果当前编辑行中包含i,就根据UIState的值将该i行的状态设置为相应的状态
+			if (editRows.contains(i)) {
+				if (isUIStateAdd()) {
+					setRowState(i, BillModel.ADD);
+				} else if (isUIStateEdit()) {
+					setRowState(i, BillModel.MODIFICATION);
+				}
+			} else {
+				billCardPanel.getBillModel().setRowState(i, BillModel.NORMAL);
+			}
 		}
+	}
+
+	private void setRowState(int i, int state) {
+		billCardPanel.getBillModel().setRowState(i, state);
 	}
 
 	private boolean isUIStateAdd() {
@@ -154,10 +176,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	 * @return
 	 */
 	private void addToEditRows(BillEditEvent e) {
-		int selectedRow = e.getRow();
-		if (!editRows.contains(selectedRow)) {
-			editRows.add(selectedRow);
-		}
+		editRows.add(e.getRow());
 	}
 
 	/**
@@ -191,7 +210,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 			UITable billTable = billCardPanel.getBillTable();
 			int rowCount = billTable.getRowCount();
 			DefaultConstEnum defaultConstEnum = (DefaultConstEnum) billTable
-					.getValueAt(rowCount - 1, 4);//第4列
+					.getValueAt(rowCount - 1, 4);// 第4列
 			if (defaultConstEnum != null) {
 				vo.setFactor((String) defaultConstEnum.getValue());
 			}
