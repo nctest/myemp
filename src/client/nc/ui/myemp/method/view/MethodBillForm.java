@@ -224,6 +224,9 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	 */
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
+		if(!editRows.contains(e.getRow())){
+			return false;
+		}
 		if (!MethodVO.FACTOR.equals(e.getKey())) {
 			return true;
 		}
