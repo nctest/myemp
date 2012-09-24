@@ -3,25 +3,20 @@ package nc.ui.myemp.method.view;
 import java.util.List;
 
 import nc.bs.logging.Logger;
-import nc.ui.myemp.method.model.MethodBillManageModel;
 import nc.ui.pub.bill.BillEditEvent;
-import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillEditListener2;
 import nc.ui.uif2.editor.BillForm;
 import nc.ui.uif2.model.BillManageModel;
 import nc.vo.myemp.method.BasisVO;
 
-public class BasisBillForm extends BillForm implements BillEditListener2,
-		BillEditListener {
+public class BasisBillForm extends BillForm implements BillEditListener2{
 
 	private static final long serialVersionUID = 2540172321607743066L;
-	private MethodBillForm methodForm;
 
 	@Override
 	public void initUI() {
 		super.initUI();
 		billCardPanel.addBodyEditListener2(this);
-		billCardPanel.addEditListener(this);
 	}
 
 	@Override
@@ -51,21 +46,6 @@ public class BasisBillForm extends BillForm implements BillEditListener2,
 					e.getKey(), false);
 		}
 		return true;
-	}
-
-	@Override
-	public void afterEdit(BillEditEvent e) {
-		MethodBillManageModel methodModel = (MethodBillManageModel) methodForm
-				.getModel();
-		methodForm.addToEditRows(methodModel.getSelectedRow());
-	}
-
-	@Override
-	public void bodyRowChange(BillEditEvent e) {
-	}
-
-	public void setMethodForm(MethodBillForm methodForm) {
-		this.methodForm = methodForm;
 	}
 
 }

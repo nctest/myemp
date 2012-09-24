@@ -48,7 +48,6 @@
 		init-method="initUI">
 		<property name="model" ref="basisModel"></property>
 		<property name="nodekey" value="basis"></property>
-		<property name="methodForm" ref="methodForm"></property>
 	</bean>
 	<bean id="basisModel" class="nc.ui.myemp.method.model.BasisBillManageModel">
 		<property name="businessObjectAdapterFactory" ref="businessObjectAdapterFactory"></property>
@@ -85,8 +84,9 @@
 			</bean>
 		</property>
 	</bean>
-	<bean id="editAction" class="nc.ui.uif2.actions.EditAction">
+	<bean id="editAction" class="nc.ui.myemp.method.actions.MethodEditAction">
 		<property name="model" ref="methodModel"></property>
+		<property name="methodForm" ref="methodForm"></property>
 	</bean>
 	<bean id="deleteAction" class="nc.ui.uif2.actions.DeleteAction">
 		<property name="model" ref="methodModel"></property>
