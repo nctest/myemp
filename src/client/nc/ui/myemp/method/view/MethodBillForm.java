@@ -139,7 +139,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	@Override
 	public void afterEdit(BillEditEvent e) {
-		// 将修改的行添加到editRows中，以便在beforeGetValue方法中将它们恢复为修改状态
+		// 设置修改的行，以便在beforeGetValue方法中将它恢复为修改状态
 		setEditRow(e.getRow());
 		// 如果编辑的是管控范围，并且值非空
 		if (isControlAreaAndNotBlank(e)) {
