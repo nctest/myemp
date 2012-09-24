@@ -95,6 +95,10 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	@Override
 	protected void beforeGetValue() {
 		super.beforeGetValue();
+		restoreState();
+	}
+
+	private void restoreState() {
 		int rowCount = billCardPanel.getRowCount();
 		for (int i = 0; i < rowCount; i++) {
 			// 如果当前编辑行中包含i,就根据UIState的值将该i行的状态设置为相应的状态
@@ -128,6 +132,8 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	@Override
 	protected void onEdit() {
 		setEditable(true);
+		// 此处该方法主要是为了处理在修改状态下，只修改子表，而没有修改主表
+		// 经过这样处理，在beforeGetValue方法中恢复状态，可以保证在获取值时可以得到
 		setEditRow(((MethodBillManageModel) getModel()).getSelectedRow());
 	}
 
@@ -227,9 +233,8 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	}
 
 	private String getControlAreaValue(BillEditEvent e) {
-		String controlArea = (String) billCardPanel.getBillModel().getValueAt(
-				e.getRow(), MethodVO.CONTROLAREA + IBillItem.ID_SUFFIX);
-		return controlArea;
+		return (String) billCardPanel.getBillModel().getValueAt(e.getRow(),
+				MethodVO.CONTROLAREA + IBillItem.ID_SUFFIX);
 	}
 
 	/**
