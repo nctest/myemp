@@ -10,6 +10,7 @@ import nc.ui.uif2.ShowStatusBarMsgUtil;
 import nc.ui.uif2.UIState;
 import nc.ui.uif2.actions.EditAction;
 
+@Deprecated
 public class MethodEditAction extends EditAction {
 	private static final long serialVersionUID = 2682925775711503580L;
 	private MethodBillForm methodForm;

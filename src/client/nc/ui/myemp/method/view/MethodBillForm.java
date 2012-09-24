@@ -130,6 +130,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	@Override
 	protected void onEdit() {
 		setEditable(true);
+		addToEditRows(((MethodBillManageModel) getModel()).getSelectedRow());
 	}
 
 	@Override

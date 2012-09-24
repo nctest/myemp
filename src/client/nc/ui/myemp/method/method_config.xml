@@ -84,9 +84,8 @@
 			</bean>
 		</property>
 	</bean>
-	<bean id="editAction" class="nc.ui.myemp.method.actions.MethodEditAction">
+	<bean id="editAction" class="nc.ui.uif2.actions.EditAction">
 		<property name="model" ref="methodModel"></property>
-		<property name="methodForm" ref="methodForm"></property>
 	</bean>
 	<bean id="deleteAction" class="nc.ui.uif2.actions.DeleteAction">
 		<property name="model" ref="methodModel"></property>
