@@ -1,8 +1,6 @@
 package nc.ui.myemp.method.view;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.ListSelectionModel;
 
@@ -32,7 +30,7 @@ import org.apache.commons.lang.StringUtils;
 public class MethodBillForm extends BillForm implements BillEditListener,
 		BillEditListener2, ValueChangedListener {
 	private static final long serialVersionUID = 1L;
-	private Set<Integer> editRows = new HashSet<Integer>();
+	private int editRow;
 	private BasisBillForm basisForm;
 
 	@Override
@@ -100,7 +98,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		int rowCount = billCardPanel.getRowCount();
 		for (int i = 0; i < rowCount; i++) {
 			// 如果当前编辑行中包含i,就根据UIState的值将该i行的状态设置为相应的状态
-			if (editRows.contains(i)) {
+			if (i == editRow) {
 				if (isUIStateAdd()) {
 					setRowState(i, BillModel.ADD);
 				} else if (isUIStateEdit()) {
@@ -130,20 +128,19 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	@Override
 	protected void onEdit() {
 		setEditable(true);
-		addToEditRows(((MethodBillManageModel) getModel()).getSelectedRow());
+		setEditRow(((MethodBillManageModel) getModel()).getSelectedRow());
 	}
 
 	@Override
 	protected void onNotEdit() {
 		super.onNotEdit();
-		// 清空editRows,防止影响下次的修改操作
-		editRows.clear();
+		editRow = -1;
 	}
 
 	@Override
 	public void afterEdit(BillEditEvent e) {
 		// 将修改的行添加到editRows中，以便在beforeGetValue方法中将它们恢复为修改状态
-		addToEditRows(e.getRow());
+		setEditRow(e.getRow());
 		// 如果编辑的是管控范围，并且值非空
 		if (isControlAreaAndNotBlank(e)) {
 			// 关联管控范围和要素
@@ -168,16 +165,6 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	private boolean isControlAreaAndNotBlank(BillEditEvent e) {
 		return MethodVO.CONTROLAREA.equals(e.getKey())
 				&& StringUtils.isNotBlank((String) e.getValue());
-	}
-
-	/**
-	 * 将修改的行添加到editRows集合中
-	 * 
-	 * @param e
-	 * @return
-	 */
-	public void addToEditRows(int row) {
-		editRows.add(row);
 	}
 
 	/**
@@ -224,7 +211,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	 */
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
-		if(!editRows.contains(e.getRow())){
+		if (editRow != e.getRow()) {
 			return false;
 		}
 		if (!MethodVO.FACTOR.equals(e.getKey())) {
@@ -255,14 +242,6 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 				.toString(), model, event));
 	}
 
-	public Set<Integer> getEditRows() {
-		return editRows;
-	}
-
-	public void setEditRows(Set<Integer> editRows) {
-		this.editRows = editRows;
-	}
-
 	public static long getSerialversionuid() {
 		return serialVersionUID;
 	}
@@ -273,6 +252,14 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	public void setBasisForm(BasisBillForm basisForm) {
 		this.basisForm = basisForm;
+	}
+
+	public int getEditRow() {
+		return editRow;
+	}
+
+	public void setEditRow(int editRow) {
+		this.editRow = editRow;
 	}
 
 }
