@@ -1,5 +1,6 @@
 package nc.ui.myemp.method.view;
 
+import java.lang.reflect.Array;
 import java.util.List;
 
 import javax.swing.ListSelectionModel;
@@ -80,8 +81,8 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 			}
 		} else if (isUIStateEdit() && methodVOs.getClass().isArray()) {
 			MethodVO[] vos = (MethodVO[]) methodVOs;
-			for (MethodVO vo : vos) {
-				vo.setBases((BasisVO[]) basisForm.getValue());
+			if (Array.getLength(vos)>0) {
+				vos[0].setBases((BasisVO[]) basisForm.getValue());
 			}
 			return vos;
 		}
