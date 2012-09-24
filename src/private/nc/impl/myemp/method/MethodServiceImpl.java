@@ -1,16 +1,14 @@
 package nc.impl.myemp.method;
 
-import nc.bs.bd.baseservice.md.BatchBaseService;
 import nc.bs.bd.baseservice.md.SingleBaseService;
+import nc.bs.dao.BaseDAO;
+import nc.bs.dao.DAOException;
 import nc.itf.myemp.method.IMethodService;
 import nc.vo.myemp.method.MethodVO;
 import nc.vo.pub.BusinessException;
 
 public class MethodServiceImpl extends SingleBaseService<MethodVO> implements
 		IMethodService {
-	private BatchBaseService<MethodVO> baseService = new BatchBaseService<MethodVO>(
-			"52d96209-b406-4077-8ffb-358b621aa577");
-
 	public MethodServiceImpl() {
 		super("52d96209-b406-4077-8ffb-358b621aa577");
 	}
@@ -19,8 +17,18 @@ public class MethodServiceImpl extends SingleBaseService<MethodVO> implements
 	 * ¸üÐÂ
 	 */
 	@Override
-	public MethodVO[] update(MethodVO... vos) throws BusinessException {
-		return baseService.updateVO(vos);
+	public MethodVO update(MethodVO vo) throws BusinessException {
+		deleteOldBasisVOs(vo);
+		return updateVO(vo);
+	}
+
+	private void deleteOldBasisVOs(MethodVO vo) throws BusinessException,
+			DAOException {
+		MethodVO oldVo = retrieveVO(vo.getPrimaryKey());
+		if (!oldVo.getFactor().equals(vo.getFactor())) {
+			new BaseDAO().deleteByClause(nc.vo.myemp.method.BasisVO.class,
+					"pk_method='" + vo.getPrimaryKey()+"'");
+		}
 	}
 
 	public MethodServiceImpl(String MDId) {

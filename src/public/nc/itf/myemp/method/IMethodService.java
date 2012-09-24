@@ -20,7 +20,7 @@ public interface IMethodService {
 	 * @return
 	 * @throws BusinessException
 	 */
-	MethodVO[] update(MethodVO... vos) throws BusinessException;
+	MethodVO update(MethodVO vo) throws BusinessException;
 
 	/**
 	 * É¾³ý
