@@ -204,7 +204,6 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		if (list.size() > row) {
 			vo = list.get(row);
 		}
-		// 调用setMethodVO方法，在该方法中触发SELECT_METHODVO事件
 		if (vo == null) {
 			vo = new MethodVO();
 			UITable billTable = billCardPanel.getBillTable();
@@ -215,6 +214,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 				vo.setFactor((String) defaultConstEnum.getValue());
 			}
 		}
+		// 调用setMethodVO方法，在该方法中触发SELECT_METHODVO事件
 		model.setMethodVO(vo);
 	}
 
