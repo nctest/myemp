@@ -70,18 +70,15 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	@Override
 	public Object getValue() {
 		Object methodVOs = super.getValue();
+		// 通过调用，setEditRow,beforeEdit，restoreState方法，新增和修改状态下得到的都是含有一个元素的数组。
 		// 增加时只返回一条数据（主键为空）
-		if (isUIStateAdd() && methodVOs.getClass().isArray()) {
+		if (MethodVO[].class.isInstance(methodVOs)
+				&& Array.getLength(methodVOs) > 0) {
 			MethodVO[] vos = (MethodVO[]) methodVOs;
-			for (MethodVO vo : vos) {
-				if (vo.getPk_method() == null) {
-					vo.setBases((BasisVO[]) basisForm.getValue());
-					return vo;
-				}
-			}
-		} else if (isUIStateEdit() && methodVOs.getClass().isArray()) {
-			MethodVO[] vos = (MethodVO[]) methodVOs;
-			if (Array.getLength(vos)>0) {
+			if (isUIStateAdd() && vos[0].getPk_method() == null) {
+				vos[0].setBases((BasisVO[]) basisForm.getValue());
+				return vos[0];
+			} else if (isUIStateEdit()) {
 				vos[0].setBases((BasisVO[]) basisForm.getValue());
 			}
 			return vos;
@@ -128,6 +125,8 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		// 新增方式与原封装逻辑不同，不需要清除数据
 		setEditable(true);
 		billCardPanel.addLine();
+		// 将最后一行设置为编辑行
+		setEditRow(billCardPanel.getRowCount() - 1);
 	}
 
 	@Override
