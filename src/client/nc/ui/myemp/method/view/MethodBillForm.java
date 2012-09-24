@@ -98,14 +98,14 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		int rowCount = billCardPanel.getRowCount();
 		for (int i = 0; i < rowCount; i++) {
 			// 如果当前编辑行中包含i,就根据UIState的值将该i行的状态设置为相应的状态
-			if (i == editRow) {
+			if (i != editRow) {
+				billCardPanel.getBillModel().setRowState(i, BillModel.NORMAL);
+			} else {
 				if (isUIStateAdd()) {
 					setRowState(i, BillModel.ADD);
 				} else if (isUIStateEdit()) {
 					setRowState(i, BillModel.MODIFICATION);
 				}
-			} else {
-				billCardPanel.getBillModel().setRowState(i, BillModel.NORMAL);
 			}
 		}
 	}
