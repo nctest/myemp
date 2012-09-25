@@ -242,14 +242,20 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 	 */
 	@Override
 	public void valueChanged(ValueChangedEvent event) {
+		setEditFactorChangedByEvent(event);
+		MethodBillManageModel model = (MethodBillManageModel) getModel();
+		model.fireEvent(new AppEvent(MethodAppEventConst.FACTOR_CHANGE
+				.toString(), model, event));
+	}
+
+	private void setEditFactorChangedByEvent(
+			ValueChangedEvent event) {
 		MethodBillManageModel model = (MethodBillManageModel) getModel();
 		if (event.getOldValue() != null
 				&& StringUtils.isNotBlank((String) Array.get(
 						event.getOldValue(), 0))) {
 			model.setEditFactorChanged(true);
 		}
-		model.fireEvent(new AppEvent(MethodAppEventConst.FACTOR_CHANGE
-				.toString(), model, event));
 	}
 
 	public static long getSerialversionuid() {
