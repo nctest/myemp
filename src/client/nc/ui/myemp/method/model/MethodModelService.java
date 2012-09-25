@@ -7,6 +7,9 @@ import nc.vo.myemp.method.MethodVO;
 import nc.vo.uif2.LoginContext;
 
 public class MethodModelService implements IAppModelService {
+	public void deleteBasisVOByMethodPk(String pk_method) throws Exception{
+		getService().deleteBasisVOByMethodPk(pk_method);
+	}
 
 	@Override
 	public Object insert(Object object) throws Exception {

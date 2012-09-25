@@ -2,7 +2,6 @@ package nc.impl.myemp.method;
 
 import nc.bs.bd.baseservice.md.SingleBaseService;
 import nc.bs.dao.BaseDAO;
-import nc.bs.dao.DAOException;
 import nc.itf.myemp.method.IMethodService;
 import nc.vo.myemp.method.BasisVO;
 import nc.vo.myemp.method.MethodVO;
@@ -19,19 +18,7 @@ public class MethodServiceImpl extends SingleBaseService<MethodVO> implements
 	 */
 	@Override
 	public MethodVO update(MethodVO vo) throws BusinessException {
-		if (isFactorChanged(vo, retrieveVO(vo.getPrimaryKey()))) {
-			deleteOldBasisVOs(vo);
-		}
 		return updateVO(vo);
-	}
-
-	private void deleteOldBasisVOs(MethodVO vo) throws DAOException {
-		new BaseDAO().deleteByClause(BasisVO.class,
-				"pk_method='" + vo.getPrimaryKey() + "'");
-	}
-
-	private boolean isFactorChanged(MethodVO vo, MethodVO oldVo) {
-		return !oldVo.getFactor().equals(vo.getFactor());
 	}
 
 	public MethodServiceImpl(String MDId) {
@@ -52,6 +39,13 @@ public class MethodServiceImpl extends SingleBaseService<MethodVO> implements
 	@Override
 	public void delete(MethodVO vo) throws BusinessException {
 		deleteVO(vo);
+	}
+
+	@Override
+	public void deleteBasisVOByMethodPk(String pk_method)
+			throws BusinessException {
+		new BaseDAO().deleteByClause(BasisVO.class, "pk_method='" + pk_method
+				+ "'");
 	}
 
 }

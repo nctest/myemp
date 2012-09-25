@@ -9,6 +9,24 @@ import nc.vo.myemp.method.MethodVO;
 
 public class MethodBillManageModel extends BillManageModel {
 	private int bodySelectedRow = -1;
+	private boolean isEditFactorChanged;
+
+	@Override
+	public Object update(Object object) throws Exception {
+		//增加了下面这个方法，做一些处理
+		beforeUpdate(object);
+		Object obj = getService().update(object);
+		directlyUpdate(obj);
+		return obj;
+	}
+
+	private void beforeUpdate(Object object) throws Exception {
+		if(isEditFactorChanged){
+			String pk_method = (((MethodVO[])object)[0]).getPk_method();
+			((MethodModelService)getService()).deleteBasisVOByMethodPk(pk_method);
+			isEditFactorChanged=false;
+		}
+	}
 
 	/**
 	 * 覆盖该方法，主要是替换为用bodySelectedRow
@@ -67,6 +85,18 @@ public class MethodBillManageModel extends BillManageModel {
 
 	public void setBodySelectedRow(int bodySelectedRow) {
 		this.bodySelectedRow = bodySelectedRow;
+	}
+
+	public boolean isEditFactorChanged() {
+		return isEditFactorChanged;
+	}
+
+	public void setEditFactorChanged(boolean isEditFactorChanged) {
+		this.isEditFactorChanged = isEditFactorChanged;
+	}
+
+	public int getBodySelectedRow() {
+		return bodySelectedRow;
 	}
 
 }

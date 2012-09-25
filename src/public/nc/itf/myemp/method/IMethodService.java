@@ -29,4 +29,11 @@ public interface IMethodService {
 	 * @throws BusinessException
 	 */
 	void delete(MethodVO vo) throws BusinessException;
+
+	/**
+	 * 通过分摊方法主键删除分摊依据
+	 * 
+	 * @param pk_method
+	 */
+	void deleteBasisVOByMethodPk(String pk_method) throws BusinessException;
 }
