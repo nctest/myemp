@@ -4,6 +4,7 @@ import nc.bs.bd.baseservice.md.SingleBaseService;
 import nc.bs.dao.BaseDAO;
 import nc.bs.dao.DAOException;
 import nc.itf.myemp.method.IMethodService;
+import nc.vo.myemp.method.BasisVO;
 import nc.vo.myemp.method.MethodVO;
 import nc.vo.pub.BusinessException;
 
@@ -26,7 +27,7 @@ public class MethodServiceImpl extends SingleBaseService<MethodVO> implements
 			DAOException {
 		MethodVO oldVo = retrieveVO(vo.getPrimaryKey());
 		if (!oldVo.getFactor().equals(vo.getFactor())) {
-			new BaseDAO().deleteByClause(nc.vo.myemp.method.BasisVO.class,
+			new BaseDAO().deleteByClause(BasisVO.class,
 					"pk_method='" + vo.getPrimaryKey()+"'");
 		}
 	}
