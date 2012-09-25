@@ -19,17 +19,19 @@ public class MethodServiceImpl extends SingleBaseService<MethodVO> implements
 	 */
 	@Override
 	public MethodVO update(MethodVO vo) throws BusinessException {
-		deleteOldBasisVOs(vo);
+		if (isFactorChanged(vo, retrieveVO(vo.getPrimaryKey()))) {
+			deleteOldBasisVOs(vo);
+		}
 		return updateVO(vo);
 	}
 
-	private void deleteOldBasisVOs(MethodVO vo) throws BusinessException,
-			DAOException {
-		MethodVO oldVo = retrieveVO(vo.getPrimaryKey());
-		if (!oldVo.getFactor().equals(vo.getFactor())) {
-			new BaseDAO().deleteByClause(BasisVO.class,
-					"pk_method='" + vo.getPrimaryKey()+"'");
-		}
+	private void deleteOldBasisVOs(MethodVO vo) throws DAOException {
+		new BaseDAO().deleteByClause(BasisVO.class,
+				"pk_method='" + vo.getPrimaryKey() + "'");
+	}
+
+	private boolean isFactorChanged(MethodVO vo, MethodVO oldVo) {
+		return !oldVo.getFactor().equals(vo.getFactor());
 	}
 
 	public MethodServiceImpl(String MDId) {
