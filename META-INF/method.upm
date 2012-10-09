@@ -14,4 +14,10 @@
 			</implementation>
 		</component>
 	</public>
+	<public>
+		<component remote="true" singleton="true" tx="CMT">
+			<interface>nc.itf.myemp.method.IBasisService</interface>
+			<implementation>nc.impl.myemp.method.BasisServiceImpl</implementation>
+		</component>
+	</public>
 </module>

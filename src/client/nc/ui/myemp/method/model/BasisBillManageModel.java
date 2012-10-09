@@ -6,6 +6,7 @@ import java.util.Map;
 
 import nc.bs.logging.Logger;
 import nc.ui.uif2.model.BillManageModel;
+import nc.vo.bd.accassitem.AccAssItemVO;
 import nc.vo.myemp.method.BasisVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.pub.lang.UFBoolean;
@@ -37,5 +38,9 @@ public class BasisBillManageModel extends BillManageModel {
 		} catch (BusinessException e) {
 			Logger.debug(e.getMessage());
 		}
+	}
+
+	public AccAssItemVO getAllocDimen(String pkAllocDimen) throws BusinessException {
+		return ((BasisModelService) getService()).getAllocDimenVO(pkAllocDimen);
 	}
 }

@@ -4,8 +4,10 @@ import java.util.List;
 import java.util.Map;
 
 import nc.bs.framework.common.NCLocator;
+import nc.itf.myemp.method.IBasisService;
 import nc.pubitf.resa.factor.IFactorAssPubService;
 import nc.ui.uif2.model.IAppModelService;
+import nc.vo.bd.accassitem.AccAssItemVO;
 import nc.vo.pub.BusinessException;
 import nc.vo.resa.factor.FactorAssVO;
 import nc.vo.uif2.LoginContext;
@@ -50,6 +52,14 @@ public class BasisModelService implements IAppModelService {
 			throws Exception {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public AccAssItemVO getAllocDimenVO(String pkAllocDimen) throws BusinessException {
+		return getBasisService().getFactorAssVO(pkAllocDimen);
+	}
+
+	private IBasisService getBasisService() {
+		return NCLocator.getInstance().lookup(IBasisService.class);
 	}
 
 }
