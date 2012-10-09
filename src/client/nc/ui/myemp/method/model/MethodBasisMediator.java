@@ -61,9 +61,8 @@ public class MethodBasisMediator implements AppEventListener {
 	private void doSelectMethodVO(AppEvent event) {
 		MethodVO vo = (MethodVO) event.getSource();
 		if (vo == null) {
-			return;
-		}
-		if (vo.getBases() != null) {
+			basisModel.initModel(null);
+		} else if (vo.getBases() != null) {
 			basisModel.initModel(vo.getBases());
 		} else {
 			basisModel.initByFactorPK(vo.getFactor());

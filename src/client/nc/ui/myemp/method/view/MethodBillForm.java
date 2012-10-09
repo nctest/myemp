@@ -22,7 +22,6 @@ import nc.ui.resa.refmodel.FactorRefModel;
 import nc.ui.uif2.AppEvent;
 import nc.ui.uif2.UIState;
 import nc.ui.uif2.editor.BillForm;
-import nc.ui.uif2.model.BillManageModel;
 import nc.vo.myemp.method.BasisVO;
 import nc.vo.myemp.method.MethodVO;
 
@@ -52,17 +51,23 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 
 	@Override
 	protected void synchronizeDataFromModel() {
+		MethodBillManageModel model = (MethodBillManageModel) getModel();
 		@SuppressWarnings("unchecked")
-		List<MethodVO> data = ((BillManageModel) getModel()).getData();
+		List<MethodVO> data = model.getData();
+		billCardPanel.getBillModel().clearBodyData();
 		if (data != null && data.size() > 0) {
-			billCardPanel.getBillModel().clearBodyData();
 			billCardPanel.getBodyPanel().addLine(data.size());
 			billCardPanel.getBillModel().setBodyRowObjectByMetaData(
 					data.toArray(new MethodVO[0]), 0);
+			// 设置第一行选中
+			billCardPanel.getBillTable().getSelectionModel()
+					.setSelectionInterval(0, 0);
+			if (data.size()==1) {
+				model.setUiState(UIState.NOT_EDIT);
+			}
+		}else{
+			model.setMethodVO(null);
 		}
-		// 设置第一行选中
-		billCardPanel.getBillTable().getSelectionModel()
-				.setSelectionInterval(0, 0);
 	}
 
 	@Override
