@@ -56,9 +56,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		List<MethodVO> data = ((BillManageModel) getModel()).getData();
 		if (data != null && data.size() > 0) {
 			billCardPanel.getBillModel().clearBodyData();
-			for (int i = 0; i < data.size(); i++) {
-				billCardPanel.addLine();
-			}
+			billCardPanel.getBodyPanel().addLine(data.size());
 			billCardPanel.getBillModel().setBodyRowObjectByMetaData(
 					data.toArray(new MethodVO[0]), 0);
 		}
@@ -248,8 +246,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 				.toString(), model, event));
 	}
 
-	private void setEditFactorChangedByEvent(
-			ValueChangedEvent event) {
+	private void setEditFactorChangedByEvent(ValueChangedEvent event) {
 		MethodBillManageModel model = (MethodBillManageModel) getModel();
 		if (event.getOldValue() != null
 				&& StringUtils.isNotBlank((String) Array.get(
