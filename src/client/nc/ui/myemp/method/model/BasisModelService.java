@@ -55,7 +55,7 @@ public class BasisModelService implements IAppModelService {
 	}
 
 	public AccAssItemVO getAllocDimenVO(String pkAllocDimen) throws BusinessException {
-		return getBasisService().getFactorAssVO(pkAllocDimen);
+		return getBasisService().getAccAssItemVO(pkAllocDimen);
 	}
 
 	private IBasisService getBasisService() {

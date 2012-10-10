@@ -8,7 +8,7 @@ import nc.vo.pub.BusinessException;
 public class BasisServiceImpl implements IBasisService {
 
 	@Override
-	public AccAssItemVO getFactorAssVO(String pk_allocDimen)
+	public AccAssItemVO getAccAssItemVO(String pk_allocDimen)
 			throws BusinessException {
 		return (AccAssItemVO) new BaseDAO().retrieveByPK(AccAssItemVO.class, pk_allocDimen);
 	}
