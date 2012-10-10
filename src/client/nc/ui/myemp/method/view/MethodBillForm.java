@@ -9,10 +9,8 @@ import nc.desktop.ui.WorkbenchEnvironment;
 import nc.ui.myemp.method.event.MethodAppEventConst;
 import nc.ui.myemp.method.model.MethodBillManageModel;
 import nc.ui.pub.beans.UIRefPane;
-import nc.ui.pub.beans.UITable;
 import nc.ui.pub.beans.ValueChangedEvent;
 import nc.ui.pub.beans.ValueChangedListener;
-import nc.ui.pub.beans.constenum.DefaultConstEnum;
 import nc.ui.pub.bill.BillEditEvent;
 import nc.ui.pub.bill.BillEditListener;
 import nc.ui.pub.bill.BillEditListener2;
@@ -203,13 +201,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		}
 		if (vo == null) {
 			vo = new MethodVO();
-			UITable billTable = billCardPanel.getBillTable();
-			int rowCount = billTable.getRowCount();
-			DefaultConstEnum defaultConstEnum = (DefaultConstEnum) billTable
-					.getValueAt(rowCount - 1, 4);// 第4列
-			if (defaultConstEnum != null) {
-				vo.setFactor((String) defaultConstEnum.getValue());
-			}
+			vo.setFactor((String) billCardPanel.getBillModel().getValueAt(row, MethodVO.FACTOR+IBillItem.ID_SUFFIX));
 		}
 		// 调用setMethodVO方法，在该方法中触发SELECT_METHODVO事件
 		model.setMethodVO(vo);
