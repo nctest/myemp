@@ -152,20 +152,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		if (isControlAreaAndNotBlank(e)) {
 			// 关联管控范围和要素
 			relateControlAreaAndFactor();
-			// 设置要素为可编辑,不可缺少
-			setFactorEditable(e, true);
 		}
-	}
-
-	/**
-	 * 设置要素是否可以编辑
-	 * 
-	 * @param e
-	 * @param isEditable
-	 */
-	private void setFactorEditable(BillEditEvent e, boolean isEditable) {
-		billCardPanel.getBillModel().setCellEditable(e.getRow(),
-				MethodVO.FACTOR, isEditable);
 	}
 
 	// 如果编辑的是管控范围，并且值非空
@@ -220,11 +207,12 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		}
 		String controlArea = getControlAreaValue(e);
 		// 根据管控范围是否为空，设置factor是否可以编辑
-		setFactorEditable(e, StringUtils.isNotBlank(controlArea));
-		if (StringUtils.isNotBlank(controlArea)) {
+		if(StringUtils.isBlank(controlArea)){
+			return false;
+		}else{
 			relateControlAreaAndFactor();
+			return true;
 		}
-		return true;
 	}
 
 	private String getControlAreaValue(BillEditEvent e) {
