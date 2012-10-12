@@ -86,28 +86,6 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		return getModel().getUiState() == UIState.EDIT;
 	}
 
-	@Override
-	protected void beforeGetValue() {
-		super.beforeGetValue();
-		restoreState();
-	}
-
-	private void restoreState() {
-		int rowCount = billCardPanel.getRowCount();
-		for (int i = 0; i < rowCount; i++) {
-			// 如果当前编辑行中包含i,就根据UIState的值将该i行的状态设置为相应的状态
-			if (i != editRow) {
-				billCardPanel.getBillModel().setRowState(i, BillModel.NORMAL);
-			} else {
-				if (isUIStateAdd()) {
-					setRowState(i, BillModel.ADD);
-				} else if (isUIStateEdit()) {
-					setRowState(i, BillModel.MODIFICATION);
-				}
-			}
-		}
-	}
-
 	private void setRowState(int i, int state) {
 		billCardPanel.getBillModel().setRowState(i, state);
 	}
@@ -122,7 +100,7 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		setEditable(true);
 		billCardPanel.addLine();
 		// 将最后一行设置为编辑行
-		setEditRow(billCardPanel.getRowCount() - 1);
+		editRow = billCardPanel.getRowCount() - 1;
 	}
 
 	@Override
@@ -130,19 +108,12 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		setEditable(true);
 		// 此处该方法主要是为了处理在修改状态下，只修改子表，而没有修改主表
 		// 经过这样处理，在beforeGetValue方法中恢复状态，可以保证在获取值时可以得到
-		setEditRow(((MethodBillManageModel) getModel()).getSelectedRow());
-	}
-
-	@Override
-	protected void onNotEdit() {
-		super.onNotEdit();
-		editRow = -1;
+		editRow = ((MethodBillManageModel) getModel()).getSelectedRow();
+		setRowState(editRow, BillModel.MODIFICATION);
 	}
 
 	@Override
 	public void afterEdit(BillEditEvent e) {
-		// 设置修改的行，以便在beforeGetValue方法中将它恢复为修改状态
-		setEditRow(e.getRow());
 		// 如果编辑的是管控范围，并且值非空
 		if (isControlAreaAndNotBlank(e)) {
 			// 关联管控范围和要素

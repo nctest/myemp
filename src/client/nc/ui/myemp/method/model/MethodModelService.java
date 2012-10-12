@@ -1,5 +1,7 @@
 package nc.ui.myemp.method.model;
 
+import java.lang.reflect.Array;
+
 import nc.bs.framework.common.NCLocator;
 import nc.itf.myemp.method.IMethodService;
 import nc.ui.uif2.model.IAppModelService;
@@ -22,7 +24,7 @@ public class MethodModelService implements IAppModelService {
 
 	@Override
 	public Object update(Object object) throws Exception {
-		if (object.getClass().isArray()) {
+		if (object.getClass().isArray()&&Array.getLength(object)>0) {
 			return getService().update(((MethodVO[]) object)[0]);
 		}
 		return null;
