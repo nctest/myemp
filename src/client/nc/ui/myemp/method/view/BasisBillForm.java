@@ -23,7 +23,7 @@ public class BasisBillForm extends BillForm implements BillEditListener2 {
 
 	private static final long serialVersionUID = 2540172321607743066L;
 	private Map<String, String> map = new HashMap<String, String>();
-	private UIRefPane uiRefPane=new UIRefPane();
+	private UIRefPane uiRefPane = new UIRefPane();
 
 	@Override
 	public void initUI() {
@@ -53,10 +53,12 @@ public class BasisBillForm extends BillForm implements BillEditListener2 {
 
 	@Override
 	public boolean beforeEdit(BillEditEvent e) {
-		// 分摊维度不可以编辑
-		if (BasisVO.ALLOCDIMEN.equals(e.getKey())) {
-			billCardPanel.getBillModel().setCellEditable(e.getRow(),
-					e.getKey(), false);
+		if (BasisVO.TYPE.equals(e.getKey())) {
+			boolean selected = (Boolean) billCardPanel.getBillModel().getValueAt(
+					e.getRow(), BasisVO.SELECTED);
+			if(!selected){
+				return false;
+			}
 		}
 		try {
 			uiRefPane.setRefNodeName(getRefNodeName(e));
