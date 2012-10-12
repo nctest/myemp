@@ -20,7 +20,7 @@ public class MethodBasisMediator implements AppEventListener {
 
 	@Override
 	public void handleEvent(AppEvent event) {
-		if (isSelectionChangedEvent(event) || isModelInitializedEvent(event)) {
+		if (isSelectionChangedEvent(event)) {
 			doSelectedChanged(event);
 		} else if (isUIStateEvent(event)) {
 			doUIStateChanged();
@@ -29,10 +29,6 @@ public class MethodBasisMediator implements AppEventListener {
 		} else if (isSelectMethodVOEvent(event)) {
 			doSelectMethodVO(event);
 		}
-	}
-
-	private boolean isModelInitializedEvent(AppEvent event) {
-		return event.getType() == AppEventConst.MODEL_INITIALIZED;
 	}
 
 	private boolean isSelectionChangedEvent(AppEvent event) {

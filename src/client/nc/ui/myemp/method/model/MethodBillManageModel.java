@@ -13,7 +13,7 @@ public class MethodBillManageModel extends BillManageModel {
 
 	@Override
 	public Object update(Object object) throws Exception {
-		//增加了下面这个方法，做一些处理
+		// 增加了下面这个方法，做一些处理
 		beforeUpdate(object);
 		Object obj = getService().update(object);
 		directlyUpdate(obj);
@@ -21,10 +21,11 @@ public class MethodBillManageModel extends BillManageModel {
 	}
 
 	private void beforeUpdate(Object object) throws Exception {
-		if(isEditFactorChanged){
-			String pk_method = (((MethodVO[])object)[0]).getPk_method();
-			((MethodModelService)getService()).deleteBasisVOByMethodPk(pk_method);
-			isEditFactorChanged=false;
+		if (isEditFactorChanged) {
+			String pk_method = (((MethodVO[]) object)[0]).getPk_method();
+			((MethodModelService) getService())
+					.deleteBasisVOByMethodPk(pk_method);
+			isEditFactorChanged = false;
 		}
 	}
 
@@ -70,9 +71,9 @@ public class MethodBillManageModel extends BillManageModel {
 	 * @param vo
 	 */
 	public void setMethodVO(MethodVO vo) {
+		bodySelectedRow = getData().indexOf(vo);
 		fireEvent(new AppEvent(MethodAppEventConst.SELECT_METHODVO.toString(),
 				vo, null));
-		bodySelectedRow = getData().indexOf(vo);
 	}
 
 	/**

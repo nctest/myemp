@@ -54,16 +54,11 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		List<MethodVO> data = model.getData();
 		billCardPanel.getBillModel().clearBodyData();
 		if (data != null && data.size() > 0) {
-			billCardPanel.getBodyPanel().addLine(data.size());
-			billCardPanel.getBillModel().setBodyRowObjectByMetaData(
-					data.toArray(new MethodVO[0]), 0);
+			setValue(data.toArray(new MethodVO[0]));
 			// 设置第一行选中
 			billCardPanel.getBillTable().getSelectionModel()
 					.setSelectionInterval(0, 0);
-			if (data.size()==1) {
-				model.setUiState(UIState.NOT_EDIT);
-			}
-		}else{
+		} else {
 			model.setMethodVO(null);
 		}
 	}
@@ -188,7 +183,8 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		}
 		if (vo == null) {
 			vo = new MethodVO();
-			vo.setFactor((String) billCardPanel.getBillModel().getValueAt(row, MethodVO.FACTOR+IBillItem.ID_SUFFIX));
+			vo.setFactor((String) billCardPanel.getBillModel().getValueAt(row,
+					MethodVO.FACTOR + IBillItem.ID_SUFFIX));
 		}
 		// 调用setMethodVO方法，在该方法中触发SELECT_METHODVO事件
 		model.setMethodVO(vo);
@@ -207,9 +203,9 @@ public class MethodBillForm extends BillForm implements BillEditListener,
 		}
 		String controlArea = getControlAreaValue(e);
 		// 根据管控范围是否为空，设置factor是否可以编辑
-		if(StringUtils.isBlank(controlArea)){
+		if (StringUtils.isBlank(controlArea)) {
 			return false;
-		}else{
+		} else {
 			relateControlAreaAndFactor();
 			return true;
 		}
